@@ -93,7 +93,8 @@ def display():
         account = cursor.fetchone()    
         return render_template("display.html", account = account)
     return redirect(url_for('login'))
-  
+
+
 @app.route("/update", methods =['GET', 'POST'])
 def update():
     msg = ''
@@ -126,5 +127,20 @@ def update():
         return render_template("update.html", msg = msg)
     return redirect(url_for('login'))
   
+
+@app.route("/my_conferences")
+def my_conferences():
+    if 'loggedin' in session:
+        return render_template("my_conferences.html")
+    return redirect(url_for('login'))
+
+
+@app.route("/all_conferences")
+def all_conferences():
+    if 'loggedin' in session:
+        return render_template("all_conferences.html")
+    return redirect(url_for('login'))
+
+
 if __name__ == "__main__":
     app.run(host ="localhost", port = int("5000"))
