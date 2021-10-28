@@ -142,5 +142,11 @@ def all_conferences():
     return redirect(url_for('login'))
 
 
+@app.route("/create_conference")
+def create_conference():
+    if 'loggedin' in session:   
+        return render_template("create_conference.html")
+    return redirect(url_for('login'))
+
 if __name__ == "__main__":
     app.run(host ="localhost", port = int("5000"))
