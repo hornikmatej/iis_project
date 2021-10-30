@@ -14,18 +14,32 @@
             </div>
             <div class="content" align="center">
                 <div class="topbar">
-                    <h2>Not registered, nr_conf</h2>
+                    <h2>{{ conf['nazov'] }}</h2>
             </div>
             <div>
-                <h3>{{ conf.id_kon }}</h3>
-                <h3>{{ conf.nazov }}</h3>
-                <h3>{{ conf.zaner }}</h3>
-                <h3>{{ conf.obsah }}</h3>
-                <h3>{{ conf.od_datum }}</h3>
-                <h3>{{ conf.do_datum }}</h3>
-                <h3>{{ conf.cena }}</h3>
-                <h3>{{ conf.login }}</h3>
+                <h2>{{ conf['zaner'] }}</h2>
+                <h2>{{ conf['obsah'] }}</h2>
+                <h2>{{ conf['od_datum'] }}</h2>
+                <h2>{{ conf['do_datum'] }}</h2>
+                <h2>{{ conf['cena'] }}</h2>
+                <h2>{{ conf['login'] }}</h2>
             </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>lecture</th>
+                        <th>room</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    {% for lec in lecs %}    
+                        <tr>
+                            <td>{{ lec['nazov'] }}</td>
+                            <td>{{ lec['m.nazov'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </body>
 </html>

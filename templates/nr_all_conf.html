@@ -26,8 +26,8 @@
                 <tbody>
                     {% for row in rows %}    
                         <tr>
-                            <td>{{row.od_datum}}</td>
-                            <td><a href="{{ url_for('nr_conf', conf_id=row.id_kon)}}">{{row.nazov}}</a></td>
+                            <td>{{ row['od_datum'] }}</td>
+                            <td><a href="{{ url_for('nr_conf', conf_id=row.id_kon)}}">{{ row['nazov'] }}</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
