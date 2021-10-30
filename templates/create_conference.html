@@ -28,21 +28,22 @@
             <form action="{{ url_for('create_conference') }}" method="post" autocomplete="off">
                 <div class="msg">{{ msg }}</div>
                 <td>Title: </td> 
-                <input type="text" name="title" placeholder="Conference title" class="textbox" id="title" required></br></br>
+                <input type="text" name="nazov" placeholder="Conference title" class="textbox" id="title" required></br></br>
                 <td>Genre: </td></br>
-                <select name="rooms" id="room-select" multiple>
+                <select name="zaner" id="Genre-select" multiple>
                     <option value="Sport">Sport</option>
                     <option value="Movie">Movie</option>
                     <option value="Technology">Technology</option>
                     <option value="Science">Science</option>
                     <option value="Travel">Travel</option>
+                    <option value="Others">Others</option>
                 </select></br></br>
                 <td>Conference content: </td></br>
-                <textarea cols="40" rows="5" placeholder="..." class="textbox" id="content" required></textarea></br></br>
+                <textarea name="obsah" cols="40" rows="5" placeholder="..." class="textbox" id="obsah" required></textarea></br></br>
                 <td>From: </td>
-                <input type="datetime-local" name="conference_from" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" required>
+                <input type="datetime-local" name="od_datum" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" step="3600" required>
                 <td>To: </td>
-                <input type="datetime-local" name="conference_to" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" required></br></br>
+                <input type="datetime-local" name="do_datum" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" step="3600" required></br></br>
                 <td>Select room</td></br>
                 <td>(if more than one hold CTRL) </td></br>
                 <select name="rooms" id="room-select" multiple>
@@ -62,12 +63,11 @@
                 <td>Capacity: </td>
                 <input type="number" id="capacity" name="capacity" class="textbox" id="capacity" min="0" required></br></br>
                 <td>Price: </td>
-                <input type="number" id="price" name="price" placeholder="Ticket price" class="textbox" id="price" min="0" required></br></br>
-                <button type="button">Create!</button>
+                <input type="number" id="cena" name="cena" placeholder="Ticket price" class="textbox" id="price" min="0" required></br></br>
+                <input type="submit" class="btn" value="Create">
 
             </form>                     
                 </div>  
-                  
             </div>
         </div>
     </body>
