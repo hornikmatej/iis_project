@@ -12,6 +12,8 @@
                     <li><a href="{{url_for('index')}}">Index</a></li>
                     <li><a href="{{url_for('display')}}">Display</a></li>
                     <li><a href="{{url_for('update')}}">Update</a></li>
+                    <li><a href="{{url_for('my_conferences')}}">My conferences</a></li>
+                    <li><a href="{{url_for('all_conferences')}}">All conferences</a></li>
                     <li class="active"><a href="{{url_for('create_conference')}}">Create new conference</a></li>
                     <li><a href="{{url_for('logout')}}">Log out</a></li>
                 </ul> 
@@ -25,8 +27,16 @@
 
             <form action="{{ url_for('create_conference') }}" method="post" autocomplete="off">
                 <div class="msg">{{ msg }}</div>
-                <td>Title: </td>
+                <td>Title: </td> 
                 <input type="text" name="title" placeholder="Conference title" class="textbox" id="title" required></br></br>
+                <td>Genre: </td></br>
+                <select name="rooms" id="room-select" multiple>
+                    <option value="Sport">Sport</option>
+                    <option value="Movie">Movie</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Science">Science</option>
+                    <option value="Travel">Travel</option>
+                </select></br></br>
                 <td>Conference content: </td></br>
                 <textarea cols="40" rows="5" placeholder="..." class="textbox" id="content" required></textarea></br></br>
                 <td>From: </td>
@@ -36,11 +46,18 @@
                 <td>Select room</td></br>
                 <td>(if more than one hold CTRL) </td></br>
                 <select name="rooms" id="room-select" multiple>
-                    <option value="D0205">D0205</option>
+                    <option value="D105">D105</option>
+                    <option value="D106">D106</option>
                     <option value="D107">D107</option>
                     <option value="E112">E112</option>
+                    <option value="E113">E113</option>
+                    <option value="E114">E114</option>
+                    <option value="M101">M101</option>
                     <option value="M102">M102</option>
+                    <option value="M103">M103</option>
                     <option value="N203">N203</option>
+                    <option value="N204">N204</option>
+                    <option value="N205">N205</option>
                 </select></br></br>
                 <td>Capacity: </td>
                 <input type="number" id="capacity" name="capacity" class="textbox" id="capacity" min="0" required></br></br>
