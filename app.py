@@ -143,7 +143,7 @@ def update():
             elif not re.match(r'[A-Za-z0-9]+', username):
                 msg = 'name must contain only characters and numbers !'
             else:
-                cursor.execute('UPDATE accounts SET  username =% s, password =% s, email =% s, organisation =% s, address =% s, city =% s, state =% s, country =% s, postalcode =% s WHERE id =% s', (username, password, email, organisation, address, city, state, country, postalcode, (session['id'], ), ))
+                cursor.execute('UPDATE accounts SET  username =% s, password =% s, email =% s, organisation =% s, address =% s, city =% s, state =% s, country =% s, postalcode =% s WHERE id =% s', (username, password, email, organisation, address, city, state, country, postalcode, session['id'], ))
                 mysql.connection.commit()
                 msg = 'You have successfully updated !'
         elif request.method == 'POST':
@@ -166,10 +166,25 @@ def all_conferences():
     return redirect(url_for('login'))
 
 
-@app.route("/create_conference")
+@app.route('/create_conference', methods =['GET', 'POST'])
 def create_conference():
-    if 'loggedin' in session:   
-        return render_template("create_conference.html")
+    if 'loggedin' in session:  
+        msg = ''
+        login = session['login']
+        if request.method == 'POST' and 'nazov' in request.form and 'zaner' in request.form and 'od_datum' in request.form and 'do_datum' in request.form and 'cena' in request.form and 'obsah' in request.form:
+            nazov = request.form['nazov']
+            zaner = request.form['zaner']
+            obsah = request.form['obsah']
+            od_datum = request.form['od_datum']
+            do_datum = request.form['do_datum']
+            cena = request.form['cena']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO konferencia VALUES (NULL, % s, % s, % s, % s, % s, % s, % s)', (nazov, zaner, obsah, od_datum, do_datum, cena, login ))
+            mysql.connection.commit()
+            msg = 'You have successfully created coference !'
+        elif request.method == 'POST':
+            msg = 'Please fill out the form !'
+        return render_template("create_conference.html", msg = msg)
     return redirect(url_for('login'))
 
 if __name__ == "__main__":
