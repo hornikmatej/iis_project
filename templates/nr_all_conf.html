@@ -1,0 +1,37 @@
+<html lang="en">
+    <head>
+        <title>nr_all_conf</title>
+        <link rel="stylesheet" href="../static/style.css">
+    </head>
+    <body bgcolor="#e6ffee">
+        <div class="one">
+            <div class="two">
+                <h1>Side Bar</h1>
+                <ul>
+                    <li class="active"><a href="{{url_for('nr_all_conf')}}">All conferences</a></li>
+                    <li><a href="{{url_for('register')}}">Register</a></li>
+                </ul> 
+            </div>
+            <div class="content" align="center">
+                <div class="topbar">
+                    <h2>Welcome you are not registered yet!! </h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>date</th>
+                        <th>name</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    {% for row in rows %}    
+                        <tr>
+                            <td>{{row.od_datum}}</td>
+                            <td><a href="{{ url_for('nr_conf', conf_id=row.id_kon)}}">{{row.nazov}}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

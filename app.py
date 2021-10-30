@@ -40,6 +40,23 @@ def login():
             msg = 'Incorrect username / password !'
     return render_template('login.html', msg = msg)
   
+
+@app.route('/nr_all_conf', methods = ['GET', 'POST'])
+def nr_all_conf():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM konferencia')
+    rows = cursor.fetchall()
+    return render_template("nr_all_conf.html", rows=rows)
+
+
+@app.route('/nr_conf/<conf_id>') # , methods = ['GET', 'POST']
+def nr_conf(conf_id, methods =['GET', 'POST']):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
+    conf = cursor.fetchone()
+    return render_template("nr_conf.html", conf = conf) #, conf = conf
+
+
 @app.route('/logout')
 def logout():
    session.pop('loggedin', None)
@@ -47,6 +64,7 @@ def logout():
    session.pop('username', None)
    return redirect(url_for('login'))
   
+
 @app.route('/register', methods =['GET', 'POST'])
 def register():
     msg = ''
