@@ -24,20 +24,20 @@ mysql = MySQL(app)
 @app.route('/login', methods =['GET', 'POST'])
 def login():
     msg = ''
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        username = request.form['username']
-        password = request.form['password']
+    if request.method == 'POST' and 'login' in request.form and 'heslo' in request.form:
+        login = request.form['login']
+        heslo = request.form['heslo']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = % s AND password = % s', (username, password, ))
+        cursor.execute('SELECT * FROM reg_uzivatel WHERE login = % s AND heslo = % s', (login, heslo, ))
         account = cursor.fetchone()
         if account:
             session['loggedin'] = True
-            session['id'] = account['id']
-            session['username'] = account['username']
+            session['id_uziv'] = account['id_uziv']
+            session['login'] = account['login']
             msg = 'Logged in successfully !'
             return render_template('index.html', msg = msg)
         else:
-            msg = 'Incorrect username / password !'
+            msg = 'Incorrect login / password !'
     return render_template('login.html', msg = msg)
   
 @app.route('/logout')
@@ -50,27 +50,27 @@ def logout():
 @app.route('/register', methods =['GET', 'POST'])
 def register():
     msg = ''
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form and 'address' in request.form and 'city' in request.form and 'country' in request.form and 'postalcode' in request.form and 'organisation' in request.form:
-        username = request.form['username']
-        password = request.form['password']
+    if request.method == 'POST' and 'login' in request.form and 'heslo' in request.form and 'email' in request.form and 'meno' in request.form and 'priezvisko' in request.form :
+        meno = request.form['meno']
+        priezvisko = request.form['priezvisko']
+        login = request.form['login']
+        heslo = request.form['heslo']
         email = request.form['email']
-        organisation = request.form['organisation']  
-        address = request.form['address']
-        city = request.form['city']
-        state = request.form['state']
-        country = request.form['country']    
-        postalcode = request.form['postalcode'] 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = % s', (username, ))
+        cursor.execute('SELECT * FROM reg_uzivatel WHERE login = % s', (login, ))
         account = cursor.fetchone()
         if account:
             msg = 'Account already exists !'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Invalid email address !'
-        elif not re.match(r'[A-Za-z0-9]+', username):
+        elif not re.match(r'[A-Za-z0-9]+', login):
             msg = 'name must contain only characters and numbers !'
         else:
-            cursor.execute('INSERT INTO accounts VALUES (NULL, % s, % s, % s, % s, % s, % s, % s, % s, % s)', (username, password, email, organisation, address, city, state, country, postalcode, ))
+            cursor.execute('INSERT INTO uzivatel VALUES (NULL, % s, % s, % s)', (meno, priezvisko, email, ))
+            mysql.connection.commit()
+            cursor.execute('SELECT * FROM uzivatel WHERE meno = % s AND priezvisko = % s AND email = % s', (meno, priezvisko, email, ))
+            uzivatel = cursor.fetchone()
+            cursor.execute('INSERT INTO reg_uzivatel VALUES (% s, % s, % s)', (uzivatel['id_uziv'], login, heslo, ))
             mysql.connection.commit()
             msg = 'You have successfully registered !'
     elif request.method == 'POST':
