@@ -29,41 +29,25 @@
                         <div class="border">
                             <table class="worddark"></br></br></br></br>
                                 <tr>
-                                    <td>Username:</td>
-                                    <td>{{ account['username'] }}</td>
+                                    <td>First name:</td>
+                                    <td>{{ account['meno'] }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Passworde:</td>
-                                    <td>{{ account['password'] }}</td>
-                                </tr>
+                                    <td>Last name:</td>
+                                    <td>{{ account['priezvisko'] }}</td>
+                                </tr> 
                                 <tr>
                                     <td>Email ID:</td>
                                     <td>{{ account['email'] }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Organisation:</td>
-                                    <td>{{ account['organisation'] }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Address:</td>
-                                    <td>{{ account['address'] }}</td>
-                                </tr>
-                                <tr>
-                                    <td>City:</td>
-                                    <td>{{ account['city'] }}</td>
-                                </tr>
-                                <tr>
-                                    <td>State:</td>
-                                    <td>{{ account['state'] }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Country:</td>
-                                    <td>{{ account['country'] }}</td>
                                 </tr>  
                                 <tr>
-                                    <td>Postal code:</td>
-                                    <td>{{ account['postalcode'] }}</td>
-                                </tr>                          
+                                    <td>Username:</td>
+                                    <td>{{ reg_uzivatel['login'] }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Passworde:</td>
+                                    <td>{{ reg_uzivatel['heslo'] }}</td>
+                                </tr>                       
                             </table>
                         </div>
                     {% endblock %}                                           
