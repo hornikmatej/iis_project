@@ -200,6 +200,26 @@ def all_conferences():
 
 @app.route('/r_conf/<conf_id>', methods =['GET', 'POST'])
 def r_conf(conf_id):
+    if 'loggedin' in session:
+        msg = ''
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
+        conf = cursor.fetchone()
+        cursor.execute('SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s', (conf_id, ))
+        lecs = cursor.fetchall()
+        if request.method == 'POST' and 'pocet' in request.form :
+            pocet = request.form['pocet']
+            cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            uzivatel = session['id_uziv']
+            cursor2.execute('INSERT INTO rezervacia VALUES (% s, % s, % s, % s)', (uzivatel, conf_id, pocet, False, ))
+            mysql.connection.commit()
+            msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
+        elif request.method == 'POST':
+            msg = 'Please fill out the form !'
+        return render_template("r_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id)
+    return redirect(url_for('login'))
+
+'''
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
     conf = cursor.fetchone()
@@ -207,7 +227,7 @@ def r_conf(conf_id):
     lecs = cursor.fetchall()
     print(lecs)
     return render_template("r_conf.html", conf = conf, lecs = lecs)
-
+'''
 
 @app.route('/create_conference', methods =['GET', 'POST'])
 def create_conference():
