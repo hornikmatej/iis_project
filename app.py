@@ -51,13 +51,28 @@ def nr_all_conf():
 
 @app.route('/nr_conf/<conf_id>', methods =['GET', 'POST'])
 def nr_conf(conf_id):
+    msg = ''
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
     conf = cursor.fetchone()
     cursor.execute('SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s', (conf_id, ))
     lecs = cursor.fetchall()
-    print(lecs)
-    return render_template("nr_conf.html", conf = conf, lecs = lecs) #, conf = conf
+    if request.method == 'POST' and 'email' in request.form and 'meno' in request.form and 'priezvisko' in request.form and 'pocet' in request.form :
+        meno = request.form['meno']
+        priezvisko = request.form['priezvisko']
+        email = request.form['email']
+        pocet = request.form['pocet']
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('INSERT INTO uzivatel VALUES (NULL, % s, % s, % s)', (meno, priezvisko, email, ))
+        mysql.connection.commit()
+        cursor2.execute('SELECT * FROM uzivatel WHERE meno = % s AND priezvisko = % s AND email = % s', (meno, priezvisko, email, ))
+        uzivatel = cursor2.fetchone()
+        cursor2.execute('INSERT INTO rezervacia VALUES (% s, % s, % s, % s)', (uzivatel['id_uziv'], conf_id, pocet, False, ))
+        mysql.connection.commit()
+        msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
+    elif request.method == 'POST':
+        msg = 'Please fill out the form !'
+    return render_template("nr_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id)
 
 
 @app.route('/logout')

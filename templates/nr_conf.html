@@ -44,11 +44,14 @@
             </table></br></br>
             <td>Price: {{ conf['cena'] }}</td></br></br>
             <td>Reservation:</td></br></br>
+        <div class="reservebottom" align="center">
+                <form action="{{ url_for('nr_conf', conf_id = conf_id)}}"  method="post" autocomplete="off">
+            <div class="msg">{{ msg }}</div>
             <input type="text" name="meno" placeholder="Enter Your First name" class="textbox" id="meno" required></br></br>
             <input type="text" name="priezvisko" placeholder="Enter Your Last name" class="textbox" id="priezvisko" required></br></br>
             <input type="email" name="email" placeholder="Enter Your Email ID" class="textbox" id="email" required></br></br>
-            <input type="number" id="cena" name="cena" placeholder="Number of tickets" class="textbox" id="price" min="0" required></br></br>
+            <input type="number" id="pocet" name="pocet" placeholder="Number of tickets" class="textbox" id="pocet" min="1" required></br></br>
             <input type="submit" class="btn" value="Reserve">
-        </div>
+                </form>
     </body>
 </html>
