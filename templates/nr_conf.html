@@ -14,18 +14,44 @@
             </div>
             <div class="content" align="center">
                 <div class="topbar">
-                    <h2>Not registered, nr_conf</h2>
+                    <h2>{{ conf['nazov'] }}</h2>
             </div>
             <div>
-                <h3>{{ conf.id_kon }}</h3>
-                <h3>{{ conf.nazov }}</h3>
-                <h3>{{ conf.zaner }}</h3>
-                <h3>{{ conf.obsah }}</h3>
-                <h3>{{ conf.od_datum }}</h3>
-                <h3>{{ conf.do_datum }}</h3>
-                <h3>{{ conf.cena }}</h3>
-                <h3>{{ conf.login }}</h3>
+                <h2>{{ conf['zaner'] }}</h2>
+                <h2>{{ conf['obsah'] }}</h2>
+                <h2>{{ conf['od_datum'] }}</h2>
+                <h2>{{ conf['do_datum'] }}</h2>
+                <h2>{{ conf['cena'] }}</h2>
+                <h2>{{ conf['login'] }}</h2>
             </div>
-        </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>lecture</th>
+                        <th>room</th>
+                        <th>occupancy</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    {% for lec in lecs %}    
+                        <tr>
+                            <td>{{ lec['nazov'] }}</td>
+                            <td>{{ lec['m.nazov'] }}</td>
+                            <td>{{ lec['zaplnenost'] }} / {{ lec['kapacita'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table></br></br>
+            <td>Price: {{ conf['cena'] }}</td></br></br>
+            <td>Reservation:</td></br></br>
+        <div class="reservebottom" align="center">
+                <form action="{{ url_for('nr_conf', conf_id = conf_id)}}"  method="post" autocomplete="off">
+            <div class="msg">{{ msg }}</div>
+            <input type="text" name="meno" placeholder="Enter Your First name" class="textbox" id="meno" required></br></br>
+            <input type="text" name="priezvisko" placeholder="Enter Your Last name" class="textbox" id="priezvisko" required></br></br>
+            <input type="email" name="email" placeholder="Enter Your Email ID" class="textbox" id="email" required></br></br>
+            <input type="number" id="pocet" name="pocet" placeholder="Number of tickets" class="textbox" id="pocet" min="1" required></br></br>
+            <input type="submit" class="btn" value="Reserve">
+                </form>
     </body>
 </html>
