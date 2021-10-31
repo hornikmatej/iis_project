@@ -49,14 +49,14 @@ def nr_all_conf():
     return render_template("nr_all_conf.html", rows=rows)
 
 
-@app.route('/nr_conf/<conf_id>') # , methods = ['GET', 'POST']
+@app.route('/nr_conf/<conf_id>', methods =['GET', 'POST'])
 def nr_conf(conf_id):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
     conf = cursor.fetchone()
     cursor.execute('SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s', (conf_id, ))
     lecs = cursor.fetchall()
-
+    print(lecs)
     return render_template("nr_conf.html", conf = conf, lecs = lecs) #, conf = conf
 
 
