@@ -43,14 +43,14 @@
   font-weight: bold;
 }
 
-.btn {
+/* .btn {
   padding: 10px 40px;
   background-color: #009933;
   color: #ffffff;
   font-style: oblique;
   font-weight: bold;
   border-radius: 10px;
-}
+} */
 
 .worddark {
   color: #009933;
@@ -142,4 +142,8 @@
   text-align: center;
   font-style: oblique;
   font-weight: bold;
+}
+
+.table {
+  max-width: 500px;
 }
