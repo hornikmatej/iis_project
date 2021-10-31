@@ -21,6 +21,22 @@
                 <div class="topbar">
                     <h2>Welcome!! You are in Display Page!! </h2>
             </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>date</th>
+                        <th>name</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    {% for conf in confs %}    
+                        <tr>
+                            <td>{{ conf['od_datum'] }}</td>
+                            <td><a href="{{ url_for('my_conf', conf_id=conf.id_kon)}}">{{ conf['nazov'] }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </body>
 </html>

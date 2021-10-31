@@ -1,0 +1,56 @@
+<html lang="en">
+    <head>
+        <title>r_conf</title>
+        <link rel="stylesheet" href="../static/style.css">
+    </head>
+    <body bgcolor="#e6ffee">
+        <div class="one">
+            <div class="two">
+                <h1>Side Bar</h1>
+                <ul>
+                    <li><a href="{{url_for('index')}}">Index</a></li>
+                    <li><a href="{{url_for('display')}}">Display</a></li>
+                    <li><a href="{{url_for('update')}}">Update</a></li>
+                    <li><a href="{{url_for('my_conferences')}}">My conferences</a></li>
+                    <li><a href="{{url_for('all_conferences')}}">All conferences</a></li>
+                    <li><a href="{{url_for('create_conference')}}">Create new conference</a></li>
+                    <li><a href="{{url_for('logout')}}">Log out</a></li>
+                </ul> 
+            </div>
+            <div class="content" align="center">
+                <div class="topbar">
+                    <h2>{{ conf['nazov'] }}</h2>
+            </div>
+            <div>
+                <h2>{{ conf['zaner'] }}</h2>
+                <h2>{{ conf['obsah'] }}</h2>
+                <h2>{{ conf['od_datum'] }}</h2>
+                <h2>{{ conf['do_datum'] }}</h2>
+                <h2>{{ conf['cena'] }}</h2>
+                <h2>{{ conf['login'] }}</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>lecture</th>
+                        <th>room</th>
+                        <th>occupancy</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    {% for lec in lecs %}    
+                        <tr>
+                            <td>{{ lec['nazov'] }}</td>
+                            <td>{{ lec['m.nazov'] }}</td>
+                            <td>{{ lec['zaplnenost'] }} / {{ lec['kapacita'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table></br></br>
+            <td>Price: {{ conf['cena'] }}</td></br></br>
+            <td>Reservation:</td></br></br>
+            <input type="number" id="cena" name="cena" placeholder="Number of tickets" class="textbox" id="price" min="0" required></br></br>
+            <input type="submit" class="btn" value="Reserve">
+        </div>
+    </body>
+</html>
