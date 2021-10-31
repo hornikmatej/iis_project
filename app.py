@@ -170,15 +170,43 @@ def update():
 @app.route("/my_conferences")
 def my_conferences():
     if 'loggedin' in session:
-        return render_template("my_conferences.html")
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM konferencia WHERE login = % s', (session['login'], ))
+        confs = cursor.fetchall()
+        return render_template("my_conferences.html", confs=confs)
     return redirect(url_for('login'))
 
 
-@app.route("/all_conferences")
+@app.route('/my_conf/<conf_id>', methods =['GET', 'POST'])
+def my_conf(conf_id):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
+    conf = cursor.fetchone()
+    cursor.execute('SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s', (conf_id, ))
+    lecs = cursor.fetchall()
+    print(lecs)
+    return render_template("my_conf.html", conf = conf, lecs = lecs)
+
+
+@app.route("/all_conferences", methods = ['GET', 'POST'])
 def all_conferences():
     if 'loggedin' in session:
-        return render_template("all_conferences.html")
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM konferencia')
+        confs = cursor.fetchall()
+        return render_template("all_conferences.html", confs=confs)
     return redirect(url_for('login'))
+
+
+@app.route('/r_conf/<conf_id>', methods =['GET', 'POST'])
+def r_conf(conf_id):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
+    conf = cursor.fetchone()
+    cursor.execute('SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s', (conf_id, ))
+    lecs = cursor.fetchall()
+    print(lecs)
+    return render_template("r_conf.html", conf = conf, lecs = lecs)
 
 
 @app.route('/create_conference', methods =['GET', 'POST'])
