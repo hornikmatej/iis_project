@@ -121,8 +121,9 @@ def index():
     return redirect(url_for('login'))
   
   
-@app.route("/display")
-def display():
+@app.route("/your_account", methods =['GET', 'POST'])
+def your_account():
+    msg = ''
     if 'loggedin' in session:
         cursor_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor_uzivatel.execute('SELECT * FROM uzivatel WHERE id_uziv = % s', (session['id_uziv'], ))
@@ -130,42 +131,57 @@ def display():
         cursor_reg_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor_reg_uzivatel.execute('SELECT * FROM reg_uzivatel WHERE id_uziv = % s', (session['id_uziv'], ))
         reg_uzivatel = cursor_reg_uzivatel.fetchone() 
-        return render_template("display.html", account = account, reg_uzivatel = reg_uzivatel)
-    return redirect(url_for('login'))
-
-
-@app.route("/update", methods =['GET', 'POST'])
-def update():
-    msg = ''
-    if 'loggedin' in session:
-        if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form and 'address' in request.form and 'city' in request.form and 'country' in request.form and 'postalcode' in request.form and 'organisation' in request.form:
-            username = request.form['username']
-            password = request.form['password']
-            email = request.form['email']
-            organisation = request.form['organisation']  
-            address = request.form['address']
-            city = request.form['city']
-            state = request.form['state']
-            country = request.form['country']    
-            postalcode = request.form['postalcode'] 
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM accounts WHERE username = % s', (username, ))
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        if request.method == 'POST' and 'meno' in request.form and request.form['meno'] != "":
+            meno = request.form['meno']
+            cursor.execute('UPDATE uzivatel SET  meno =% s WHERE id_uziv =% s', (meno, session['id_uziv'], ))
+            mysql.connection.commit()
+            msg+= 'First name updated, '
+        if request.method == 'POST' and 'priezvisko' in request.form and request.form['priezvisko'] != "":
+            priezvisko = request.form['priezvisko']
+            cursor.execute('UPDATE uzivatel SET  priezvisko =% s WHERE id_uziv =% s', (priezvisko, session['id_uziv'], ))
+            mysql.connection.commit()
+            msg+= 'Last name updated, '
+        '''
+        if request.method == 'POST' and 'login' in request.form and request.form['login'] != "":
+            login = request.form['login']
+            cursor.execute('SELECT * FROM reg_uzivatel WHERE login = % s', (login, ))
             account = cursor.fetchone()
             if account:
-                msg = 'Account already exists !'
-            elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-                msg = 'Invalid email address !'
-            elif not re.match(r'[A-Za-z0-9]+', username):
-                msg = 'name must contain only characters and numbers !'
+                msg+= 'Username already exists !, '
+            elif not re.match(r'[A-Za-z0-9]+', login):
+                msg+= 'Username must contain only characters and numbers !, '
             else:
-                cursor.execute('UPDATE accounts SET  username =% s, password =% s, email =% s, organisation =% s, address =% s, city =% s, state =% s, country =% s, postalcode =% s WHERE id =% s', (username, password, email, organisation, address, city, state, country, postalcode, session['id'], ))
+                cursor.execute('UPDATE reg_uzivatel SET login =% s WHERE id_uziv = % s', ( login, session['id_uziv'], ))
                 mysql.connection.commit()
-                msg = 'You have successfully updated !'
-        elif request.method == 'POST':
-            msg = 'Please fill out the form !'
-        return render_template("update.html", msg = msg)
+                msg+= 'Username updated, '
+        '''
+        if request.method == 'POST' and 'heslo' in request.form and request.form['heslo'] != "":
+            heslo = request.form['heslo']
+            cursor.execute('UPDATE reg_uzivatel SET heslo =% s WHERE id_uziv = % s', ( heslo, session['id_uziv'], ))
+            mysql.connection.commit()
+            msg+= 'Password updated, '
+            
+        if request.method == 'POST' and 'email' in request.form and request.form['email'] != "":
+            email = request.form['email']
+            if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                msg+= 'Invalid email address !, '
+            else:
+                cursor.execute('UPDATE uzivatel SET  email =% s WHERE id_uziv =% s', (email, session['id_uziv'], ))
+                mysql.connection.commit()
+                msg+= 'Email updated, '
+        if msg != "":
+            cursor_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor_uzivatel.execute('SELECT * FROM uzivatel WHERE id_uziv = % s', (session['id_uziv'], ))
+            account = cursor_uzivatel.fetchone()    
+            cursor_reg_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor_reg_uzivatel.execute('SELECT * FROM reg_uzivatel WHERE id_uziv = % s', (session['id_uziv'], ))
+            reg_uzivatel = cursor_reg_uzivatel.fetchone() 
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        return render_template("your_account.html", account = account, reg_uzivatel = reg_uzivatel, msg = msg[:-2])
+
     return redirect(url_for('login'))
-  
+
 
 @app.route("/my_conferences")
 def my_conferences():
