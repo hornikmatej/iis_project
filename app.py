@@ -292,6 +292,7 @@ def r_conf(conf_id):
         return render_template("r_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id, admin_bool = admin_bool)
     return redirect(url_for('login'))
 
+
 @app.route('/create_conference', methods =['GET', 'POST'])
 def create_conference():
     if 'loggedin' in session:  

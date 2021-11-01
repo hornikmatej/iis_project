@@ -23,7 +23,7 @@
             <div class="content" align="center">
                 <div class="topbar">
                     <h2>{{ conf['nazov'] }}</h2>
-            </div>
+                </div>
             <div>
                 <h2>{{ conf['zaner'] }}</h2>
                 <h2>{{ conf['obsah'] }}</h2>
@@ -51,18 +51,29 @@
                 </tbody>
             </table></br></br>
             <td>Price: {{ conf['cena'] }}</td></br></br>
+            
             <td>Reservation:</td></br></br>
-    <div class="reservebottom" align="center">
-        <form action="{{ url_for('r_conf', conf_id = conf_id)}}"  method="post" autocomplete="off">
-            <div class="msg">{{ msg }}</div> 
-                <div class="container-sm">
-                    <div class="input-group mb-3 ">
-                        <span class="input-group-text" id="basic-addon1">></span>
-                        <input type="number" id="pocet" name="pocet" placeholder="Number of tickets" class="form-control" id="pocet" aria-describedby="basic-addon1" min="1" required></br></br>
-                    </div>
+            <div class="reserve" align="center">
+                <div class="reservebottom" align="center">
+                    <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
+                        <div class="msg">{{ msg }}</div>
+                        <input type="number" id="pocet" name="pocet" placeholder="Number of tickets" class="textbox" aria-describedby="basic-addon1" min="1" required></br></br>
+                    </form>
+                    <input type="submit" class="btn btn-outline-secondary" value="Reserve">
                 </div>
-                <input type="submit" class="btn btn-outline-secondary" value="Reserve">
-            </div>
-        </form>
+            </div></br></br>
+
+            <td>Applie for presentation: </td></br></br>
+            <div class = "apply" align="center">
+                <div class="applybottom" align="center">
+                    <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
+                        <div class="msg">{{ msg }}</div>
+                        <input type="text" id="title" name="title" placeholder="Presentation title" class="textbox" aria-describedby="basic-addon1" required></br></br>
+                        <input type="text" id="content" name="content" placeholder="Presentation content" class="textbox" aria-describedby="basic-addon1" required></br></br>
+                    </form>
+                    <input type="submit" class="btn btn-outline-secondary" value="Apply">
+                </div>
+            </div></br></br>
+        </div>
     </body>
 </html>
