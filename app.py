@@ -2,24 +2,19 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
-  
-  
-  
+
+
 app = Flask(__name__)
-  
-  
+
 app.secret_key = 'your secret key'
-  
-  
+
 app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
 app.config['MYSQL_USER'] = 'sql11447453'
 app.config['MYSQL_PASSWORD'] = 'e2KGxNGz6H'
 app.config['MYSQL_DB'] = 'sql11447453'
-  
-  
+
 mysql = MySQL(app)
-  
-  
+
 @app.route('/')
 @app.route('/login', methods =['GET', 'POST'])
 def login():
@@ -85,11 +80,10 @@ def nr_conf(conf_id):
 
 @app.route('/logout')
 def logout():
-   session.pop('loggedin', None)
-   session.pop('id', None)
-   session.pop('username', None)
-   return redirect(url_for('login'))
-  
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 @app.route('/register', methods =['GET', 'POST'])
 def register():
@@ -297,6 +291,7 @@ def r_conf(conf_id):
 def create_conference():
     if 'loggedin' in session:  
         msg = ''
+        kapacita_msg = ""
         admin_bool = False;
         login = session['login']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -311,13 +306,24 @@ def create_conference():
             od_datum = request.form['od_datum']
             do_datum = request.form['do_datum']
             cena = request.form['cena']
-            cursor.execute('INSERT INTO konferencia VALUES (NULL, % s, % s, % s, % s, % s, % s, % s)', (nazov, zaner, obsah, od_datum, do_datum, cena, login ))
+
+            miestnosti = ""
+            kapacita = 0
+            for room in request.form.getlist('rooms'):
+                cursor.execute('SELECT kapacita FROM miestnost WHERE nazov = % s ', (room, ))
+                kapacita_miestnosti = cursor.fetchone()
+                kapacita+= kapacita_miestnosti['kapacita']
+                miestnosti+=str(room)+","
+            miestnosti = miestnosti[:-1]
+            
+            cursor.execute('INSERT INTO konferencia VALUES (NULL, % s, % s, % s, % s, % s, % s, % s, % s, % s)', (nazov, zaner, obsah, od_datum, do_datum, cena, login, kapacita, miestnosti ))
             mysql.connection.commit()
+            kapacita_msg = "Capacity of conference: "+str(kapacita)
             msg = 'You have successfully created coference !'
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
         cursor.close()
-        return render_template("create_conference.html", msg = msg, admin_bool = admin_bool)
+        return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg)
     return redirect(url_for('login'))
 
 if __name__ == "__main__":
