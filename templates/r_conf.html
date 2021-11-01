@@ -51,15 +51,15 @@
                 </tbody>
             </table></br></br>
             <td>Price: {{ conf['cena'] }}</td></br></br>
-            
+            <div class="msg">{{ msg }}</div>
             <td>Reservation:</td></br></br>
-            <div class="reserve" align="center">
+            <div class="Reserve" align="center">
                 <div class="reservebottom" align="center">
                     <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
-                        <div class="msg">{{ msg }}</div>
                         <input type="number" id="pocet" name="pocet" placeholder="Number of tickets" class="textbox" aria-describedby="basic-addon1" min="1" required></br></br>
+                        <input type="submit" class="btn btn-outline-secondary" value="Reserve">
                     </form>
-                    <input type="submit" class="btn btn-outline-secondary" value="Reserve">
+                    
                 </div>
             </div></br></br>
 
@@ -67,11 +67,10 @@
             <div class = "apply" align="center">
                 <div class="applybottom" align="center">
                     <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
-                        <div class="msg">{{ msg }}</div>
-                        <input type="text" id="title" name="title" placeholder="Presentation title" class="textbox" aria-describedby="basic-addon1" required></br></br>
-                        <input type="text" id="content" name="content" placeholder="Presentation content" class="textbox" aria-describedby="basic-addon1" required></br></br>
+                        <input type="text" id="nazov" name="nazov" placeholder="Presentation title" class="textbox" aria-describedby="basic-addon1" required></br></br>
+                        <input type="text" id="obsah" name="obsah" placeholder="Presentation content" class="textbox" aria-describedby="basic-addon1" required></br></br>
+                        <input type="submit" class="btn btn-outline-secondary" value="Apply">
                     </form>
-                    <input type="submit" class="btn btn-outline-secondary" value="Apply">
                 </div>
             </div></br></br>
         </div>

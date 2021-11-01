@@ -271,18 +271,23 @@ def r_conf(conf_id):
         lecs = cursor.fetchall()
         cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
         admin = cursor.fetchone()
-        cursor.close()
         if admin:
             admin_bool = True; 
         if request.method == 'POST' and 'pocet' in request.form :
             pocet = request.form['pocet']
-            cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             uzivatel = session['id_uziv']
-            cursor2.execute('INSERT INTO rezervacia VALUES (% s, % s, % s, % s)', (uzivatel, conf_id, pocet, False, ))
+            cursor.execute('INSERT INTO rezervacia VALUES (% s, % s, % s, % s)', (uzivatel, conf_id, pocet, False, ))
             mysql.connection.commit()
             msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
+        elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
+            nazov = request.form['nazov']
+            obsah = request.form['obsah']
+            cursor.execute('INSERT INTO ziadost_prednaska VALUES (% s, % s, % s, % s)', (conf_id, session['login'], nazov, obsah, ))
+            mysql.connection.commit()
+            msg = 'You have successfully applied presentation on conference, now wait for confirmation!'
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
+        cursor.close()
         return render_template("r_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id, admin_bool = admin_bool)
     return redirect(url_for('login'))
 
