@@ -30,6 +30,7 @@
 
             <form action="{{ url_for('create_conference') }}" method="post" autocomplete="off">
                 <div class="msg">{{ msg }}</div>
+                <div class="msg">{{ kapacita_msg }}</div>
                 <td>Title: </td> 
                 <input type="text" name="nazov" placeholder="Conference title" class="textbox" id="title" required></br></br>
                 <td>Genre: </td></br>
@@ -47,24 +48,22 @@
                 <input type="datetime-local" name="od_datum" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" step="3600" required>
                 <td>To: </td>
                 <input type="datetime-local" name="do_datum" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" step="3600" required></br></br>
-                <td>Select room</td></br>
+                <td>Select room (*room capacity*)</td></br>
                 <td>(if more than one hold CTRL) </td></br>
                 <select name="rooms" id="room-select" multiple>
-                    <option value="D105">D105</option>
-                    <option value="D106">D106</option>
-                    <option value="D107">D107</option>
-                    <option value="E112">E112</option>
-                    <option value="E113">E113</option>
-                    <option value="E114">E114</option>
-                    <option value="M101">M101</option>
-                    <option value="M102">M102</option>
-                    <option value="M103">M103</option>
-                    <option value="N203">N203</option>
-                    <option value="N204">N204</option>
-                    <option value="N205">N205</option>
+                    <option value="D105">D105 (100)</option>
+                    <option value="D106">D106 (100)</option>
+                    <option value="D107">D107 (100)</option>
+                    <option value="E112">E112 (200)</option>
+                    <option value="E113">E113 (200)</option>
+                    <option value="E114">E114 (200)</option>
+                    <option value="M101">M101 (50)</option>
+                    <option value="M102">M102 (50)</option>
+                    <option value="M103">M103 (50)</option>
+                    <option value="N203">N203 (70)</option>
+                    <option value="N204">N204 (70)</option>
+                    <option value="N205">N205 (70)</option>
                 </select></br></br>
-                <td>Capacity: </td>
-                <input type="number" id="capacity" name="capacity" class="textbox" id="capacity" min="0" required></br></br>
                 <td>Price: </td>
                 <input type="number" id="cena" name="cena" placeholder="Ticket price" class="textbox" id="price" min="0" required></br></br>
                 <input type="submit" class="btn btn-outline-secondary" value="Create">
