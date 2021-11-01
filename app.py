@@ -226,6 +226,23 @@ def my_conferences():
     return redirect(url_for('login'))
 
 
+@app.route("/my_reservations", methods = ['GET', 'POST'])
+def my_reservations():
+    admin_bool = False;
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        ress = cursor.fetchall()
+        print(ress)
+        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        admin = cursor.fetchone()
+        cursor.close()
+        if admin:
+            admin_bool = True;
+        return render_template("my_reservations.html", ress=ress, admin_bool = admin_bool)
+    return redirect(url_for('login'))   
+
+
 @app.route('/my_conf/<conf_id>', methods =['GET', 'POST'])
 def my_conf(conf_id):
     admin_bool = False;
