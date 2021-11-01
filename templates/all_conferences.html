@@ -14,6 +14,9 @@
                     <li><a href="{{url_for('my_conferences')}}">My conferences</a></li>
                     <li class="active"><a href="{{url_for('all_conferences')}}">All conferences</a></li>
                     <li><a href="{{url_for('create_conference')}}">Create new conference</a></li>
+                    {% if admin_bool %}
+                    <li><a href="{{url_for('user_management')}}">User management</a></li>
+                    {% endif %}
                     <li><a href="{{url_for('logout')}}">Log out</a></li>
                 </ul> 
             </div>
