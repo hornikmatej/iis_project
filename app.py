@@ -20,7 +20,7 @@ mysql = MySQL(app)
 def login():
     msg = ''
     if request.method == 'POST' and 'login' in request.form and 'heslo' in request.form:
-        admin_bool = False;
+        admin_bool = False
         login = request.form['login']
         heslo = request.form['heslo']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -147,7 +147,7 @@ def user_management():
 @app.route("/your_account", methods =['GET', 'POST'])
 def your_account():
     msg = ''
-    admin_bool = False;
+    admin_bool = False
     if 'loggedin' in session:
         cursor_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor_uzivatel.execute('SELECT * FROM uzivatel WHERE id_uziv = % s', (session['id_uziv'], ))
@@ -212,7 +212,7 @@ def your_account():
 
 @app.route("/my_conferences")
 def my_conferences():
-    admin_bool = False;
+    admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM konferencia WHERE login = % s', (session['login'], ))
@@ -228,7 +228,7 @@ def my_conferences():
 
 @app.route('/my_conf/<conf_id>', methods =['GET', 'POST'])
 def my_conf(conf_id):
-    admin_bool = False;
+    admin_bool = False
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
     conf = cursor.fetchone()
@@ -245,7 +245,7 @@ def my_conf(conf_id):
 
 @app.route("/all_conferences", methods = ['GET', 'POST'])
 def all_conferences():
-    admin_bool = False;
+    admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM konferencia')
@@ -263,7 +263,7 @@ def all_conferences():
 def r_conf(conf_id):
     if 'loggedin' in session:
         msg = ''
-        admin_bool = False;
+        admin_bool = False
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
         conf = cursor.fetchone()
@@ -276,7 +276,12 @@ def r_conf(conf_id):
         if request.method == 'POST' and 'pocet' in request.form :
             pocet = request.form['pocet']
             uzivatel = session['id_uziv']
-            cursor.execute('INSERT INTO rezervacia VALUES (% s, % s, % s, % s)', (uzivatel, conf_id, pocet, False, ))
+            cursor.execute('SELECT * FROM rezervacia WHERE id_uzivatela = % s AND id_konferencie = % s', (uzivatel, conf_id, ))
+            ordered = cursor.fetchone()
+            if (ordered):
+                cursor.execute('UPDATE rezervacia SET pocet_listkov = pocet_listkov + % s WHERE id_uzivatela = % s AND id_konferencie = % s', (pocet, uzivatel, conf_id, ))
+            else:
+                cursor.execute('INSERT INTO rezervacia VALUES (% s, % s, % s, % s)', (uzivatel, conf_id, pocet, False, ))
             mysql.connection.commit()
             msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
@@ -297,7 +302,7 @@ def create_conference():
     if 'loggedin' in session:  
         msg = ''
         kapacita_msg = ""
-        admin_bool = False;
+        admin_bool = False
         login = session['login']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
