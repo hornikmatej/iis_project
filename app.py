@@ -2,18 +2,24 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
+from passlib.context import CryptContext
 
 
 app = Flask(__name__)
 
 app.secret_key = 'your secret key'
-
 app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
 app.config['MYSQL_USER'] = 'sql11447453'
 app.config['MYSQL_PASSWORD'] = 'e2KGxNGz6H'
 app.config['MYSQL_DB'] = 'sql11447453'
 
 mysql = MySQL(app)
+
+context = CryptContext(
+        schemes=["pbkdf2_sha256"],
+        default="pbkdf2_sha256",
+        pbkdf2_sha256__default_rounds=50000
+)
 
 @app.route('/')
 @app.route('/login', methods =['GET', 'POST'])
@@ -24,19 +30,22 @@ def login():
         login = request.form['login']
         heslo = request.form['heslo']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM reg_uzivatel WHERE login = % s AND heslo = % s', (login, heslo, ))
+        cursor.execute('SELECT * FROM reg_uzivatel WHERE login = % s', (login, ))
         account = cursor.fetchone()
-        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (account['id_uziv'], ))
-        admin = cursor.fetchone()
-        cursor.close()
-        if admin:
-            admin_bool = True;
-        if account:
-            session['loggedin'] = True
-            session['id_uziv'] = account['id_uziv']
-            session['login'] = account['login']
-            msg = 'Logged in successfully !'
-            return render_template('index.html', msg = msg, admin_bool = admin_bool)
+        if ((context.verify(heslo, account['heslo'])) == True):
+            if account:
+                cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (account['id_uziv'], ))
+                admin = cursor.fetchone()
+                cursor.close()
+                if admin:
+                    admin_bool = True;
+                session['loggedin'] = True
+                session['id_uziv'] = account['id_uziv']
+                session['login'] = account['login']
+                msg = 'Logged in successfully !'
+                return render_template('index.html', msg = msg, admin_bool = admin_bool)
+            else:
+                msg = 'Incorrect login / password !'
         else:
             msg = 'Incorrect login / password !'
     return render_template('login.html', msg = msg)
@@ -93,6 +102,7 @@ def register():
         priezvisko = request.form['priezvisko']
         login = request.form['login']
         heslo = request.form['heslo']
+        heslo = context.hash(heslo)
         email = request.form['email']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM reg_uzivatel WHERE login = % s', (login, ))
