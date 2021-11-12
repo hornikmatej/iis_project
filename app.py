@@ -196,6 +196,7 @@ def your_account():
         '''
         if request.method == 'POST' and 'heslo' in request.form and request.form['heslo'] != "":
             heslo = request.form['heslo']
+            heslo = context.hash(heslo)
             cursor.execute('UPDATE reg_uzivatel SET heslo =% s WHERE id_uziv = % s', ( heslo, session['id_uziv'], ))
             mysql.connection.commit()
             msg+= 'Password updated, '
