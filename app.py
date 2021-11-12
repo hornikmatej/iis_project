@@ -414,5 +414,22 @@ def create_conference():
         return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg)
     return redirect(url_for('login'))
 
+@app.route("/my_applications", methods = ['GET', 'POST'])
+def my_applications():
+    if 'loggedin' in session:
+        msg = ''
+        admin_bool = False
+        login = session['login']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
+        params = (session['id_uziv'],)
+        cursor.execute(sql, params)
+        admin = cursor.fetchone()
+        if admin:
+            admin_bool = True; 
+        return render_template("my_applications.html", msg = msg, admin_bool = admin_bool)
+    return redirect(url_for('login'))
+
+
 if __name__ == "__main__":
     app.run(host ="localhost", port = int("5000"))
