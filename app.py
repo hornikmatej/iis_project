@@ -30,11 +30,20 @@ def login():
         login = request.form['login']
         heslo = request.form['heslo']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM reg_uzivatel WHERE login = % s', (login, ))
+        sql = "SELECT * FROM reg_uzivatel WHERE login = % s"
+        params = (login,)
+        cursor.execute(sql, params)
         account = cursor.fetchone()
-        if ((context.verify(heslo, account['heslo'])) == True):
+        try:
+            valid = context.verify(heslo, account['heslo'])
+        except:
+            msg = 'Incorrect login / password !'
+            return render_template('login.html', msg = msg)
+        if (valid == True):
             if account:
-                cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (account['id_uziv'], ))
+                sql = "SELECT * FROM admin WHERE id_uzivatela = % s "
+                params = (account['id_uziv'],)
+                cursor.execute(sql, params)
                 admin = cursor.fetchone()
                 cursor.close()
                 if admin:
@@ -63,9 +72,13 @@ def nr_all_conf():
 def nr_conf(conf_id):
     msg = ''
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
+    sql = "SELECT * FROM konferencia WHERE id_kon = % s"
+    params = (conf_id,)
+    cursor.execute(sql, params)
     conf = cursor.fetchone()
-    cursor.execute('SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s', (conf_id, ))
+    sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s"
+    params = (conf_id,)
+    cursor.execute(sql, params)
     lecs = cursor.fetchall()
     cursor.close()
     if request.method == 'POST' and 'email' in request.form and 'meno' in request.form and 'priezvisko' in request.form and 'pocet' in request.form :
@@ -74,11 +87,17 @@ def nr_conf(conf_id):
         email = request.form['email']
         pocet = request.form['pocet']
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('INSERT INTO uzivatel VALUES (NULL, % s, % s, % s)', (meno, priezvisko, email, ))
+        sql = "INSERT INTO uzivatel VALUES (NULL, % s, % s, % s)"
+        params = (meno, priezvisko, email,)
+        cursor2.execute(sql, params)
         mysql.connection.commit()
-        cursor2.execute('SELECT * FROM uzivatel WHERE meno = % s AND priezvisko = % s AND email = % s', (meno, priezvisko, email, ))
+        sql = "SELECT * FROM uzivatel WHERE meno = % s AND priezvisko = % s AND email = % s"
+        params = (meno, priezvisko, email,)
+        cursor2.execute(sql, params)
         uzivatel = cursor2.fetchone()
-        cursor2.execute('INSERT INTO rezervacia VALUES (% s, % s, % s, % s)', (uzivatel['id_uziv'], conf_id, pocet, False, ))
+        sql = "INSERT INTO rezervacia VALUES (% s, % s, % s, % s)"
+        params = (uzivatel['id_uziv'], conf_id, pocet, False,)
+        cursor2.execute(sql, params)
         mysql.connection.commit()
         cursor2.close()
         msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
@@ -105,7 +124,9 @@ def register():
         heslo = context.hash(heslo)
         email = request.form['email']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM reg_uzivatel WHERE login = % s', (login, ))
+        sql = "SELECT * FROM reg_uzivatel WHERE login = % s"
+        params = (login,)
+        cursor.execute(sql, params)
         account = cursor.fetchone()
         if account:
             msg = 'Account already exists !'
@@ -114,11 +135,17 @@ def register():
         elif not re.match(r'[A-Za-z0-9]+', login):
             msg = 'name must contain only characters and numbers !'
         else:
-            cursor.execute('INSERT INTO uzivatel VALUES (NULL, % s, % s, % s)', (meno, priezvisko, email, ))
+            sql = "INSERT INTO uzivatel VALUES (NULL, % s, % s, % s)"
+            params = (meno, priezvisko, email,)
+            cursor.execute(sql, params)
             mysql.connection.commit()
-            cursor.execute('SELECT * FROM uzivatel WHERE meno = % s AND priezvisko = % s AND email = % s', (meno, priezvisko, email, ))
+            sql = "SELECT * FROM uzivatel WHERE meno = % s AND priezvisko = % s AND email = % s"
+            params = (meno, priezvisko, email,)
+            cursor.execute(sql, params)
             uzivatel = cursor.fetchone()
-            cursor.execute('INSERT INTO reg_uzivatel VALUES (% s, % s, % s)', (uzivatel['id_uziv'], login, heslo, ))
+            sql = "INSERT INTO reg_uzivatel VALUES (% s, % s, % s)"
+            params = (uzivatel['id_uziv'], login, heslo,)
+            cursor.execute(sql, params)
             mysql.connection.commit()
             cursor.close()
             msg = 'You have successfully registered !'
@@ -132,7 +159,9 @@ def index():
     admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
+        params = (session['id_uziv'],)
+        cursor.execute(sql, params)
         admin = cursor.fetchone()
         cursor.close()
         if admin:
@@ -145,7 +174,9 @@ def user_management():
     admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s "
+        params = (session['id_uziv'],)
+        cursor.execute(sql, params)
         admin = cursor.fetchone()
         cursor.close()
         if admin:
@@ -160,44 +191,42 @@ def your_account():
     admin_bool = False
     if 'loggedin' in session:
         cursor_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor_uzivatel.execute('SELECT * FROM uzivatel WHERE id_uziv = % s', (session['id_uziv'], ))
+        sql = "SELECT * FROM uzivatel WHERE id_uziv = % s"
+        params = (session['id_uziv'],)
+        cursor_uzivatel.execute(sql, params)
         account = cursor_uzivatel.fetchone()
-        cursor_uzivatel.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
+        params = (session['id_uziv'],)
+        cursor_uzivatel.execute(sql, params)
         admin = cursor_uzivatel.fetchone()
         if admin:
             admin_bool = True;    
         cursor_reg_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor_reg_uzivatel.execute('SELECT * FROM reg_uzivatel WHERE id_uziv = % s', (session['id_uziv'], ))
+        sql = "SELECT * FROM reg_uzivatel WHERE id_uziv = % s"
+        params = (session['id_uziv'],)
+        cursor_reg_uzivatel.execute(sql, params)
         reg_uzivatel = cursor_reg_uzivatel.fetchone() 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         if request.method == 'POST' and 'meno' in request.form and request.form['meno'] != "":
             meno = request.form['meno']
-            cursor.execute('UPDATE uzivatel SET  meno =% s WHERE id_uziv =% s', (meno, session['id_uziv'], ))
+            sql = "UPDATE uzivatel SET  meno =% s WHERE id_uziv =% s"
+            params = (meno, session['id_uziv'],)
+            cursor.execute(sql, params)
             mysql.connection.commit()
             msg+= 'First name updated, '
         if request.method == 'POST' and 'priezvisko' in request.form and request.form['priezvisko'] != "":
             priezvisko = request.form['priezvisko']
-            cursor.execute('UPDATE uzivatel SET  priezvisko =% s WHERE id_uziv =% s', (priezvisko, session['id_uziv'], ))
+            sql = "UPDATE uzivatel SET  priezvisko =% s WHERE id_uziv =% s"
+            params = (priezvisko, session['id_uziv'],)
+            cursor.execute(sql, params)
             mysql.connection.commit()
             msg+= 'Last name updated, '
-        '''
-        if request.method == 'POST' and 'login' in request.form and request.form['login'] != "":
-            login = request.form['login']
-            cursor.execute('SELECT * FROM reg_uzivatel WHERE login = % s', (login, ))
-            account = cursor.fetchone()
-            if account:
-                msg+= 'Username already exists !, '
-            elif not re.match(r'[A-Za-z0-9]+', login):
-                msg+= 'Username must contain only characters and numbers !, '
-            else:
-                cursor.execute('UPDATE reg_uzivatel SET login =% s WHERE id_uziv = % s', ( login, session['id_uziv'], ))
-                mysql.connection.commit()
-                msg+= 'Username updated, '
-        '''
         if request.method == 'POST' and 'heslo' in request.form and request.form['heslo'] != "":
             heslo = request.form['heslo']
             heslo = context.hash(heslo)
-            cursor.execute('UPDATE reg_uzivatel SET heslo =% s WHERE id_uziv = % s', ( heslo, session['id_uziv'], ))
+            sql = "UPDATE reg_uzivatel SET heslo =% s WHERE id_uziv = % s"
+            params = (heslo, session['id_uziv'],)
+            cursor.execute(sql, params)
             mysql.connection.commit()
             msg+= 'Password updated, '
             
@@ -206,15 +235,21 @@ def your_account():
             if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
                 msg+= 'Invalid email address !, '
             else:
-                cursor.execute('UPDATE uzivatel SET  email =% s WHERE id_uziv =% s', (email, session['id_uziv'], ))
+                sql = "UPDATE uzivatel SET  email =% s WHERE id_uziv =% s"
+                params = (email, session['id_uziv'],)
+                cursor.execute(sql, params)
                 mysql.connection.commit()
                 msg+= 'Email updated, '
         if msg != "":
             cursor_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor_uzivatel.execute('SELECT * FROM uzivatel WHERE id_uziv = % s', (session['id_uziv'], ))
+            sql = "SELECT * FROM uzivatel WHERE id_uziv = % s"
+            params = (session['id_uziv'],)
+            cursor_uzivatel.execute(sql, params)
             account = cursor_uzivatel.fetchone()    
             cursor_reg_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor_reg_uzivatel.execute('SELECT * FROM reg_uzivatel WHERE id_uziv = % s', (session['id_uziv'], ))
+            sql = "SELECT * FROM reg_uzivatel WHERE id_uziv = % s"
+            params = (session['id_uziv'],)
+            cursor_reg_uzivatel.execute(sql, params)
             reg_uzivatel = cursor_reg_uzivatel.fetchone() 
         return render_template("your_account.html", account = account, reg_uzivatel = reg_uzivatel, msg = msg[:-2], admin_bool = admin_bool)
 
@@ -226,9 +261,13 @@ def my_conferences():
     admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM konferencia WHERE login = % s', (session['login'], ))
+        sql = "SELECT * FROM konferencia WHERE login = % s"
+        params = (session['login'],)
+        cursor.execute(sql, params)
         confs = cursor.fetchall()
-        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
+        params = (session['id_uziv'],)
+        cursor.execute(sql, params)
         admin = cursor.fetchone()
         cursor.close()
         if admin:
@@ -241,11 +280,17 @@ def my_conferences():
 def my_conf(conf_id):
     admin_bool = False
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
+    sql = "SELECT * FROM konferencia WHERE id_kon = % s"
+    params = (conf_id,)
+    cursor.execute(sql, params)
     conf = cursor.fetchone()
-    cursor.execute('SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s', (conf_id, ))
+    sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s"
+    params = (conf_id,)
+    cursor.execute(sql, params)
     lecs = cursor.fetchall()
-    cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+    sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
+    params = (session['id_uziv'],)
+    cursor.execute(sql, params)
     admin = cursor.fetchone()
     cursor.close()
     if admin:
@@ -261,7 +306,9 @@ def all_conferences():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM konferencia')
         confs = cursor.fetchall()
-        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
+        params = (session['id_uziv'],)
+        cursor.execute(sql, params)
         admin = cursor.fetchone()
         cursor.close()
         if admin:
@@ -276,29 +323,43 @@ def r_conf(conf_id):
         msg = ''
         admin_bool = False
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM konferencia WHERE id_kon = % s', (conf_id, ))
+        sql = "SELECT * FROM konferencia WHERE id_kon = % s"
+        params = (conf_id,)
+        cursor.execute(sql, params)
         conf = cursor.fetchone()
-        cursor.execute('SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s', (conf_id, ))
+        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s"
+        params = (conf_id,)
+        cursor.execute(sql, params)
         lecs = cursor.fetchall()
-        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
+        params = (session['id_uziv'],)
+        cursor.execute(sql, params)
         admin = cursor.fetchone()
         if admin:
             admin_bool = True; 
         if request.method == 'POST' and 'pocet' in request.form :
             pocet = request.form['pocet']
             uzivatel = session['id_uziv']
-            cursor.execute('SELECT * FROM rezervacia WHERE id_uzivatela = % s AND id_konferencie = % s', (uzivatel, conf_id, ))
+            sql = "SELECT * FROM rezervacia WHERE id_uzivatela = % s AND id_konferencie = % s"
+            params = (uzivatel, conf_id,)
+            cursor.execute(sql, params)
             ordered = cursor.fetchone()
             if (ordered):
-                cursor.execute('UPDATE rezervacia SET pocet_listkov = pocet_listkov + % s WHERE id_uzivatela = % s AND id_konferencie = % s', (pocet, uzivatel, conf_id, ))
+                sql = "UPDATE rezervacia SET pocet_listkov = pocet_listkov + % s WHERE id_uzivatela = % s AND id_konferencie = % s"
+                params = (pocet, uzivatel, conf_id,)
+                cursor.execute(sql, params)
             else:
-                cursor.execute('INSERT INTO rezervacia VALUES (% s, % s, % s, % s)', (uzivatel, conf_id, pocet, False, ))
+                sql = "INSERT INTO rezervacia VALUES (% s, % s, % s, % s)"
+                params = (uzivatel, conf_id, pocet, False,)
+                cursor.execute(sql, params)
             mysql.connection.commit()
             msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             obsah = request.form['obsah']
-            cursor.execute('INSERT INTO ziadost_prednaska VALUES (% s, % s, % s, % s)', (conf_id, session['login'], nazov, obsah, ))
+            sql = "INSERT INTO ziadost_prednaska VALUES (% s, % s, % s, % s)"
+            params = (conf_id, session['login'], nazov, obsah,)
+            cursor.execute(sql, params)
             mysql.connection.commit()
             msg = 'You have successfully applied presentation on conference, now wait for confirmation!'
         elif request.method == 'POST':
@@ -316,7 +377,9 @@ def create_conference():
         admin_bool = False
         login = session['login']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
+        params = (session['id_uziv'],)
+        cursor.execute(sql, params)
         admin = cursor.fetchone()
         if admin:
             admin_bool = True; 
@@ -331,13 +394,17 @@ def create_conference():
             miestnosti = ""
             kapacita = 0
             for room in request.form.getlist('rooms'):
-                cursor.execute('SELECT kapacita FROM miestnost WHERE nazov = % s ', (room, ))
+                sql = "SELECT kapacita FROM miestnost WHERE nazov = % s"
+                params = (room,)
+                cursor.execute(sql, params)
                 kapacita_miestnosti = cursor.fetchone()
                 kapacita+= kapacita_miestnosti['kapacita']
                 miestnosti+=str(room)+","
             miestnosti = miestnosti[:-1]
             
-            cursor.execute('INSERT INTO konferencia VALUES (NULL, % s, % s, % s, % s, % s, % s, % s, % s, % s)', (nazov, zaner, obsah, od_datum, do_datum, cena, login, kapacita, miestnosti ))
+            sql = "INSERT INTO konferencia VALUES (NULL, % s, % s, % s, % s, % s, % s, % s, % s, % s)"
+            params = (nazov, zaner, obsah, od_datum, do_datum, cena, login, kapacita, miestnosti,)
+            cursor.execute(sql, params)
             mysql.connection.commit()
             kapacita_msg = "Capacity of conference: "+str(kapacita)
             msg = 'You have successfully created coference !'
