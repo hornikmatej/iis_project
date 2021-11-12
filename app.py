@@ -303,7 +303,7 @@ def my_reservations():
     return redirect(url_for('login'))   
 
 
-@app.route('/my_conf/<conf_id>', methods =['GET', 'POST'])
+@app.route('/my_conf/<conf_id>', methods = ['GET', 'POST'])
 def my_conf(conf_id):
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -312,7 +312,6 @@ def my_conf(conf_id):
         params = (conf_id, )
         cursor.execute(sql, params)
         conf = cursor.fetchone()
-        
         conf['miestnosti'] = conf['miestnosti'].split(",")
         
         sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s"
@@ -332,9 +331,20 @@ def my_conf(conf_id):
         admin_bool = True if admin else False
 
         if request.method == 'POST' and 'rooms' in request.form and 'datetime' in request.form and 'submit' in request.form and request.form['submit'] == 'Accept':
+            sql = "SELECT * FROM miestnost "
+            cursor.execute(sql)
+            rooms = cursor.fetchall()
+            room_id = ""
+            for room in rooms:
+                print(room)
+                if room['nazov'] == str(request.form['rooms']):
+                    room_id = int(room['id_miestnosti'])
+
             sql = "UPDATE prednaska SET id_miestnosti = % s, cas = % s, stav = % s WHERE id_pred = % s"
-            params = (request.form['rooms'], request.form['datetime'], "Accepted", request.form['id'])
+            params = (room_id, request.form['datetime'], "Accepted", "4")
+            print(request.form)
             cursor.execute(sql, params)
+            mysql.connection.commit()
             cursor.close() 
    
         return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, admin_bool = admin_bool)
@@ -361,7 +371,7 @@ def all_conferences():
     return redirect(url_for('login'))
 
 
-@app.route('/r_conf/<conf_id>', methods =['GET', 'POST'])
+@app.route('/r_conf/<conf_id>', methods = ['GET', 'POST'])
 def r_conf(conf_id):
     if 'loggedin' in session:
         msg = ''
@@ -420,7 +430,7 @@ def r_conf(conf_id):
     return redirect(url_for('login'))
 
 
-@app.route('/create_conference', methods =['GET', 'POST'])
+@app.route('/create_conference', methods = ['GET', 'POST'])
 def create_conference():
     if 'loggedin' in session:  
         msg = ''
@@ -476,7 +486,7 @@ def my_applications():
         admin = cursor.fetchone()
         admin_bool = True if admin else False
 
-        sql = "SELECT * FROM prednaska p JOIN reg_uzivatel r ON p.login = r.login JOIN konferencia k ON p.id_konferencie = k.id_kon WHERE r.id_uziv = % s"
+        sql = "SELECT * FROM prednaska p JOIN reg_uzivatel r ON p.login = r.login JOIN konferencia k ON p.id_konferencie = k.id_kon WHERE r.id_uziv = % s AND p.stav = 'In progress'"
         params = (session['id_uziv'], )
         cursor.execute(sql, params)
         applications_in_progress = cursor.fetchall()

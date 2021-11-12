@@ -62,7 +62,7 @@
                             <td>{{ application['nazov'] }}</td>
                             <td>{{ application['obsah'] }}</td>
                             <td>{{ application['m.nazov'] }}</td>
-                            <td>{{ application['p.cas'] }}</td>
+                            <td>{{ application['cas'] }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -77,7 +77,7 @@
                     </tr>
                 </thead>    
                 <tbody>
-                    {% for application in applications_accepted %}    
+                    {% for application in applications_declined %}    
                         <tr>
                             <td>{{ application['k.nazov'] }}</td>
                             <td>{{ application['nazov'] }}</td>

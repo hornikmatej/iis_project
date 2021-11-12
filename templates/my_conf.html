@@ -73,7 +73,7 @@
                 </thead>
                 <tbody>
                     {% for application in applications%}
-                    <form action="{{ url_for('my_conf', conf_id=conf['id_kon']) }}" method="post" autocomplete="off"></form>
+                    <form action="{{ url_for('my_conf', conf_id=conf['id_kon']) }}" method="post" autocomplete="off">
                         <tr>
                             <td name="id" id="id">{{ application['id_pred'] }}</td>
                             <td>{{ application['login'] }}</td>
@@ -90,11 +90,11 @@
                                 <input type="datetime-local" name="datetime" placeholder="Date" class="textbox" id="datetime" min="datetime-local" value="datetime-local" step="3600" required>
                             </td>
                             <td>
-                                <button type="submit" name="submit" value="Accept">Accept</button>
+                                <input type="submit" name="submit" id="submit" value="Accept">
                             </td>
-                            <td>
-                                <button type="submit" name="submit" value="Decline" formnovalidate>Decline</button>
-                            </td>
+                            <!-- <td>
+                                <input type="submit" name="submit" value="Decline" formnovalidate>
+                            </td> -->
                         </tr>
                     </form>
                     {% endfor %}
