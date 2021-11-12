@@ -33,28 +33,69 @@
                 <h2>{{ conf['do_datum'] }}</h2>
                 <h2>{{ conf['cena'] }}</h2>
                 <h2>{{ conf['login'] }}</h2>
-            </div>
+            </div><br>
+            <label>Presentations:</label><br>
+            {% for room in conf['miestnosti'] %}
+            <label>{{ room }}</label>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>lecture</th>
-                        <th>room</th>
-                        <th>occupancy</th>
+                        <th>Date & Time:</th>
+                        <th>Speaker:</th>
+                        <th>Presentation:</th>
                     </tr>
-                </thead>    
+                </thead>
                 <tbody>
-                    {% for lec in lecs %}    
-                        <tr>
-                            <td>{{ lec['nazov'] }}</td>
-                            <td>{{ lec['m.nazov'] }}</td>
-                            <td>{{ lec['zaplnenost'] }} / {{ lec['kapacita'] }}</td>
-                        </tr>
+                    {% for lec in lecs %}
+                    {% if lec['m.nazov'] == room %}
+                    <tr>
+                        <td>{{ lec['cas'] }}</td>
+                        <td>{{ lec['login'] }}</td>
+                        <td>{{ lec['nazov'] }}</td>
+                    </tr>
+                    {% endif %}
                     {% endfor %}
                 </tbody>
-            </table></br></br>
-            <td>Price: {{ conf['cena'] }}</td></br></br>
-
-
+            </table><br>
+            {% endfor %}
+            <label for="applications">Applications:</label>
+            <table name="applications" id="applications" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Name:</th>
+                        <th>Presention:</th>
+                        <th>About:</th>
+                        <th>Room:</th>
+                        <th>Date & Time:</th>
+                        <th>Decision:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications%}
+                    <tr>
+                        <td>{{ application['login'] }}</td>
+                        <td>{{ application['nazov'] }}</td>
+                        <td>{{ application['obsah'] }}</td>
+                        <td>
+                            <select name="rooms" id="rooms" required>
+                                {% for room in conf['miestnosti'] %}    
+                                    <option value = room>{{ room }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="datetime-local" name="datetime" placeholder="Date" class="textbox" id="datetime" min="datetime-local" value="datetime-local" step="3600" required>
+                        </td>
+                        <td>
+                            <input type="submit" value="Accept">
+                        </td>
+                        <td>
+                            <input type="submit" value="Decline" formnovalidate>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table><br>
         </div>
     </body>
 </html>

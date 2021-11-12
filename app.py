@@ -296,24 +296,32 @@ def my_reservations():
 @app.route('/my_conf/<conf_id>', methods =['GET', 'POST'])
 def my_conf(conf_id):
     admin_bool = False
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    sql = "SELECT * FROM konferencia WHERE id_kon = % s"
-    params = (conf_id,)
-    cursor.execute(sql, params)
-    conf = cursor.fetchone()
-    sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s"
-    params = (conf_id,)
-    cursor.execute(sql, params)
-    lecs = cursor.fetchall()
-    sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
-    params = (session['id_uziv'],)
-    cursor.execute(sql, params)
-    admin = cursor.fetchone()
-    cursor.close()
-    if admin:
-        admin_bool = True; 
-    print(lecs)
-    return render_template("my_conf.html", conf = conf, lecs = lecs, admin_bool = admin_bool)
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        sql = 'SELECT * FROM konferencia WHERE id_kon = % s'
+        params = (conf_id, )
+        cursor.execute(sql, params)
+        conf = cursor.fetchone()
+        conf['miestnosti'] = conf['miestnosti'].split(",")
+        sql = 'SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s'
+        params = (conf_id, )
+        cursor.execute(sql, params)
+        lecs = cursor.fetchall()
+        sql = 'SELECT * FROM admin WHERE id_uzivatela = % s ' 
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        admin = cursor.fetchone()
+        sql = 'SELECT * FROM ziadost_prednaska WHERE id_konferencie = % s'
+        params = (conf_id, )
+        cursor.execute(sql, params)
+        applications = cursor.fetchall()
+        cursor.close()
+        if admin:
+            admin_bool = True; 
+        print(conf)
+        print(lecs[0])
+        return render_template("my_conf.html", conf = conf, lecs = lecs, applications = applications, admin_bool = admin_bool)
+    return redirect(url_for('login'))
 
 
 @app.route("/all_conferences", methods = ['GET', 'POST'])
@@ -382,7 +390,11 @@ def r_conf(conf_id):
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
         cursor.close()
-        return render_template("r_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id, admin_bool = admin_bool)
+        # redirect if clicked conference is mine
+        if conf['login'] == session['login']:
+            return redirect(url_for('my_conf', conf_id = conf_id))
+        else:
+            return render_template("r_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id, admin_bool = admin_bool)
     return redirect(url_for('login'))
 
 
