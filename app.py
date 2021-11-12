@@ -145,12 +145,24 @@ def user_management():
     admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
-        admin = cursor.fetchone()
+        # cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        cursor.execute('SELECT * FROM admin')
+        admin = cursor.fetchall()
+        admin = [id for id_list in admin for id in id_list.values()]
+
+        cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
+        users = cursor.fetchall()
+        
+        users = tuple(filter(lambda x: x['login'] != session['login'], users))
+        for user in users:
+            if user['id_uziv'] in admin:
+                user['admin'] = "Yes"
+            else:
+                user['admin'] = "No"
         cursor.close()
         if admin:
-            admin_bool = True;
-        return render_template("user_management.html", admin_bool = admin_bool)
+            admin_bool = True
+        return render_template("user_management.html", admin_bool = admin_bool, users = users)
     return redirect(url_for('login'))
 
 
