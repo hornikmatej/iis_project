@@ -445,6 +445,10 @@ def my_conf(conf_id):
         # reservations = cursor.fetchall()
         # print(request.form)
         # # print(reservations)
+        sql = "SELECT * FROM rezervacia r JOIN uzivatel u ON r.id_uzivatela = u.id_uziv WHERE r.id_konferencie = % s AND r.stav = 'In progress'"
+        params = (conf_id, )
+        cursor.execute(sql, params)
+        incoming_reservations = cursor.fetchall()
 
         mysql.connection.commit()
         cursor.close() 
