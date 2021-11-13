@@ -326,6 +326,28 @@ def my_reservations():
         cursor.execute(sql, params)
         reservations_in_progress = cursor.fetchall()
 
+        if request.method == 'POST' and 'id_rez' in request.form and 'pay_submit' in request.form and request.form['pay_submit'] == 'Pay':
+            sql = "UPDATE rezervacia SET uhradene = 'ano' WHERE id_rez = % s"
+            params = (request.form['id_rez'], )
+            cursor.execute(sql, params)
+            mysql.connection.commit()
+
+        sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'In progress'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        reservations_in_progress = cursor.fetchall()
+
+        sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'Accepted'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        reservations_accepted = cursor.fetchall()
+
+        if request.method == 'POST' and 'id_rez' in request.form and 'pay_submit' in request.form and request.form['pay_submit'] == 'Pay':
+            sql = "UPDATE rezervacia SET uhradene = 'ano' WHERE id_rez = % s"
+            params = (request.form['id_rez'], )
+            cursor.execute(sql, params)
+            mysql.connection.commit()
+
         sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'Accepted'"
         params = (session['id_uziv'], )
         cursor.execute(sql, params)
@@ -390,12 +412,10 @@ def my_conf(conf_id):
             date = datetime.strptime(request.form['datetime'],"%Y-%m-%dT%H:%M")
 
             if start <= date <= end:
-
                 sql = "SELECT * FROM prednaska WHERE id_miestnosti = % s AND cas = %s AND stav = %s"
                 params = (room_id, request.form['datetime'], "Accepted",)
                 cursor.execute(sql, params)
                 same_time_applicaton = cursor.fetchall()
-
                 if(same_time_applicaton):
                     msg = 'Another application at same time and room already exist!' 
 
@@ -403,9 +423,9 @@ def my_conf(conf_id):
                     sql = "UPDATE prednaska SET id_miestnosti = % s, cas = % s, stav = % s WHERE id_pred = % s"
                     params = (room_id, request.form['datetime'], "Accepted", request.form['id_pred'],)
                     cursor.execute(sql, params)
+            
             else:
                 msg = 'Application does not take place at the time of the conference!'
-
 
         elif request.method == 'POST' and 'id_pred' in request.form and 'submit' in request.form and request.form['submit'] == 'Decline':
             sql = "UPDATE prednaska SET stav = % s WHERE id_pred = % s"
@@ -439,12 +459,6 @@ def my_conf(conf_id):
             cursor.execute(sql, params)
             mysql.connection.commit()
 
-        # sql = "SELECT * FROM rezervacia WHERE id_konferencie = % s"
-        # params = (conf_id, )
-        # cursor.execute(sql, params)
-        # reservations = cursor.fetchall()
-        # print(request.form)
-        # # print(reservations)
         sql = "SELECT * FROM rezervacia r JOIN uzivatel u ON r.id_uzivatela = u.id_uziv WHERE r.id_konferencie = % s AND r.stav = 'In progress'"
         params = (conf_id, )
         cursor.execute(sql, params)
