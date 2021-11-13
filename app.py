@@ -330,22 +330,38 @@ def my_conf(conf_id):
         admin = cursor.fetchone()
         admin_bool = True if admin else False
 
-        if request.method == 'POST' and 'rooms' in request.form and 'datetime' in request.form and 'submit' in request.form and request.form['submit'] == 'Accept':
+        if request.method == 'POST'and 'id_pred' in request.form and 'rooms' in request.form and 'datetime' in request.form and 'submit' in request.form and request.form['submit'] == 'Accept':
             sql = "SELECT * FROM miestnost "
             cursor.execute(sql)
             rooms = cursor.fetchall()
             room_id = ""
             for room in rooms:
-                print(room)
                 if room['nazov'] == str(request.form['rooms']):
                     room_id = int(room['id_miestnosti'])
 
             sql = "UPDATE prednaska SET id_miestnosti = % s, cas = % s, stav = % s WHERE id_pred = % s"
-            params = (room_id, request.form['datetime'], "Accepted", "4")
+            params = (room_id, request.form['datetime'], "Accepted", request.form['id_pred'],)
             print(request.form)
             cursor.execute(sql, params)
-            mysql.connection.commit()
-            cursor.close() 
+
+        elif request.method == 'POST' and 'id_pred' in request.form and 'submit' in request.form and request.form['submit'] == 'Decline':
+            sql = "UPDATE prednaska SET stav = % s WHERE id_pred = % s"
+            params = ("Declined", request.form['id_pred'],)
+            print(request.form)
+            cursor.execute(sql, params)
+
+        sql = "SELECT * FROM prednaska WHERE id_konferencie = % s AND stav = %s"
+        params = (conf_id, "In progress")
+        cursor.execute(sql, params)
+        applications = cursor.fetchall()
+
+        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s"
+        params = (conf_id, "Accepted")
+        cursor.execute(sql, params)
+        presentations = cursor.fetchall()
+
+        mysql.connection.commit()
+        cursor.close() 
         return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, admin_bool = admin_bool)
     return redirect(url_for('login'))
 
@@ -507,4 +523,4 @@ def my_applications():
 
 
 if __name__ == "__main__":
-    app.run(host ="localhost", port = int("5000"))
+    app.run(host ="localhost", port = int("4999"))

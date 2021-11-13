@@ -75,11 +75,13 @@
                     {% for application in applications%}
                     <form action="{{ url_for('my_conf', conf_id=conf['id_kon']) }}" method="post" autocomplete="off">
                         <tr>
-                            <td name="id" id="id">{{ application['id_pred'] }}</td>
+                            <td name="id_pred">{{ application['id_pred'] }}</td>
+                            <input type="hidden" name="id_pred" id="id_pred" value="{{ application['id_pred'] }}" />
                             <td>{{ application['login'] }}</td>
                             <td>{{ application['nazov'] }}</td>
                             <td>{{ application['obsah'] }}</td>
                             <td>
+                                
                                 <select name="rooms" id="rooms" required>
                                     {% for room in conf['miestnosti'] %}    
                                         <option value = {{ room }}>{{ room }}</option>
@@ -92,10 +94,11 @@
                             <td>
                                 <input type="submit" name="submit" id="submit" value="Accept">
                             </td>
-                            <!-- <td>
+                            <td>
                                 <input type="submit" name="submit" value="Decline" formnovalidate>
-                            </td> -->
+                            </td>
                         </tr>
+                        
                     </form>
                     {% endfor %}
                 </tbody>
