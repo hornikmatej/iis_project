@@ -430,15 +430,12 @@ def my_conf(conf_id):
         if request.method == 'POST' and 'id_rez' in request.form and 'reservation_submit' in request.form and request.form['reservation_submit'] == 'Confirm':
             sql = "UPDATE rezervacia SET stav = 'Accepted' WHERE id_rez = % s"
             params = (request.form['id_rez'], )
-            print("STUK")
-            print(request.form)
             cursor.execute(sql, params)
             mysql.connection.commit()
 
         elif request.method == 'POST' and 'id_rez' in request.form and 'reservation_submit' in request.form and request.form['reservation_submit'] == 'Decline':
             sql = "UPDATE rezervacia SET stav = 'Declined' WHERE id_rez = % s"
             params = (request.form['id_rez'], )
-            print(request.form)
             cursor.execute(sql, params)
             mysql.connection.commit()
 
