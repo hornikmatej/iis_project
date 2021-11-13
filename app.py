@@ -3,15 +3,19 @@ import MySQLdb.cursors
 from flask_mysqldb import MySQL
 from passlib.context import CryptContext
 from flask import Flask, render_template, request, redirect, url_for, session
+from datetime import timedelta
+from datetime import datetime
 
 
 app = Flask(__name__)
 
 app.secret_key = 'your secret key'
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=10)
 app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
 app.config['MYSQL_USER'] = 'sql11447453'
 app.config['MYSQL_PASSWORD'] = 'e2KGxNGz6H'
 app.config['MYSQL_DB'] = 'sql11447453'
+
 
 mysql = MySQL(app)
 
@@ -83,7 +87,8 @@ def nr_conf(conf_id):
     cursor.execute(sql, params)
     lecs = cursor.fetchall()
     cursor.close()
-    if request.method == 'POST' and 'email' in request.form and 'meno' in request.form and 'priezvisko' in request.form and 'pocet' in request.form :
+    print (request.form)
+    if request.method == 'POST' and 'email' in request.form and 'meno' in request.form and 'priezvisko' in request.form and 'pocet' in request.form:
         meno = request.form['meno']
         priezvisko = request.form['priezvisko']
         email = request.form['email']
@@ -97,8 +102,8 @@ def nr_conf(conf_id):
         params = (meno, priezvisko, email,)
         cursor2.execute(sql, params)
         uzivatel = cursor2.fetchone()
-        sql = "INSERT INTO rezervacia VALUES (% s, % s, % s, % s)"
-        params = (uzivatel['id_uziv'], conf_id, pocet, False,)
+        sql = "INSERT INTO rezervacia VALUES (NULL, % s, % s, % s, % s, % s, % s)"
+        params = (uzivatel['id_uziv'], conf_id, pocet, "nie", "In progress", (datetime.now()).strftime("%Y-%m-%d %H:%M:%S"))
         cursor2.execute(sql, params)
         mysql.connection.commit()
         cursor2.close()
@@ -435,18 +440,9 @@ def r_conf(conf_id):
         if request.method == 'POST' and 'pocet' in request.form :
             pocet = request.form['pocet']
             uzivatel = session['id_uziv']
-            sql = "SELECT * FROM rezervacia WHERE id_uzivatela = % s AND id_konferencie = % s"
-            params = (uzivatel, conf_id,)
+            sql = "INSERT INTO rezervacia VALUES (NULL, % s, % s, % s, % s, % s, % s)"
+            params = (uzivatel, conf_id, pocet, "nie", "In progress", (datetime.now()).strftime("%Y-%m-%d %H:%M:%S"))
             cursor.execute(sql, params)
-            ordered = cursor.fetchone()
-            if (ordered):
-                sql = "UPDATE rezervacia SET pocet_listkov = pocet_listkov + % s WHERE id_uzivatela = % s AND id_konferencie = % s"
-                params = (pocet, uzivatel, conf_id,)
-                cursor.execute(sql, params)
-            else:
-                sql = "INSERT INTO rezervacia VALUES (% s, % s, % s, % s)"
-                params = (uzivatel, conf_id, pocet, False,)
-                cursor.execute(sql, params)
             mysql.connection.commit()
             msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:

@@ -57,8 +57,9 @@
             <td>Reservation:</td></br></br>
             <div class="Reserve" align="center">
                 <div class="reservebottom" align="center">
+                    <label for="Number_of_tickets">How many tickets do you want to reserve?</label>
                     <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
-                        <input type="number" id="pocet" name="pocet" placeholder="Number of tickets" class="textbox" aria-describedby="basic-addon1" min="1" required></br></br>
+                        <input type="number" id="pocet" name="pocet" placeholder="" class="textbox" aria-describedby="basic-addon1" min="1" max="10" required></br></br>
                         <input type="submit" class="btn btn-outline-secondary" value="Reserve">
                     </form>
                     
