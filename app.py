@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-from flask_mysqldb import MySQL
-import MySQLdb.cursors
 import re
+import MySQLdb.cursors
+from flask_mysqldb import MySQL
 from passlib.context import CryptContext
+from flask import Flask, render_template, request, redirect, url_for, session
 
 
 app = Flask(__name__)
@@ -21,19 +21,21 @@ context = CryptContext(
         pbkdf2_sha256__default_rounds=50000
 )
 
+
 @app.route('/')
 @app.route('/login', methods =['GET', 'POST'])
 def login():
     msg = ''
     if request.method == 'POST' and 'login' in request.form and 'heslo' in request.form:
-        admin_bool = False
         login = request.form['login']
         heslo = request.form['heslo']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
         sql = "SELECT * FROM reg_uzivatel WHERE login = % s"
         params = (login,)
         cursor.execute(sql, params)
         account = cursor.fetchone()
+        
         try:
             valid = context.verify(heslo, account['heslo'])
         except:
@@ -45,9 +47,9 @@ def login():
                 params = (account['id_uziv'],)
                 cursor.execute(sql, params)
                 admin = cursor.fetchone()
+                admin_bool = True if admin else False
+                
                 cursor.close()
-                if admin:
-                    admin_bool = True;
                 session['loggedin'] = True
                 session['id_uziv'] = account['id_uziv']
                 session['login'] = account['login']
@@ -156,31 +158,31 @@ def register():
 
 @app.route("/index")
 def index():
-    admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
         params = (session['id_uziv'],)
         cursor.execute(sql, params)
         admin = cursor.fetchone()
+        admin_bool = True if admin else False
+
         cursor.close()
-        if admin:
-            admin_bool = True;
+        
         return render_template("index.html", admin_bool = admin_bool)
     return redirect(url_for('login'))
 
 @app.route("/user_management")
 def user_management():
-    admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s "
         params = (session['id_uziv'],)
         cursor.execute(sql, params)
         admin = cursor.fetchone()
+        admin_bool = True if admin else False
+        
         cursor.close()
-        if admin:
-            admin_bool = True;
+        
         return render_template("user_management.html", admin_bool = admin_bool)
     return redirect(url_for('login'))
 
@@ -188,19 +190,20 @@ def user_management():
 @app.route("/your_account", methods =['GET', 'POST'])
 def your_account():
     msg = ''
-    admin_bool = False
     if 'loggedin' in session:
         cursor_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
         sql = "SELECT * FROM uzivatel WHERE id_uziv = % s"
         params = (session['id_uziv'],)
         cursor_uzivatel.execute(sql, params)
         account = cursor_uzivatel.fetchone()
+        
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
         params = (session['id_uziv'],)
         cursor_uzivatel.execute(sql, params)
         admin = cursor_uzivatel.fetchone()
-        if admin:
-            admin_bool = True;    
+        admin_bool = True if admin else False
+
         cursor_reg_uzivatel = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         sql = "SELECT * FROM reg_uzivatel WHERE id_uziv = % s"
         params = (session['id_uziv'],)
@@ -258,37 +261,44 @@ def your_account():
 
 @app.route("/my_conferences")
 def my_conferences():
-    admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
         sql = "SELECT * FROM konferencia WHERE login = % s"
         params = (session['login'],)
         cursor.execute(sql, params)
         confs = cursor.fetchall()
+        
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
         params = (session['id_uziv'],)
         cursor.execute(sql, params)
         admin = cursor.fetchone()
+        admin_bool = True if admin else False
+
         cursor.close()
-        if admin:
-            admin_bool = True; 
+        
         return render_template("my_conferences.html", confs=confs, admin_bool = admin_bool)
     return redirect(url_for('login'))
 
 
 @app.route("/my_reservations", methods = ['GET', 'POST'])
 def my_reservations():
-    admin_bool = False;
+    admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        
+        sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s "
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
         ress = cursor.fetchall()
-        print(ress)
-        cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+                
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s "
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
         admin = cursor.fetchone()
+        admin_bool = True if admin else False
+
         cursor.close()
-        if admin:
-            admin_bool = True;
         return render_template("my_reservations.html", ress=ress, admin_bool = admin_bool)
     return redirect(url_for('login'))   
 
@@ -342,42 +352,46 @@ def my_conf(conf_id):
 
 @app.route("/all_conferences", methods = ['GET', 'POST'])
 def all_conferences():
-    admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
         cursor.execute('SELECT * FROM konferencia')
         confs = cursor.fetchall()
+        
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
         params = (session['id_uziv'],)
         cursor.execute(sql, params)
         admin = cursor.fetchone()
+        admin_bool = True if admin else False
+
         cursor.close()
-        if admin:
-            admin_bool = True; 
+
         return render_template("all_conferences.html", confs=confs, admin_bool = admin_bool)
     return redirect(url_for('login'))
 
 
-@app.route('/r_conf/<conf_id>', methods =['GET', 'POST'])
+@app.route('/r_conf/<conf_id>', methods = ['GET', 'POST'])
 def r_conf(conf_id):
     if 'loggedin' in session:
         msg = ''
-        admin_bool = False
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
         sql = "SELECT * FROM konferencia WHERE id_kon = % s"
         params = (conf_id,)
         cursor.execute(sql, params)
         conf = cursor.fetchone()
+        
         sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s"
         params = (conf_id,)
         cursor.execute(sql, params)
         lecs = cursor.fetchall()
+        
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
         params = (session['id_uziv'],)
         cursor.execute(sql, params)
         admin = cursor.fetchone()
-        if admin:
-            admin_bool = True; 
+        admin_bool = True if admin else False
+        
         if request.method == 'POST' and 'pocet' in request.form :
             pocet = request.form['pocet']
             uzivatel = session['id_uziv']
@@ -398,7 +412,7 @@ def r_conf(conf_id):
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             obsah = request.form['obsah']
-            sql = "INSERT INTO ziadost_prednaska VALUES (% s, % s, % s, % s)"
+            sql = "INSERT INTO prednaska VALUES (NULL, % s, NULL, NULL, % s, % s, % s, 'In progress')"
             params = (conf_id, session['login'], nazov, obsah,)
             cursor.execute(sql, params)
             mysql.connection.commit()
@@ -406,6 +420,7 @@ def r_conf(conf_id):
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
         cursor.close()
+
         # redirect if clicked conference is mine
         if conf['login'] == session['login']:
             return redirect(url_for('my_conf', conf_id = conf_id))
@@ -414,20 +429,18 @@ def r_conf(conf_id):
     return redirect(url_for('login'))
 
 
-@app.route('/create_conference', methods =['GET', 'POST'])
+@app.route('/create_conference', methods = ['GET', 'POST'])
 def create_conference():
     if 'loggedin' in session:  
         msg = ''
         kapacita_msg = ""
-        admin_bool = False
         login = session['login']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
         params = (session['id_uziv'],)
         cursor.execute(sql, params)
         admin = cursor.fetchone()
-        if admin:
-            admin_bool = True; 
+        admin_bool = True if admin else False
         if request.method == 'POST' and 'nazov' in request.form and 'zaner' in request.form and 'od_datum' in request.form and 'do_datum' in request.form and 'cena' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             zaner = request.form['zaner']
@@ -459,20 +472,37 @@ def create_conference():
         return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg)
     return redirect(url_for('login'))
 
+
 @app.route("/my_applications", methods = ['GET', 'POST'])
 def my_applications():
     if 'loggedin' in session:
         msg = ''
-        admin_bool = False
-        login = session['login']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
-        params = (session['id_uziv'],)
+        params = (session['id_uziv'], )
         cursor.execute(sql, params)
         admin = cursor.fetchone()
-        if admin:
-            admin_bool = True; 
-        return render_template("my_applications.html", msg = msg, admin_bool = admin_bool)
+        admin_bool = True if admin else False
+
+        sql = "SELECT * FROM prednaska p JOIN reg_uzivatel r ON p.login = r.login JOIN konferencia k ON p.id_konferencie = k.id_kon WHERE r.id_uziv = % s AND p.stav = 'In progress'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        applications_in_progress = cursor.fetchall()
+        
+        sql = "SELECT * FROM prednaska p JOIN reg_uzivatel r ON p.login = r.login JOIN konferencia k ON p.id_konferencie = k.id_kon JOIN miestnost m ON p.id_miestnosti = m.id_miestnosti WHERE r.id_uziv = % s AND p.stav = 'Accepted'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        applications_accepted = cursor.fetchall()
+        
+        sql = "SELECT * FROM prednaska p JOIN reg_uzivatel r ON p.login = r.login JOIN konferencia k ON p.id_konferencie = k.id_kon WHERE r.id_uziv = % s AND p.stav = 'Declined'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        applications_declined = cursor.fetchall()
+
+        cursor.close()
+        
+        return render_template("my_applications.html", msg=msg, applications_in_progress=applications_in_progress, applications_accepted=applications_accepted, applications_declined=applications_declined, admin_bool=admin_bool)
     return redirect(url_for('login'))
 
 
