@@ -39,6 +39,7 @@
                             <th>Email</th>
                             <th>User ID</th>
                             <th>Admin</th>
+                            <th>Admin Rights</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +50,14 @@
                                 <td>{{ user['email'] }}</td>
                                 <td>{{ user['id_uziv'] }}</td>
                                 <td>{{ user['admin'] }}</td>
+                                <td>
+                                    <form action="{{ url_for('user_management') }}" method="post" id='a_yes'>
+                                        <button name="button1" value="{{ user['id_uziv'] }}">Add</button>
+                                    </form>
+                                    <form action="{{ url_for('user_management') }}" method="post" id='a_no'>
+                                        <button name="button2" value="{{ user['id_uziv'] }}">Remove</button>
+                                    </form>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

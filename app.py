@@ -140,11 +140,24 @@ def index():
         return render_template("index.html", admin_bool = admin_bool)
     return redirect(url_for('login'))
 
-@app.route("/user_management")
+@app.route("/user_management", methods =['GET', 'POST'])
 def user_management():
     admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        if request.method == 'POST':
+            if list(request.form.keys())[0] == 'button1':
+                try:        
+                    cursor.execute('INSERT INTO admin VALUES (% s)', (request.form['button1'], ))
+                    mysql.connection.commit()
+                except (MySQLdb._exceptions.IntegrityError):
+                    # vlozenie uz admina do tabulky
+                    pass
+
+            if list(request.form.keys())[0] == 'button2':
+                cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
+                mysql.connection.commit()
+
         # cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
         cursor.execute('SELECT * FROM admin')
         admin = cursor.fetchall()
@@ -159,9 +172,11 @@ def user_management():
                 user['admin'] = "Yes"
             else:
                 user['admin'] = "No"
-        cursor.close()
+        
         if admin:
             admin_bool = True
+        
+        cursor.close()
         return render_template("user_management.html", admin_bool = admin_bool, users = users)
     return redirect(url_for('login'))
 
