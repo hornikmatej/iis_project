@@ -293,34 +293,50 @@ def my_reservations():
     return redirect(url_for('login'))   
 
 
-@app.route('/my_conf/<conf_id>', methods =['GET', 'POST'])
+@app.route('/my_conf/<conf_id>', methods = ['GET', 'POST'])
 def my_conf(conf_id):
-    admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        sql = 'SELECT * FROM konferencia WHERE id_kon = % s'
+        
+        sql = "SELECT * FROM konferencia WHERE id_kon = % s"
         params = (conf_id, )
         cursor.execute(sql, params)
         conf = cursor.fetchone()
         conf['miestnosti'] = conf['miestnosti'].split(",")
-        sql = 'SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s'
-        params = (conf_id, )
+        
+        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s"
+        params = (conf_id, "Accepted")
         cursor.execute(sql, params)
-        lecs = cursor.fetchall()
-        sql = 'SELECT * FROM admin WHERE id_uzivatela = % s ' 
+        presentations = cursor.fetchall()
+
+        sql = "SELECT * FROM prednaska WHERE id_konferencie = % s AND stav = %s"
+        params = (conf_id, "In progress")
+        cursor.execute(sql, params)
+        applications = cursor.fetchall()
+
+        sql = "SELECT * FROM admin WHERE id_uzivatela = % s"
         params = (session['id_uziv'], )
         cursor.execute(sql, params)
         admin = cursor.fetchone()
-        sql = 'SELECT * FROM ziadost_prednaska WHERE id_konferencie = % s'
-        params = (conf_id, )
-        cursor.execute(sql, params)
-        applications = cursor.fetchall()
-        cursor.close()
-        if admin:
-            admin_bool = True; 
-        print(conf)
-        print(lecs[0])
-        return render_template("my_conf.html", conf = conf, lecs = lecs, applications = applications, admin_bool = admin_bool)
+        admin_bool = True if admin else False
+
+        if request.method == 'POST' and 'rooms' in request.form and 'datetime' in request.form and 'submit' in request.form and request.form['submit'] == 'Accept':
+            sql = "SELECT * FROM miestnost "
+            cursor.execute(sql)
+            rooms = cursor.fetchall()
+            room_id = ""
+            for room in rooms:
+                print(room)
+                if room['nazov'] == str(request.form['rooms']):
+                    room_id = int(room['id_miestnosti'])
+
+            sql = "UPDATE prednaska SET id_miestnosti = % s, cas = % s, stav = % s WHERE id_pred = % s"
+            params = (room_id, request.form['datetime'], "Accepted", "4")
+            print(request.form)
+            cursor.execute(sql, params)
+            mysql.connection.commit()
+            cursor.close() 
+        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, admin_bool = admin_bool)
     return redirect(url_for('login'))
 
 

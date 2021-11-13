@@ -72,27 +72,29 @@
                 </thead>
                 <tbody>
                     {% for application in applications%}
-                    <tr>
-                        <td>{{ application['login'] }}</td>
-                        <td>{{ application['nazov'] }}</td>
-                        <td>{{ application['obsah'] }}</td>
-                        <td>
-                            <select name="rooms" id="rooms" required>
-                                {% for room in conf['miestnosti'] %}    
-                                    <option value = room>{{ room }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            <input type="datetime-local" name="datetime" placeholder="Date" class="textbox" id="datetime" min="datetime-local" value="datetime-local" step="3600" required>
-                        </td>
-                        <td>
-                            <input type="submit" value="Accept">
-                        </td>
-                        <td>
-                            <input type="submit" value="Decline" formnovalidate>
-                        </td>
-                    </tr>
+                    <form action="{{ url_for('my_conf', conf_id=conf['id_kon']) }}"  method="post" autocomplete="off">
+                        <tr>
+                            <td>{{ application['login'] }}</td>
+                            <td>{{ application['nazov'] }}</td>
+                            <td>{{ application['obsah'] }}</td>
+                            <td>
+                                <select name="rooms" id="rooms" required>
+                                    {% for room in conf['miestnosti'] %}    
+                                        <option value = {{ room }}>{{ room }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="datetime-local" name="datetime" placeholder="Date" class="textbox" id="datetime" min="datetime-local" value="datetime-local" step="3600" required>
+                            </td>
+                            <td>
+                                <button type="submit" value="Accept" name="submit"> Accept </button>
+                            </td>
+                            <td>
+                                <button type="submit" value="Decline" name="submit" formnovalidate> Decline </button>
+                            </td>
+                        </tr>
+                    </form>
                     {% endfor %}
                 </tbody>
             </table><br>
