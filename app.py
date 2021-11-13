@@ -3,8 +3,8 @@ import MySQLdb.cursors
 from flask_mysqldb import MySQL
 from passlib.context import CryptContext
 from flask import Flask, render_template, request, redirect, url_for, session
-from datetime import timedelta
-from datetime import datetime
+from datetime import datetime, timedelta
+
 
 
 app = Flask(__name__)
@@ -87,7 +87,7 @@ def nr_conf(conf_id):
     cursor.execute(sql, params)
     lecs = cursor.fetchall()
     cursor.close()
-    print (request.form)
+    #print (request.form)
     if request.method == 'POST' and 'email' in request.form and 'meno' in request.form and 'priezvisko' in request.form and 'pocet' in request.form:
         meno = request.form['meno']
         priezvisko = request.form['priezvisko']
@@ -334,6 +334,7 @@ def my_reservations():
 
 @app.route('/my_conf/<conf_id>', methods = ['GET', 'POST'])
 def my_conf(conf_id):
+    msg = ''
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         
@@ -368,15 +369,36 @@ def my_conf(conf_id):
                 if room['nazov'] == str(request.form['rooms']):
                     room_id = int(room['id_miestnosti'])
 
-            sql = "UPDATE prednaska SET id_miestnosti = % s, cas = % s, stav = % s WHERE id_pred = % s"
-            params = (room_id, request.form['datetime'], "Accepted", request.form['id_pred'],)
-            print(request.form)
+            sql = "SELECT od_datum, do_datum FROM konferencia WHERE id_kon = % s"
+            params = (conf_id,)
             cursor.execute(sql, params)
+            conference_from_to = cursor.fetchall()
+
+            start = conference_from_to[0]['od_datum']
+            end = conference_from_to[0]['do_datum'] - timedelta(hours=1)
+            date = datetime.strptime(request.form['datetime'],"%Y-%m-%dT%H:%M")
+
+            if start <= date <= end:
+
+                sql = "SELECT * FROM prednaska WHERE id_miestnosti = % s AND cas = %s AND stav = %s"
+                params = (room_id, request.form['datetime'], "Accepted",)
+                cursor.execute(sql, params)
+                same_time_applicaton = cursor.fetchall()
+
+                if(same_time_applicaton):
+                    msg = 'Another application at same time and room already exist!' 
+
+                else:
+                    sql = "UPDATE prednaska SET id_miestnosti = % s, cas = % s, stav = % s WHERE id_pred = % s"
+                    params = (room_id, request.form['datetime'], "Accepted", request.form['id_pred'],)
+                    cursor.execute(sql, params)
+            else:
+                msg = 'Application does not take place at the time of the conference!'
+
 
         elif request.method == 'POST' and 'id_pred' in request.form and 'submit' in request.form and request.form['submit'] == 'Decline':
             sql = "UPDATE prednaska SET stav = % s WHERE id_pred = % s"
             params = ("Declined", request.form['id_pred'],)
-            print(request.form)
             cursor.execute(sql, params)
 
         sql = "SELECT * FROM prednaska WHERE id_konferencie = % s AND stav = %s"
@@ -391,7 +413,7 @@ def my_conf(conf_id):
 
         mysql.connection.commit()
         cursor.close() 
-        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, admin_bool = admin_bool)
+        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, admin_bool = admin_bool, msg = msg)
     return redirect(url_for('login'))
 
 
