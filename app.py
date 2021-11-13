@@ -344,7 +344,7 @@ def my_conf(conf_id):
         conf = cursor.fetchone()
         conf['miestnosti'] = conf['miestnosti'].split(",")
         
-        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s"
+        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s ORDER BY cas"
         params = (conf_id, "Accepted")
         cursor.execute(sql, params)
         presentations = cursor.fetchall()
@@ -406,7 +406,7 @@ def my_conf(conf_id):
         cursor.execute(sql, params)
         applications = cursor.fetchall()
 
-        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s"
+        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s ORDER BY cas"
         params = (conf_id, "Accepted")
         cursor.execute(sql, params)
         presentations = cursor.fetchall()
