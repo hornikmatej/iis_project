@@ -26,7 +26,7 @@
                 <div class="topbar">
                     <h2>Welcome!! You are in Display Page!! </h2>
             </div>
-            <table>
+            <!-- <table>
                 <thead>
                     <tr>
                         <th>date</th>
@@ -43,7 +43,76 @@
                         </tr>
                     {% endfor %}
                 </tbody>
-            </table>
+            </table> -->
+            <label for="reservations_in_progress">Reservations in progress:</label>
+            <table name="reservations_in_progress" id="reservations_in_progress" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Date from:</th>
+                        <th>Date to:</th>
+                        <th>Conference:</th>
+                        <th>Number of tickets:</th>
+                        <th>Status:</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    {% for reservation in reservations_in_progress %}    
+                        <tr>
+                            <td>{{ reservation['od_datum'] }}</td>
+                            <td>{{ reservation['do_datum'] }}</td>
+                            <td><a href="{{ url_for('r_conf', conf_id=reservation.id_konferencie)}}">{{ reservation['nazov'] }}</a></td>
+                            <td>{{ reservation['pocet_listkov'] }}</td>
+                            <td>{{ reservation['uhradene'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table><br>
+            <label for="reservations_accepted">Reservations accepted:</label>
+            <table name="reservations_accepted" id="reservations_accepted" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Date from:</th>
+                        <th>Date to:</th>
+                        <th>Conference:</th>
+                        <th>Number of tickets:</th>
+                        <th>Status:</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    {% for reservation in reservations_accepted %}    
+                        <tr>
+                            <td>{{ reservation['od_datum'] }}</td>
+                            <td>{{ reservation['do_datum'] }}</td>
+                            <td><a href="{{ url_for('r_conf', conf_id=reservation.id_konferencie)}}">{{ reservation['nazov'] }}</a></td>
+                            <td>{{ reservation['pocet_listkov'] }}</td>
+                            <td>{{ reservation['uhradene'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table><br>
+            <label for="reservations_declined">Reservations declined:</label>
+            <table name="reservations_declined" id="reservations_declined" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Date from:</th>
+                        <th>Date to:</th>
+                        <th>Conference:</th>
+                        <th>Number of tickets:</th>
+                        <th>Status:</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    {% for reservation in reservations_declined %}    
+                        <tr>
+                            <td>{{ reservation['od_datum'] }}</td>
+                            <td>{{ reservation['do_datum'] }}</td>
+                            <td><a href="{{ url_for('r_conf', conf_id=reservation.id_konferencie)}}">{{ reservation['nazov'] }}</a></td>
+                            <td>{{ reservation['pocet_listkov'] }}</td>
+                            <td>{{ reservation['uhradene'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table><br>
         </div>
     </body>
 </html>

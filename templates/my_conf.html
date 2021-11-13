@@ -82,7 +82,6 @@
                             <td>{{ application['nazov'] }}</td>
                             <td>{{ application['obsah'] }}</td>
                             <td>
-                                
                                 <select name="rooms" id="rooms" required>
                                     {% for room in conf['miestnosti'] %}    
                                         <option value = {{ room }}>{{ room }}</option>
@@ -99,7 +98,38 @@
                                 <input type="submit" name="submit" value="Decline" formnovalidate>
                             </td>
                         </tr>
-                        
+                    </form>
+                    {% endfor %}
+                </tbody>
+            </table><br>
+            <label for="incoming_reservations">Incoming reservations:</label>
+            <table name="incoming_reservations" id="incoming_reservations" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID:</th>
+                        <th>Name & Surname:</th>
+                        <th>Number of tickets:</th>
+                        <th>Status:</th>
+                        <th>Confirm:</th>
+                        <th>Decline:</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    {% for reservation in incoming_reservations %}    
+                    <form action="{{ url_for('my_conf', conf_id=conf['id_kon']) }}" method="post">
+                        <tr>
+                            <td name="id_rez">{{ reservation['id_rez'] }}</td>
+                            <input type="hidden" name="id_rez" id="id_rez" value="{{ reservation['id_rez'] }}"/>
+                            <td >{{ reservation['meno'] }} {{ reservation['priezvisko'] }}</td>
+                            <td>{{ reservation['pocet_listkov'] }}</td>
+                            <td>{{ reservation['uhradene'] }}</td>
+                            <td>
+                                <input type="submit" name="reservation_submit" id="reservation_submit" value="Confirm">
+                            </td>
+                            <td>
+                                <input type="submit" name="reservation_submit" id="reservation_submit" value="Decline">
+                            </td>
+                        </tr>
                     </form>
                     {% endfor %}
                 </tbody>

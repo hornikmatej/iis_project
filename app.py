@@ -267,7 +267,7 @@ def your_account():
             if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
                 msg+= 'Invalid email address !, '
             else:
-                sql = "UPDATE uzivatel SET  email =% s WHERE id_uziv =% s"
+                sql = "UPDATE uzivatel SET email = % s WHERE id_uziv = % s"
                 params = (email, session['id_uziv'],)
                 cursor.execute(sql, params)
                 mysql.connection.commit()
@@ -312,23 +312,34 @@ def my_conferences():
 
 @app.route("/my_reservations", methods = ['GET', 'POST'])
 def my_reservations():
-    admin_bool = False
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         
-        sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s "
-        params = (session['id_uziv'], )
-        cursor.execute(sql, params)
-        ress = cursor.fetchall()
-                
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s "
         params = (session['id_uziv'], )
         cursor.execute(sql, params)
         admin = cursor.fetchone()
         admin_bool = True if admin else False
 
+        sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'In progress'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        reservations_in_progress = cursor.fetchall()
+
+        sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'Accepted'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        reservations_accepted = cursor.fetchall()
+
+        sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'Declined'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        reservations_declined = cursor.fetchall()
+                
+        print(reservations_in_progress)
+
         cursor.close()
-        return render_template("my_reservations.html", ress=ress, admin_bool = admin_bool)
+        return render_template("my_reservations.html", reservations_in_progress=reservations_in_progress, reservations_accepted=reservations_accepted, reservations_declined=reservations_declined, admin_bool = admin_bool)
     return redirect(url_for('login'))   
 
 
@@ -360,7 +371,7 @@ def my_conf(conf_id):
         admin = cursor.fetchone()
         admin_bool = True if admin else False
 
-        if request.method == 'POST'and 'id_pred' in request.form and 'rooms' in request.form and 'datetime' in request.form and 'submit' in request.form and request.form['submit'] == 'Accept':
+        if request.method == 'POST' and 'id_pred' in request.form and 'rooms' in request.form and 'datetime' in request.form and 'submit' in request.form and request.form['submit'] == 'Accept':
             sql = "SELECT * FROM miestnost "
             cursor.execute(sql)
             rooms = cursor.fetchall()
@@ -411,9 +422,36 @@ def my_conf(conf_id):
         cursor.execute(sql, params)
         presentations = cursor.fetchall()
 
+        sql = "SELECT * FROM rezervacia r JOIN uzivatel u ON r.id_uzivatela = u.id_uziv WHERE r.id_konferencie = % s AND r.stav = 'In progress'"
+        params = (conf_id, )
+        cursor.execute(sql, params)
+        incoming_reservations = cursor.fetchall()
+
+        if request.method == 'POST' and 'id_rez' in request.form and 'reservation_submit' in request.form and request.form['reservation_submit'] == 'Confirm':
+            sql = "UPDATE rezervacia SET stav = 'Accepted' WHERE id_rez = % s"
+            params = (request.form['id_rez'], )
+            print("STUK")
+            print(request.form)
+            cursor.execute(sql, params)
+            mysql.connection.commit()
+
+        elif request.method == 'POST' and 'id_rez' in request.form and 'reservation_submit' in request.form and request.form['reservation_submit'] == 'Decline':
+            sql = "UPDATE rezervacia SET stav = 'Declined' WHERE id_rez = % s"
+            params = (request.form['id_rez'], )
+            print(request.form)
+            cursor.execute(sql, params)
+            mysql.connection.commit()
+
+        # sql = "SELECT * FROM rezervacia WHERE id_konferencie = % s"
+        # params = (conf_id, )
+        # cursor.execute(sql, params)
+        # reservations = cursor.fetchall()
+        # print(request.form)
+        # # print(reservations)
+
         mysql.connection.commit()
         cursor.close() 
-        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, admin_bool = admin_bool, msg = msg)
+        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, incoming_reservations=incoming_reservations, admin_bool = admin_bool)
     return redirect(url_for('login'))
 
 
