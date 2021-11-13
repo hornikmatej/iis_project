@@ -171,19 +171,43 @@ def index():
         return render_template("index.html", admin_bool = admin_bool)
     return redirect(url_for('login'))
 
-@app.route("/user_management")
+@app.route("/user_management", methods =['GET', 'POST'])
 def user_management():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        sql = "SELECT * FROM admin WHERE id_uzivatela = % s "
-        params = (session['id_uziv'],)
-        cursor.execute(sql, params)
-        admin = cursor.fetchone()
-        admin_bool = True if admin else False
+        if request.method == 'POST':
+            if list(request.form.keys())[0] == 'button1':
+                try:        
+                    cursor.execute('INSERT INTO admin VALUES (% s)', (request.form['button1'], ))
+                    mysql.connection.commit()
+                except (MySQLdb._exceptions.IntegrityError):
+                    # vlozenie uz admina do tabulky
+                    pass
+
+            if list(request.form.keys())[0] == 'button2':
+                cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
+                mysql.connection.commit()
+
+        # cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
+        cursor.execute('SELECT * FROM admin')
+        admin = cursor.fetchall()
+        admin = [id for id_list in admin for id in id_list.values()]
+
+        cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
+        users = cursor.fetchall()
+        
+        users = tuple(filter(lambda x: x['login'] != session['login'], users))
+        for user in users:
+            if user['id_uziv'] in admin:
+                user['admin'] = "Yes"
+            else:
+                user['admin'] = "No"
+        
+        if admin:
+            admin_bool = True
         
         cursor.close()
-        
-        return render_template("user_management.html", admin_bool = admin_bool)
+        return render_template("user_management.html", admin_bool = admin_bool, users = users)
     return redirect(url_for('login'))
 
 
