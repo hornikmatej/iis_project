@@ -82,7 +82,8 @@ def nr_conf(conf_id):
     params = (conf_id,)
     cursor.execute(sql, params)
     conf = cursor.fetchone()
-    sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s"
+
+    sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s ORDER BY p.cas" 
     params = (conf_id,)
     cursor.execute(sql, params)
     lecs = cursor.fetchall()
@@ -107,7 +108,7 @@ def nr_conf(conf_id):
         cursor2.execute(sql, params)
         mysql.connection.commit()
         cursor2.close()
-        msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
+        msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference ! Please pay tickets in the reservation section for the next 24 hours, otherwise I will be Declined'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     return render_template("nr_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id)
@@ -197,7 +198,7 @@ def user_management():
                     cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
                     mysql.connection.commit()
                 if list(request.form.keys())[0] == 'button3':
-                    print(request.form['button3'])
+                    #print(request.form['button3'])
                     return redirect(url_for('um_edit', conf_id = request.form['button3']))
 
             cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
@@ -380,11 +381,18 @@ def my_reservations():
         cursor.execute(sql, params)
         reservations_in_progress = cursor.fetchall()
 
-        if request.method == 'POST' and 'id_rez' in request.form and 'pay_submit' in request.form and request.form['pay_submit'] == 'Pay':
+        now = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
+        sql = "UPDATE rezervacia SET stav = 'Declined' WHERE cas <  % s"
+        params = (now, )
+        cursor.execute(sql, params)
+        mysql.connection.commit()
+
+        if request.method == 'POST' and 'id_rez' in request.form and 'pay_submit' in request.form and  request.form['pay_submit'] == 'Pay':
             sql = "UPDATE rezervacia SET uhradene = 'ano' WHERE id_rez = % s"
             params = (request.form['id_rez'], )
             cursor.execute(sql, params)
             mysql.connection.commit()
+
 
         sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'In progress'"
         params = (session['id_uziv'], )
@@ -412,7 +420,7 @@ def my_reservations():
         cursor.execute(sql, params)
         reservations_declined = cursor.fetchall()
                 
-        print(reservations_in_progress)
+        #print(reservations_in_progress)
 
         cursor.close()
         return render_template("my_reservations.html", reservations_in_progress=reservations_in_progress, reservations_accepted=reservations_accepted, reservations_declined=reservations_declined, admin_bool = admin_bool)
@@ -507,16 +515,38 @@ def my_conf(conf_id):
             cursor.execute(sql, params)
             mysql.connection.commit()
 
+            sql = "SELECT SUM(pocet_listkov) FROM rezervacia WHERE stav = % s AND id_konferencie = % s AND uhradene = % s"
+            params = ('Accepted', conf_id, 'ano', )
+            cursor.execute(sql, params)
+            number_of_tickets = cursor.fetchone()
+            mysql.connection.commit()
+
+            sql = "UPDATE konferencia SET aktualna_zaplnenost = % s WHERE id_kon = % s"
+            params = (number_of_tickets['SUM(pocet_listkov)'], conf_id, )
+            cursor.execute(sql, params)
+            mysql.connection.commit()
+
         elif request.method == 'POST' and 'id_rez' in request.form and 'reservation_submit' in request.form and request.form['reservation_submit'] == 'Decline':
             sql = "UPDATE rezervacia SET stav = 'Declined' WHERE id_rez = % s"
             params = (request.form['id_rez'], )
             cursor.execute(sql, params)
             mysql.connection.commit()
 
-        sql = "SELECT * FROM rezervacia r JOIN uzivatel u ON r.id_uzivatela = u.id_uziv WHERE r.id_konferencie = % s AND r.stav = 'In progress'"
+        sql = "SELECT * FROM rezervacia r JOIN uzivatel u ON r.id_uzivatela = u.id_uziv WHERE r.id_konferencie = % s AND r.stav = 'In progress' AND r.uhradene = 'ano'"
         params = (conf_id, )
         cursor.execute(sql, params)
         incoming_reservations = cursor.fetchall()
+
+        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s ORDER BY cas"
+        params = (conf_id, "Accepted")
+        cursor.execute(sql, params)
+        presentations = cursor.fetchall()
+
+        sql = "SELECT * FROM konferencia WHERE id_kon = % s"
+        params = (conf_id, )
+        cursor.execute(sql, params)
+        conf = cursor.fetchone()
+        conf['miestnosti'] = conf['miestnosti'].split(",")
 
         mysql.connection.commit()
         cursor.close() 
@@ -555,7 +585,7 @@ def r_conf(conf_id):
         cursor.execute(sql, params)
         conf = cursor.fetchone()
         
-        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s"
+        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s ORDER BY p.cas"
         params = (conf_id,)
         cursor.execute(sql, params)
         lecs = cursor.fetchall()
@@ -573,7 +603,7 @@ def r_conf(conf_id):
             params = (uzivatel, conf_id, pocet, "nie", "In progress", (datetime.now()).strftime("%Y-%m-%d %H:%M:%S"))
             cursor.execute(sql, params)
             mysql.connection.commit()
-            msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
+            msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference ! Please pay tickets in the My reservation section in the next 24 hours, otherwise reservation will be Declined'
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             obsah = request.form['obsah']
@@ -584,6 +614,12 @@ def r_conf(conf_id):
             msg = 'You have successfully applied presentation on conference, now wait for confirmation!'
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
+        
+
+        sql = "SELECT * FROM konferencia WHERE id_kon = % s"
+        params = (conf_id,)
+        cursor.execute(sql, params)
+        conf = cursor.fetchone()
         cursor.close()
 
         # redirect if clicked conference is mine

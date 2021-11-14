@@ -29,17 +29,17 @@
             <div>
                 <h2>{{ conf['zaner'] }}</h2>
                 <h2>{{ conf['obsah'] }}</h2>
-                <h2>{{ conf['od_datum'] }}</h2>
-                <h2>{{ conf['do_datum'] }}</h2>
-                <h2>{{ conf['cena'] }}</h2>
-                <h2>{{ conf['login'] }}</h2>
+                <h2>From: {{ conf['od_datum'] }}</h2>
+                <h2>To: {{ conf['do_datum'] }}</h2>
+                <h2>Organisator: {{ conf['login'] }}</h2>
+                <h2>Capacity: {{ conf['aktualna_zaplnenost'] }} / {{ conf['celkova_kapacita'] }}</h2>
             </div>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th>lecture</th>
                         <th>room</th>
-                        <th>occupancy</th>
+                        <th>time</th>
                     </tr>
                 </thead>    
                 <tbody>
@@ -47,35 +47,36 @@
                         <tr>
                             <td>{{ lec['nazov'] }}</td>
                             <td>{{ lec['m.nazov'] }}</td>
-                            <td>{{ lec['zaplnenost'] }} / {{ lec['kapacita'] }}</td>
+                            <td>{{ lec['cas'] }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table></br></br>
             <td>Price: {{ conf['cena'] }}</td></br></br>
             <div class="msg">{{ msg }}</div>
-            <td>Reservation:</td></br></br>
-            <div class="Reserve" align="center">
-                <div class="reservebottom" align="center">
-                    <label for="Number_of_tickets">How many tickets do you want to reserve?</label>
-                    <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
-                        <input type="number" id="pocet" name="pocet" placeholder="" class="textbox" aria-describedby="basic-addon1" min="1" max="10" required></br></br>
-                        <input type="submit" class="btn btn-outline-secondary" value="Reserve">
-                    </form>
-                    
-                </div>
-            </div></br></br>
-            <td>Applie for presentation: </td></br></br>
-            <div class = "apply" align="center">
-                <div class="applybottom" align="center">
-                    <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
-                        <input type="text" id="nazov" name="nazov" placeholder="Presentation title" class="textbox" aria-describedby="basic-addon1" required></br></br>
-                        <input type="text" id="obsah" name="obsah" placeholder="Presentation content" class="textbox" aria-describedby="basic-addon1" required></br></br>
-                        <input type="submit" class="btn btn-outline-secondary" value="Apply">
-                    </form>
-                </div>
-            </div></br></br>
-            
+            {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
+                <td>Reservation:</td></br></br>
+                <div class="Reserve" align="center">
+                    <div class="reservebottom" align="center">
+                        <label for="Number_of_tickets">How many tickets do you want to reserve?</label>
+                        <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
+                            <input type="number" id="pocet" name="pocet" placeholder="" class="textbox" aria-describedby="basic-addon1" min="1" max="10" required></br></br>
+                            <input type="submit" class="btn btn-outline-secondary" value="Reserve">
+                        </form>
+                        
+                    </div>
+                </div></br></br>
+                <td>Applie for presentation: </td></br></br>
+                <div class = "apply" align="center">
+                    <div class="applybottom" align="center">
+                        <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
+                            <input type="text" id="nazov" name="nazov" placeholder="Presentation title" class="textbox" aria-describedby="basic-addon1" required></br></br>
+                            <input type="text" id="obsah" name="obsah" placeholder="Presentation content" class="textbox" aria-describedby="basic-addon1" required></br></br>
+                            <input type="submit" class="btn btn-outline-secondary" value="Apply">
+                        </form>
+                    </div>
+                </div></br></br>
+            {% endif %}
         </div>
     </body>
 </html>

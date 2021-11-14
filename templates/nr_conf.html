@@ -22,10 +22,10 @@
             <div>
                 <h2>{{ conf['zaner'] }}</h2>
                 <h2>{{ conf['obsah'] }}</h2>
-                <h2>{{ conf['od_datum'] }}</h2>
-                <h2>{{ conf['do_datum'] }}</h2>
-                <h2>{{ conf['cena'] }}</h2>
-                <h2>{{ conf['login'] }}</h2>
+                <h2>From: {{ conf['od_datum'] }}</h2>
+                <h2>To: {{ conf['do_datum'] }}</h2>
+                <h2>Organisator: {{ conf['login'] }}</h2>
+                <h2>Capacity: {{ conf['aktualna_zaplnenost'] }} / {{ conf['celkova_kapacita'] }}</h2>
             </div>
             <table class="table table-striped table-hover">
             <table>
@@ -34,7 +34,7 @@
                     <tr>
                         <th>lecture</th>
                         <th>room</th>
-                        <th>occupancy</th>
+                        <th>time</th>
                     </tr>
                 </thead>    
                 <tbody>
@@ -42,40 +42,43 @@
                         <tr>
                             <td>{{ lec['nazov'] }}</td>
                             <td>{{ lec['m.nazov'] }}</td>
-                            <td>{{ lec['zaplnenost'] }} / {{ lec['kapacita'] }}</td>
+                            <td>{{ lec['cas'] }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table></br></br>
             <td>Price: {{ conf['cena'] }}</td></br></br>
-            <td>Reservation:</td></br></br>
-            
-    <div class="reservebottom" align="center">
-        <form action="{{ url_for('nr_conf', conf_id = conf_id)}}"  method="post" autocomplete="off">
-            <div class="msg">{{ msg }}</div>            
-            <div class="container-sm">
-                <div class="input-group mb-3 ">
-                    <span class="input-group-text" id="basic-addon1">></span>
-                    <input type="text" name="meno" placeholder="Enter Your First name" class="form-control" id="meno" aria-describedby="basic-addon1" required></br></br>
-                    
-                </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">></span>
-                    <input type="text" name="priezvisko" placeholder="Enter Your Last name" class="form-control" id="priezvisko" aria-describedby="basic-addon1" required></br></br>
-                    
-                </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">></span>
-                    <input type="email" name="email" placeholder="Enter Your Email ID" class="form-control" id="email" aria-describedby="basic-addon1" required></br></br>
-                    
-                </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">></span>
-                    <input type="number" id="pocet" name="pocet" placeholder="Number of tickets" class="form-control" id="pocet" aria-describedby="basic-addon1" min="1" max="10" required></br></br>
-                </div>
-                </div>
-                <input type="submit" class="btn btn-outline-secondary" value="Reserve">
-            </div>
-        </form>
+
+            {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
+                <td>Reservation:</td></br></br>
+                
+                <div class="reservebottom" align="center">
+                <form action="{{ url_for('nr_conf', conf_id = conf_id)}}"  method="post" autocomplete="off">
+                    <div class="msg">{{ msg }}</div>            
+                    <div class="container-sm">
+                        <div class="input-group mb-3 ">
+                            <span class="input-group-text" id="basic-addon1">></span>
+                            <input type="text" name="meno" placeholder="Enter Your First name" class="form-control" id="meno" aria-describedby="basic-addon1" required></br></br>
+                            
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">></span>
+                            <input type="text" name="priezvisko" placeholder="Enter Your Last name" class="form-control" id="priezvisko" aria-describedby="basic-addon1" required></br></br>
+                            
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">></span>
+                            <input type="email" name="email" placeholder="Enter Your Email ID" class="form-control" id="email" aria-describedby="basic-addon1" required></br></br>
+                            
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">></span>
+                            <input type="number" id="pocet" name="pocet" placeholder="Number of tickets" class="form-control" id="pocet" aria-describedby="basic-addon1" min="1" max="10" required></br></br>
+                        </div>
+                        </div>
+                        <input type="submit" class="btn btn-outline-secondary" value="Reserve">
+                    </div>
+                </form>
+            {% endif %}
     </body>
 </html>
