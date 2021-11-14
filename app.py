@@ -54,14 +54,17 @@ def login():
                 admin_bool = True if admin else False
                 
                 cursor.close()
+                
                 session['loggedin'] = True
                 session['id_uziv'] = account['id_uziv']
                 session['login'] = account['login']
                 msg = 'Logged in successfully !'
                 return render_template('index.html', msg = msg, admin_bool = admin_bool)
             else:
+                cursor.close()
                 msg = 'Incorrect login / password !'
         else:
+            cursor.close()
             msg = 'Incorrect login / password !'
     return render_template('login.html', msg = msg)
 
@@ -158,6 +161,8 @@ def register():
             msg = 'You have successfully registered !'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
+    
+    cursor.close()
     return render_template('register.html', msg = msg)
 
 
@@ -197,7 +202,8 @@ def user_management():
                     cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
                     mysql.connection.commit()
                 if list(request.form.keys())[0] == 'button3':
-                    print(request.form['button3'])
+                    # print(request.form['button3'])
+                    cursor.close()
                     return redirect(url_for('um_edit', conf_id = request.form['button3']))
 
             cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
@@ -218,6 +224,7 @@ def user_management():
             cursor.close()
             return render_template("user_management.html", admin_bool = admin_bool, users = users)
         else:
+            cursor.close()
             return redirect(url_for('index'))
     return redirect(url_for('login'))
 
@@ -260,6 +267,7 @@ def um_edit(conf_id):
                     cursor.execute(sql, params)
                     mysql.connection.commit()
             if request.method == 'POST':
+                cursor.close()
                 return redirect(url_for('user_management'))
 
             cursor.close()
@@ -337,6 +345,8 @@ def your_account():
             params = (session['id_uziv'],)
             cursor_reg_uzivatel.execute(sql, params)
             reg_uzivatel = cursor_reg_uzivatel.fetchone() 
+        
+        cursor.close()
         return render_template("your_account.html", account = account, reg_uzivatel = reg_uzivatel, msg = msg[:-2], admin_bool = admin_bool)
 
     return redirect(url_for('login'))
@@ -412,8 +422,6 @@ def my_reservations():
         cursor.execute(sql, params)
         reservations_declined = cursor.fetchall()
                 
-        print(reservations_in_progress)
-
         cursor.close()
         return render_template("my_reservations.html", reservations_in_progress=reservations_in_progress, reservations_accepted=reservations_accepted, reservations_declined=reservations_declined, admin_bool = admin_bool)
     return redirect(url_for('login'))   
@@ -517,8 +525,8 @@ def my_conf(conf_id):
         params = (conf_id, )
         cursor.execute(sql, params)
         incoming_reservations = cursor.fetchall()
-
         mysql.connection.commit()
+
         cursor.close() 
         return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, incoming_reservations=incoming_reservations, admin_bool = admin_bool)
     return redirect(url_for('login'))
@@ -584,6 +592,7 @@ def r_conf(conf_id):
             msg = 'You have successfully applied presentation on conference, now wait for confirmation!'
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
+        
         cursor.close()
 
         # redirect if clicked conference is mine
@@ -631,10 +640,13 @@ def create_conference():
             mysql.connection.commit()
             kapacita_msg = "Capacity of conference: "+str(kapacita)
             msg = 'You have successfully created coference !'
+        
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
+        
         cursor.close()
         return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg)
+    
     return redirect(url_for('login'))
 
 

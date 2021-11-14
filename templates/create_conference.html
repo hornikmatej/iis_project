@@ -25,53 +25,63 @@
             </div>
             <div class="content" align="center">
                 <div class="topbar">
-                    <h2>Welcome!! You are in Create conference Page!! </h2>                        
-                </div></br></br>
-                <div class="contentbar">
-                    <h1>Fill details about new conference</h1></br>
+                    <h2>Create new conference</h2>                        
+                </div><br>
+                <form action="{{ url_for('create_conference') }}" method="post" autocomplete="off">
+                    <div class="msg">{{ msg }}</div>
+                    <div class="msg">{{ kapacita_msg }}</div>
+                    
+                    <label for="nazov">Title:</label><br>
+                    <input type="text" name="nazov" placeholder="Conference title" class="textbox" id="title" required><br>
+                    <label for="nazov" style="color: red;">*required</label><br><br>
+                    
+                    <label for="zaner">Genre:</label><br>
+                    <select name="zaner" id="Genre-select" multiple>
+                        <option value="Sport">Sport</option>
+                        <option value="Movie">Movie</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Science">Science</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Others">Others</option>
+                    </select><br>
+                    <label for="obsah" style="color: red;">*required</label><br><br>
+                    
+                    <label for="obsah">Conference content:</label><br>
+                    <textarea name="obsah" cols="40" rows="5" placeholder="What will this conference be about?" class="textbox" id="obsah" required></textarea><br>
+                    <label for="obsah" style="color: red;">*required</label><br><br>
+                    
+                    <label for="od_datum">From:</label><br>
+                    <input type="datetime-local" name="od_datum" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" step="3600" required><br>
+                    <label for="od_datum" style="color: red;">*required</label><br><br>
+                    
+                    <label for="do_datum">To:</label><br>
+                    <input type="datetime-local" name="do_datum" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" step="3600" required><br>
+                    <label for="do_datum" style="color: red;">*required</label><br><br>
+                    
+                    <label for="rooms">Select room (room capacity):</label><br>
+                    <label for="rooms" style="color: grey;">(if more than one hold CTRL)</label><br>
+                    <select name="rooms" id="room-select" multiple>
+                        <option value="D105">D105 (100)</option>
+                        <option value="D106">D106 (100)</option>
+                        <option value="D107">D107 (100)</option>
+                        <option value="E112">E112 (200)</option>
+                        <option value="E113">E113 (200)</option>
+                        <option value="E114">E114 (200)</option>
+                        <option value="M101">M101 (50)</option>
+                        <option value="M102">M102 (50)</option>
+                        <option value="M103">M103 (50)</option>
+                        <option value="N203">N203 (70)</option>
+                        <option value="N204">N204 (70)</option>
+                        <option value="N205">N205 (70)</option>
+                    </select></br>
+                    <label for="rooms" style="color: red;">*required</label><br><br>
 
-            <form action="{{ url_for('create_conference') }}" method="post" autocomplete="off">
-                <div class="msg">{{ msg }}</div>
-                <div class="msg">{{ kapacita_msg }}</div>
-                <td>Title: </td> 
-                <input type="text" name="nazov" placeholder="Conference title" class="textbox" id="title" required></br></br>
-                <td>Genre: </td></br>
-                <select name="zaner" id="Genre-select" multiple>
-                    <option value="Sport">Sport</option>
-                    <option value="Movie">Movie</option>
-                    <option value="Technology">Technology</option>
-                    <option value="Science">Science</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Others">Others</option>
-                </select></br></br>
-                <td>Conference content: </td></br>
-                <textarea name="obsah" cols="40" rows="5" placeholder="..." class="textbox" id="obsah" required></textarea></br></br>
-                <td>From: </td>
-                <input type="datetime-local" name="od_datum" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" step="3600" required>
-                <td>To: </td>
-                <input type="datetime-local" name="do_datum" placeholder="Date" class="textbox" id="date" min="datetime-local" value="datetime-local" step="3600" required></br></br>
-                <td>Select room (*room capacity*)</td></br>
-                <td>(if more than one hold CTRL) </td></br>
-                <select name="rooms" id="room-select" multiple>
-                    <option value="D105">D105 (100)</option>
-                    <option value="D106">D106 (100)</option>
-                    <option value="D107">D107 (100)</option>
-                    <option value="E112">E112 (200)</option>
-                    <option value="E113">E113 (200)</option>
-                    <option value="E114">E114 (200)</option>
-                    <option value="M101">M101 (50)</option>
-                    <option value="M102">M102 (50)</option>
-                    <option value="M103">M103 (50)</option>
-                    <option value="N203">N203 (70)</option>
-                    <option value="N204">N204 (70)</option>
-                    <option value="N205">N205 (70)</option>
-                </select></br></br>
-                <td>Price: </td>
-                <input type="number" id="cena" name="cena" placeholder="Ticket price" class="textbox" id="price" min="0" required></br></br>
-                <input type="submit" class="btn btn-outline-secondary" value="Create">
-
-            </form>                     
-                </div>  
+                    <label for="cena">Price:</label><br>
+                    <input type="number" id="cena" name="cena" placeholder="Ticket price" class="textbox" id="price" min="0" required></br>
+                    <label for="cena" style="color: red;">*required</label><br><br>
+                    
+                    <input type="submit" class="btn btn-outline-secondary" value="Create"><br><br>
+                </form>
             </div>
         </div>
     </body>

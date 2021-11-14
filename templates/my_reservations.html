@@ -24,99 +24,103 @@
             </div>
             <div class="content" align="center">
                 <div class="topbar">
-                    <h2>Welcome!! You are in Display Page!! </h2>
+                    <h2>My reservations</h2>
+                </div><br>
+                <label for="reservations_in_progress">Pay for your reservations and wait for confirmation:</label><br>
+                <label for="reservations_in_progress" style="color: grey;">Unpaid reservation cannot be confirmed!</label><br>
+                <table name="reservations_in_progress" id="reservations_in_progress" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID:</th>
+                            <th>Date from:</th>
+                            <th>Date to:</th>
+                            <th>Conference:</th>
+                            <th>Number of tickets:</th>
+                            <th>Paid:</th>
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        {% for reservation in reservations_in_progress %}    
+                        <form action="{{ url_for('my_reservations') }}" method="post">
+                            <tr>
+                                <td name="id_rez">{{ reservation['id_rez'] }}</td>
+                                <input type="hidden" name="id_rez" id="id_rez" value="{{ reservation['id_rez'] }}"/>
+                                <td>{{ reservation['od_datum'] }}</td>
+                                <td>{{ reservation['do_datum'] }}</td>
+                                <td><a href="{{ url_for('r_conf', conf_id=reservation.id_konferencie)}}">{{ reservation['nazov'] }}</a></td>
+                                <td>{{ reservation['pocet_listkov'] }}</td>
+                                {% if reservation['uhradene'] == 'nie' %}
+                                <td>
+                                    <input type="submit" name="pay_submit" id="pay_submit" value="Pay">
+                                </td>
+                                {% endif %}
+                                {% if reservation['uhradene'] == 'ano' %}
+                                <td>Paid</td>
+                                {% endif %}
+                            </tr>
+                        </form>
+                        {% endfor %}
+                    </tbody>
+                </table><br><br>
+                <label for="reservations_accepted">Confirmed reservations:</label><br>
+                <label for="reservations_accepted" style="color: grey;">See you at the conference!</label><br>
+                <table name="reservations_accepted" id="reservations_accepted" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID:</th>
+                            <th>Date from:</th>
+                            <th>Date to:</th>
+                            <th>Conference:</th>
+                            <th>Number of tickets:</th>
+                            <th>Paid:</th>
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        {% for reservation in reservations_accepted %}    
+                        <form action="{{ url_for('my_reservations') }}" method="post">
+                            <tr>
+                                <td name="id_rez">{{ reservation['id_rez'] }}</td>
+                                <input type="hidden" name="id_rez" id="id_rez" value="{{ reservation['id_rez'] }}"/>
+                                <td>{{ reservation['od_datum'] }}</td>
+                                <td>{{ reservation['do_datum'] }}</td>
+                                <td><a href="{{ url_for('r_conf', conf_id=reservation.id_konferencie)}}">{{ reservation['nazov'] }}</a></td>
+                                <td>{{ reservation['pocet_listkov'] }}</td>
+                                {% if reservation['uhradene'] == 'nie' %}
+                                <td>
+                                    <input type="submit" name="pay_submit" id="pay_submit" value="Pay">
+                                </td>
+                                {% endif %}
+                                {% if reservation['uhradene'] == 'ano' %}
+                                <td>Paid</td>
+                                {% endif %}
+                            </tr>
+                        </form>
+                        {% endfor %}
+                    </tbody>
+                </table><br><br>
+                <label for="reservations_declined">Declined reservations:</label><br>
+                <label for="reservations_declined" style="color: grey;">Your payment will be refunded to your bank account!</label><br>
+                <table name="reservations_declined" id="reservations_declined" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date from:</th>
+                            <th>Date to:</th>
+                            <th>Conference:</th>
+                            <th>Number of tickets:</th>
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        {% for reservation in reservations_declined %}    
+                            <tr>
+                                <td>{{ reservation['od_datum'] }}</td>
+                                <td>{{ reservation['do_datum'] }}</td>
+                                <td><a href="{{ url_for('r_conf', conf_id=reservation.id_konferencie)}}">{{ reservation['nazov'] }}</a></td>
+                                <td>{{ reservation['pocet_listkov'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table><br><br>
             </div>
-            <label for="reservations_in_progress">Reservations in progress:</label>
-            <table name="reservations_in_progress" id="reservations_in_progress" class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>ID:</th>
-                        <th>Date from:</th>
-                        <th>Date to:</th>
-                        <th>Conference:</th>
-                        <th>Number of tickets:</th>
-                        <th>Paid:</th>
-                    </tr>
-                </thead>    
-                <tbody>
-                    {% for reservation in reservations_in_progress %}    
-                    <form action="{{ url_for('my_reservations') }}" method="post">
-                        <tr>
-                            <td name="id_rez">{{ reservation['id_rez'] }}</td>
-                            <input type="hidden" name="id_rez" id="id_rez" value="{{ reservation['id_rez'] }}"/>
-                            <td>{{ reservation['od_datum'] }}</td>
-                            <td>{{ reservation['do_datum'] }}</td>
-                            <td><a href="{{ url_for('r_conf', conf_id=reservation.id_konferencie)}}">{{ reservation['nazov'] }}</a></td>
-                            <td>{{ reservation['pocet_listkov'] }}</td>
-                            {% if reservation['uhradene'] == 'nie' %}
-                            <td>
-                                <input type="submit" name="pay_submit" id="pay_submit" value="Pay">
-                            </td>
-                            {% endif %}
-                            {% if reservation['uhradene'] == 'ano' %}
-                            <td>Paid</td>
-                            {% endif %}
-                        </tr>
-                    </form>
-                    {% endfor %}
-                </tbody>
-            </table><br>
-            <label for="reservations_accepted">Reservations accepted:</label>
-            <table name="reservations_accepted" id="reservations_accepted" class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>ID:</th>
-                        <th>Date from:</th>
-                        <th>Date to:</th>
-                        <th>Conference:</th>
-                        <th>Number of tickets:</th>
-                        <th>Paid:</th>
-                    </tr>
-                </thead>    
-                <tbody>
-                    {% for reservation in reservations_accepted %}    
-                    <form action="{{ url_for('my_reservations') }}" method="post">
-                        <tr>
-                            <td name="id_rez">{{ reservation['id_rez'] }}</td>
-                            <input type="hidden" name="id_rez" id="id_rez" value="{{ reservation['id_rez'] }}"/>
-                            <td>{{ reservation['od_datum'] }}</td>
-                            <td>{{ reservation['do_datum'] }}</td>
-                            <td><a href="{{ url_for('r_conf', conf_id=reservation.id_konferencie)}}">{{ reservation['nazov'] }}</a></td>
-                            <td>{{ reservation['pocet_listkov'] }}</td>
-                            {% if reservation['uhradene'] == 'nie' %}
-                            <td>
-                                <input type="submit" name="pay_submit" id="pay_submit" value="Pay">
-                            </td>
-                            {% endif %}
-                            {% if reservation['uhradene'] == 'ano' %}
-                            <td>Paid</td>
-                            {% endif %}
-                        </tr>
-                    </form>
-                    {% endfor %}
-                </tbody>
-            </table><br>
-            <label for="reservations_declined">Reservations declined:</label>
-            <table name="reservations_declined" id="reservations_declined" class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Date from:</th>
-                        <th>Date to:</th>
-                        <th>Conference:</th>
-                        <th>Number of tickets:</th>
-                    </tr>
-                </thead>    
-                <tbody>
-                    {% for reservation in reservations_declined %}    
-                        <tr>
-                            <td>{{ reservation['od_datum'] }}</td>
-                            <td>{{ reservation['do_datum'] }}</td>
-                            <td><a href="{{ url_for('r_conf', conf_id=reservation.id_konferencie)}}">{{ reservation['nazov'] }}</a></td>
-                            <td>{{ reservation['pocet_listkov'] }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table><br>
         </div>
     </body>
 </html>
