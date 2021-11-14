@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 app.secret_key = 'your secret key'
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=10)
 app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
 app.config['MYSQL_USER'] = 'sql11447453'
 app.config['MYSQL_PASSWORD'] = 'e2KGxNGz6H'
@@ -23,12 +24,6 @@ context = CryptContext(
         default="pbkdf2_sha256",
         pbkdf2_sha256__default_rounds=50000
 )
-
-@app.before_request
-def before_request():
-    session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=10)
-    session.modified = True
 
 
 @app.route('/')
@@ -59,17 +54,14 @@ def login():
                 admin_bool = True if admin else False
                 
                 cursor.close()
-                
                 session['loggedin'] = True
                 session['id_uziv'] = account['id_uziv']
                 session['login'] = account['login']
                 msg = 'Logged in successfully !'
                 return render_template('index.html', msg = msg, admin_bool = admin_bool)
             else:
-                cursor.close()
                 msg = 'Incorrect login / password !'
         else:
-            cursor.close()
             msg = 'Incorrect login / password !'
     return render_template('login.html', msg = msg)
 
@@ -90,7 +82,8 @@ def nr_conf(conf_id):
     params = (conf_id,)
     cursor.execute(sql, params)
     conf = cursor.fetchone()
-    sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s"
+
+    sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s ORDER BY p.cas" 
     params = (conf_id,)
     cursor.execute(sql, params)
     lecs = cursor.fetchall()
@@ -115,7 +108,7 @@ def nr_conf(conf_id):
         cursor2.execute(sql, params)
         mysql.connection.commit()
         cursor2.close()
-        msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
+        msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference ! Please pay tickets in the reservation section for the next 24 hours, otherwise I will be Declined'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     return render_template("nr_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id)
@@ -166,8 +159,6 @@ def register():
             msg = 'You have successfully registered !'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
-    
-    cursor.close()
     return render_template('register.html', msg = msg)
 
 
@@ -207,8 +198,7 @@ def user_management():
                     cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
                     mysql.connection.commit()
                 if list(request.form.keys())[0] == 'button3':
-                    # print(request.form['button3'])
-                    cursor.close()
+                    #print(request.form['button3'])
                     return redirect(url_for('um_edit', conf_id = request.form['button3']))
 
             cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
@@ -229,7 +219,6 @@ def user_management():
             cursor.close()
             return render_template("user_management.html", admin_bool = admin_bool, users = users)
         else:
-            cursor.close()
             return redirect(url_for('index'))
     return redirect(url_for('login'))
 
@@ -272,7 +261,6 @@ def um_edit(conf_id):
                     cursor.execute(sql, params)
                     mysql.connection.commit()
             if request.method == 'POST':
-                cursor.close()
                 return redirect(url_for('user_management'))
 
             cursor.close()
@@ -350,8 +338,6 @@ def your_account():
             params = (session['id_uziv'],)
             cursor_reg_uzivatel.execute(sql, params)
             reg_uzivatel = cursor_reg_uzivatel.fetchone() 
-        
-        cursor.close()
         return render_template("your_account.html", account = account, reg_uzivatel = reg_uzivatel, msg = msg[:-2], admin_bool = admin_bool)
 
     return redirect(url_for('login'))
@@ -395,11 +381,18 @@ def my_reservations():
         cursor.execute(sql, params)
         reservations_in_progress = cursor.fetchall()
 
-        if request.method == 'POST' and 'id_rez' in request.form and 'pay_submit' in request.form and request.form['pay_submit'] == 'Pay':
+        now = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
+        sql = "UPDATE rezervacia SET stav = 'Declined' WHERE cas <  % s"
+        params = (now, )
+        cursor.execute(sql, params)
+        mysql.connection.commit()
+
+        if request.method == 'POST' and 'id_rez' in request.form and 'pay_submit' in request.form and  request.form['pay_submit'] == 'Pay':
             sql = "UPDATE rezervacia SET uhradene = 'ano' WHERE id_rez = % s"
             params = (request.form['id_rez'], )
             cursor.execute(sql, params)
             mysql.connection.commit()
+
 
         sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'In progress'"
         params = (session['id_uziv'], )
@@ -427,6 +420,8 @@ def my_reservations():
         cursor.execute(sql, params)
         reservations_declined = cursor.fetchall()
                 
+        #print(reservations_in_progress)
+
         cursor.close()
         return render_template("my_reservations.html", reservations_in_progress=reservations_in_progress, reservations_accepted=reservations_accepted, reservations_declined=reservations_declined, admin_bool = admin_bool)
     return redirect(url_for('login'))   
@@ -520,18 +515,40 @@ def my_conf(conf_id):
             cursor.execute(sql, params)
             mysql.connection.commit()
 
+            sql = "SELECT SUM(pocet_listkov) FROM rezervacia WHERE stav = % s AND id_konferencie = % s AND uhradene = % s"
+            params = ('Accepted', conf_id, 'ano', )
+            cursor.execute(sql, params)
+            number_of_tickets = cursor.fetchone()
+            mysql.connection.commit()
+
+            sql = "UPDATE konferencia SET aktualna_zaplnenost = % s WHERE id_kon = % s"
+            params = (number_of_tickets['SUM(pocet_listkov)'], conf_id, )
+            cursor.execute(sql, params)
+            mysql.connection.commit()
+
         elif request.method == 'POST' and 'id_rez' in request.form and 'reservation_submit' in request.form and request.form['reservation_submit'] == 'Decline':
             sql = "UPDATE rezervacia SET stav = 'Declined' WHERE id_rez = % s"
             params = (request.form['id_rez'], )
             cursor.execute(sql, params)
             mysql.connection.commit()
 
-        sql = "SELECT * FROM rezervacia r JOIN uzivatel u ON r.id_uzivatela = u.id_uziv WHERE r.id_konferencie = % s AND r.stav = 'In progress'"
+        sql = "SELECT * FROM rezervacia r JOIN uzivatel u ON r.id_uzivatela = u.id_uziv WHERE r.id_konferencie = % s AND r.stav = 'In progress' AND r.uhradene = 'ano'"
         params = (conf_id, )
         cursor.execute(sql, params)
         incoming_reservations = cursor.fetchall()
-        mysql.connection.commit()
 
+        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s ORDER BY cas"
+        params = (conf_id, "Accepted")
+        cursor.execute(sql, params)
+        presentations = cursor.fetchall()
+
+        sql = "SELECT * FROM konferencia WHERE id_kon = % s"
+        params = (conf_id, )
+        cursor.execute(sql, params)
+        conf = cursor.fetchone()
+        conf['miestnosti'] = conf['miestnosti'].split(",")
+
+        mysql.connection.commit()
         cursor.close() 
         return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, incoming_reservations=incoming_reservations, admin_bool = admin_bool)
     return redirect(url_for('login'))
@@ -568,7 +585,7 @@ def r_conf(conf_id):
         cursor.execute(sql, params)
         conf = cursor.fetchone()
         
-        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s"
+        sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s ORDER BY p.cas"
         params = (conf_id,)
         cursor.execute(sql, params)
         lecs = cursor.fetchall()
@@ -586,7 +603,7 @@ def r_conf(conf_id):
             params = (uzivatel, conf_id, pocet, "nie", "In progress", (datetime.now()).strftime("%Y-%m-%d %H:%M:%S"))
             cursor.execute(sql, params)
             mysql.connection.commit()
-            msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference !'
+            msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference ! Please pay tickets in the My reservation section in the next 24 hours, otherwise reservation will be Declined'
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             obsah = request.form['obsah']
@@ -597,8 +614,8 @@ def r_conf(conf_id):
             msg = 'You have successfully applied presentation on conference, now wait for confirmation!'
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
-        
         cursor.close()
+        
 
         # redirect if clicked conference is mine
         if conf['login'] == session['login']:
@@ -645,13 +662,10 @@ def create_conference():
             mysql.connection.commit()
             kapacita_msg = "Capacity of conference: "+str(kapacita)
             msg = 'You have successfully created coference !'
-        
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
-        
         cursor.close()
         return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg)
-    
     return redirect(url_for('login'))
 
 
