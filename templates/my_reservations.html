@@ -27,7 +27,7 @@
                     <h2>My reservations</h2>
                 </div><br>
                 <label for="reservations_in_progress">Pay for your reservations and wait for confirmation:</label><br>
-                <label for="reservations_in_progress" style="color: grey;">Unpaid reservation cannot be confirmed!</label><br>
+                <label for="reservations_in_progress" style="color: grey;">Unpaid reservations cannot be confirmed!</label><br>
                 <table name="reservations_in_progress" id="reservations_in_progress" class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -98,7 +98,7 @@
                         {% endfor %}
                     </tbody>
                 </table><br><br>
-                <label for="reservations_declined">Declined reservations:</label><br>
+                <label for="reservations_declined" style="color: red;">Declined reservations:</label><br>
                 <label for="reservations_declined" style="color: grey;">Your payment will be refunded to your bank account!</label><br>
                 <table name="reservations_declined" id="reservations_declined" class="table table-striped table-hover">
                     <thead>
