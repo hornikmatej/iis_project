@@ -180,39 +180,93 @@ def index():
 def user_management():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        if request.method == 'POST':
-            if list(request.form.keys())[0] == 'button1':
-                try:        
-                    cursor.execute('INSERT INTO admin VALUES (% s)', (request.form['button1'], ))
-                    mysql.connection.commit()
-                except (MySQLdb._exceptions.IntegrityError):
-                    # vlozenie uz admina do tabulky
-                    pass
-
-            if list(request.form.keys())[0] == 'button2':
-                cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
-                mysql.connection.commit()
-
-        # cursor.execute('SELECT * FROM admin WHERE id_uzivatela = % s ', (session['id_uziv'], ))
         cursor.execute('SELECT * FROM admin')
         admin = cursor.fetchall()
         admin = [id for id_list in admin for id in id_list.values()]
+        if session['id_uziv'] in admin:
+            if request.method == 'POST':
+                if list(request.form.keys())[0] == 'button1':
+                    try:        
+                        cursor.execute('INSERT INTO admin VALUES (% s)', (request.form['button1'], ))
+                        mysql.connection.commit()
+                    except (MySQLdb._exceptions.IntegrityError):
+                        # vlozenie uz admina do tabulky
+                        pass
 
-        cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
-        users = cursor.fetchall()
-        
-        users = tuple(filter(lambda x: x['login'] != session['login'], users))
-        for user in users:
-            if user['id_uziv'] in admin:
-                user['admin'] = "Yes"
-            else:
-                user['admin'] = "No"
-        
-        if admin:
+                if list(request.form.keys())[0] == 'button2':
+                    cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
+                    mysql.connection.commit()
+                if list(request.form.keys())[0] == 'button3':
+                    print(request.form['button3'])
+                    return redirect(url_for('um_edit', conf_id = request.form['button3']))
+
+            cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
+            users = cursor.fetchall()
+
+            cursor.execute('SELECT * FROM admin')
+            admin = cursor.fetchall()
+            admin = [id for id_list in admin for id in id_list.values()]
+            
+            users = tuple(filter(lambda x: x['login'] != session['login'], users))
+            for user in users:
+                if user['id_uziv'] in admin:
+                    user['admin'] = "Yes"
+                else:
+                    user['admin'] = "No"
             admin_bool = True
-        
-        cursor.close()
-        return render_template("user_management.html", admin_bool = admin_bool, users = users)
+            
+            cursor.close()
+            return render_template("user_management.html", admin_bool = admin_bool, users = users)
+        else:
+            return redirect(url_for('index'))
+    return redirect(url_for('login'))
+
+@app.route('/user_management/edit/<conf_id>', methods = ['GET', 'POST'])
+def um_edit(conf_id):
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM admin')
+        admin = cursor.fetchall()
+        admin = [id for id_list in admin for id in id_list.values()]
+        if session['id_uziv'] in admin:
+            admin_bool = True
+
+            sql = "SELECT * FROM uzivatel WHERE id_uziv = % s"
+            params = (conf_id,)
+            cursor.execute(sql, params)
+            account = cursor.fetchone()
+
+            if request.method == 'POST' and 'meno' in request.form and request.form['meno'] != "":
+                meno = request.form['meno']
+                sql = "UPDATE uzivatel SET  meno =% s WHERE id_uziv =% s"
+                params = (meno, conf_id,)
+                cursor.execute(sql, params)
+                mysql.connection.commit()
+            if request.method == 'POST' and 'priezvisko' in request.form and request.form['priezvisko'] != "":
+                priezvisko = request.form['priezvisko']
+                sql = "UPDATE uzivatel SET  priezvisko =% s WHERE id_uziv =% s"
+                params = (priezvisko, conf_id,)
+                cursor.execute(sql, params)
+                mysql.connection.commit()
+                
+            if request.method == 'POST' and 'email' in request.form and request.form['email'] != "":
+                email = request.form['email']
+                if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                    # TODO osetrit normalne nie jak autik..
+                    pass
+                else:
+                    sql = "UPDATE uzivatel SET  email =% s WHERE id_uziv =% s"
+                    params = (email, conf_id,)
+                    cursor.execute(sql, params)
+                    mysql.connection.commit()
+            if request.method == 'POST':
+                return redirect(url_for('user_management'))
+
+            cursor.close()
+            return render_template("um_edit.html", admin_bool = admin_bool, account = account, conf_id=conf_id)
+        else:
+            cursor.close()
+            return redirect(url_for('index'))
     return redirect(url_for('login'))
 
 
@@ -326,6 +380,28 @@ def my_reservations():
         cursor.execute(sql, params)
         reservations_in_progress = cursor.fetchall()
 
+        if request.method == 'POST' and 'id_rez' in request.form and 'pay_submit' in request.form and request.form['pay_submit'] == 'Pay':
+            sql = "UPDATE rezervacia SET uhradene = 'ano' WHERE id_rez = % s"
+            params = (request.form['id_rez'], )
+            cursor.execute(sql, params)
+            mysql.connection.commit()
+
+        sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'In progress'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        reservations_in_progress = cursor.fetchall()
+
+        sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'Accepted'"
+        params = (session['id_uziv'], )
+        cursor.execute(sql, params)
+        reservations_accepted = cursor.fetchall()
+
+        if request.method == 'POST' and 'id_rez' in request.form and 'pay_submit' in request.form and request.form['pay_submit'] == 'Pay':
+            sql = "UPDATE rezervacia SET uhradene = 'ano' WHERE id_rez = % s"
+            params = (request.form['id_rez'], )
+            cursor.execute(sql, params)
+            mysql.connection.commit()
+
         sql = "SELECT * FROM rezervacia r JOIN konferencia k ON k.id_kon = r.id_konferencie WHERE id_uzivatela = % s AND r.stav = 'Accepted'"
         params = (session['id_uziv'], )
         cursor.execute(sql, params)
@@ -390,12 +466,10 @@ def my_conf(conf_id):
             date = datetime.strptime(request.form['datetime'],"%Y-%m-%dT%H:%M")
 
             if start <= date <= end:
-
                 sql = "SELECT * FROM prednaska WHERE id_miestnosti = % s AND cas = %s AND stav = %s"
                 params = (room_id, request.form['datetime'], "Accepted",)
                 cursor.execute(sql, params)
                 same_time_applicaton = cursor.fetchall()
-
                 if(same_time_applicaton):
                     msg = 'Another application at same time and room already exist!' 
 
@@ -403,9 +477,9 @@ def my_conf(conf_id):
                     sql = "UPDATE prednaska SET id_miestnosti = % s, cas = % s, stav = % s WHERE id_pred = % s"
                     params = (room_id, request.form['datetime'], "Accepted", request.form['id_pred'],)
                     cursor.execute(sql, params)
+            
             else:
                 msg = 'Application does not take place at the time of the conference!'
-
 
         elif request.method == 'POST' and 'id_pred' in request.form and 'submit' in request.form and request.form['submit'] == 'Decline':
             sql = "UPDATE prednaska SET stav = % s WHERE id_pred = % s"

@@ -59,6 +59,11 @@
                                         <button name="button2" value="{{ user['id_uziv'] }}">Remove</button>
                                     </form>
                                 </td>
+                                <td>
+                                    <form action="{{ url_for('user_management') }}" method="post" id='edit'>
+                                        <button name="button3" value="{{ user['id_uziv'] }}">Edit</button>
+                                    </form>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
