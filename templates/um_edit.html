@@ -49,9 +49,9 @@
                         </div>                                     
                 </div> </br></br>
                 <form action="{{ url_for('um_edit', conf_id=conf_id) }}" method="post" autocomplete="off">
-                    <input type="text" name="meno" placeholder="First name" class="textbox" id="meno" ></br></br>
-                    <input type="text" name="priezvisko" placeholder="Last name" class="textbox" id="priezvisko" ></br></br>
-                    <input type="email" name="email" placeholder="Email" class="textbox" id="email" ></br></br>
+                    <input type="text" name="meno" placeholder="First name" class="textbox" id="meno" maxlength="30"></br></br>
+                    <input type="text" name="priezvisko" placeholder="Last name" class="textbox" id="priezvisko" maxlength="30"></br></br>
+                    <input type="email" name="email" placeholder="Email" class="textbox" id="email" maxlength="50"></br></br>
                     <input type="submit" class="btn btn-outline-secondary" value="Update">
               </form> 
             </div>

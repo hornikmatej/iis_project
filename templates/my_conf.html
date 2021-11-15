@@ -80,7 +80,7 @@
                             <input type="hidden" name="id_pred" id="id_pred" value="{{ application['id_pred'] }}" />
                             <td>{{ application['login'] }}</td>
                             <td>{{ application['nazov'] }}</td>
-                            <td>{{ application['obsah'] }}</td>
+                            <td>{{ application['kratky_obsah'] }}</td>
                             <td>
                                 <select name="rooms" id="rooms" required>
                                     {% for room in conf['miestnosti'] %}    
