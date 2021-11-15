@@ -58,7 +58,7 @@ def login():
                 session['id_uziv'] = account['id_uziv']
                 session['login'] = account['login']
                 msg = 'Logged in successfully !'
-                return render_template('index.html', msg = msg, admin_bool = admin_bool)
+                return render_template('index.html', msg = msg, admin_bool = admin_bool, session = session)
             else:
                 msg = 'Incorrect login / password !'
         else:
@@ -108,7 +108,7 @@ def nr_conf(conf_id):
         cursor2.execute(sql, params)
         mysql.connection.commit()
         cursor2.close()
-        msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference ! Please pay tickets in the reservation section for the next 24 hours, otherwise I will be Declined'
+        msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference ! Please pay tickets the next 24 hours, otherwise reservation will be Declined. Pay in:'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     return render_template("nr_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id)
@@ -141,7 +141,7 @@ def register():
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Invalid email address !'
         elif not re.match(r'[A-Za-z0-9]+', login):
-            msg = 'name must contain only characters and numbers !'
+            msg = 'login must contain only characters and numbers !'
         else:
             sql = "INSERT INTO uzivatel VALUES (NULL, % s, % s, % s)"
             params = (meno, priezvisko, email,)
@@ -174,7 +174,7 @@ def index():
 
         cursor.close()
         
-        return render_template("index.html", admin_bool = admin_bool)
+        return render_template("index.html", admin_bool = admin_bool, session = session)
     return redirect(url_for('login'))
 
 @app.route("/user_management", methods =['GET', 'POST'])
@@ -199,7 +199,7 @@ def user_management():
                     mysql.connection.commit()
                 if list(request.form.keys())[0] == 'button3':
                     #print(request.form['button3'])
-                    return redirect(url_for('um_edit', conf_id = request.form['button3']))
+                    return redirect(url_for('um_edit', conf_id = request.form['button3'], session = session))
 
             cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
             users = cursor.fetchall()
@@ -217,9 +217,9 @@ def user_management():
             admin_bool = True
             
             cursor.close()
-            return render_template("user_management.html", admin_bool = admin_bool, users = users)
+            return render_template("user_management.html", admin_bool = admin_bool, users = users, session = session)
         else:
-            return redirect(url_for('index'))
+            return redirect(url_for('index'), session = session)
     return redirect(url_for('login'))
 
 @app.route('/user_management/edit/<conf_id>', methods = ['GET', 'POST'])
@@ -261,13 +261,13 @@ def um_edit(conf_id):
                     cursor.execute(sql, params)
                     mysql.connection.commit()
             if request.method == 'POST':
-                return redirect(url_for('user_management'))
+                return redirect(url_for('user_management'), session = session)
 
             cursor.close()
-            return render_template("um_edit.html", admin_bool = admin_bool, account = account, conf_id=conf_id)
+            return render_template("um_edit.html", admin_bool = admin_bool, account = account, conf_id=conf_id, session = session)
         else:
             cursor.close()
-            return redirect(url_for('index'))
+            return render_template("index", session = session)
     return redirect(url_for('login'))
 
 
@@ -331,7 +331,7 @@ def your_account():
                 mysql.connection.commit()
                 msg+= 'Password updated, '
             else:
-                msg+= 'Password NOT updated they are are not the same or wrong actual password entered, '
+                msg+= 'Password NOT updated, passwords are not the same or wrong WRONG actual password entered!, '
             
         if request.method == 'POST' and 'email' in request.form and request.form['email'] != "":
             email = request.form['email']
@@ -377,7 +377,7 @@ def my_conferences():
 
         cursor.close()
         
-        return render_template("my_conferences.html", confs=confs, admin_bool = admin_bool)
+        return render_template("my_conferences.html", confs=confs, admin_bool = admin_bool, session = session)
     return redirect(url_for('login'))
 
 
@@ -439,7 +439,7 @@ def my_reservations():
         #print(reservations_in_progress)
 
         cursor.close()
-        return render_template("my_reservations.html", reservations_in_progress=reservations_in_progress, reservations_accepted=reservations_accepted, reservations_declined=reservations_declined, admin_bool = admin_bool)
+        return render_template("my_reservations.html", reservations_in_progress=reservations_in_progress, reservations_accepted=reservations_accepted, reservations_declined=reservations_declined, admin_bool = admin_bool, session = session)
     return redirect(url_for('login'))   
 
 
@@ -597,7 +597,7 @@ def my_conf(conf_id):
 
         mysql.connection.commit()
         cursor.close() 
-        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, incoming_reservations=incoming_reservations, admin_bool = admin_bool, msg = msg)
+        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, incoming_reservations=incoming_reservations, admin_bool = admin_bool, msg = msg, session = session)
     return redirect(url_for('login'))
 
 
@@ -617,7 +617,7 @@ def all_conferences():
 
         cursor.close()
 
-        return render_template("all_conferences.html", confs=confs, admin_bool = admin_bool)
+        return render_template("all_conferences.html", confs=confs, admin_bool = admin_bool, session = session)
     return redirect(url_for('login'))
 
 
@@ -650,7 +650,7 @@ def r_conf(conf_id):
             params = (uzivatel, conf_id, pocet, "nie", "In progress", (datetime.now()).strftime("%Y-%m-%d %H:%M:%S"))
             cursor.execute(sql, params)
             mysql.connection.commit()
-            msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference ! Please pay tickets in the My reservation section in the next 24 hours, otherwise reservation will be Declined'
+            msg = 'You have successfully ordered '+str(pocet)+' ticket/s to conference ! Please pay tickets the next 24 hours, otherwise reservation will be Declined. Pay in:'
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             obsah = request.form['obsah']
@@ -659,16 +659,14 @@ def r_conf(conf_id):
             cursor.execute(sql, params)
             mysql.connection.commit()
             msg = 'You have successfully applied presentation on conference, now wait for confirmation!'
-        elif request.method == 'POST':
-            msg = 'Please fill out the form !'
         cursor.close()
         
 
         # redirect if clicked conference is mine
         if conf['login'] == session['login']:
-            return redirect(url_for('my_conf', conf_id = conf_id))
+            return redirect(url_for('my_conf', conf_id = conf_id, session = session))
         else:
-            return render_template("r_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id, admin_bool = admin_bool)
+            return render_template("r_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id, admin_bool = admin_bool, session = session)
     return redirect(url_for('login'))
 
 
@@ -721,7 +719,7 @@ def create_conference():
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
         cursor.close()
-        return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg, rooms=rooms)
+        return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg, rooms=rooms, session=session)
     return redirect(url_for('login'))
 
 
@@ -754,7 +752,7 @@ def my_applications():
 
         cursor.close()
         
-        return render_template("my_applications.html", msg=msg, applications_in_progress=applications_in_progress, applications_accepted=applications_accepted, applications_declined=applications_declined, admin_bool=admin_bool)
+        return render_template("my_applications.html", msg=msg, applications_in_progress=applications_in_progress, applications_accepted=applications_accepted, applications_declined=applications_declined, admin_bool=admin_bool, session = session)
     return redirect(url_for('login'))
 
 
