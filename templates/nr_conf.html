@@ -83,6 +83,11 @@
                         </div>
                     </div></br></br>
                 {% endif %}
+                {% if conf['aktualna_zaplnenost'] == conf['celkova_kapacita'] %}
+                <label style="color: red;">
+                    Cannot reserve tickets because this conference is full.
+                </label></br></br>
+                {% endif %}
             </div>
         </div>
     </body>
