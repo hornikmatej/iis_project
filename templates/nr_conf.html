@@ -55,32 +55,34 @@
                 <div class="msg">
                     {{ msg }}
                 </div>
-                <td>Reservation:</td></br></br>
-                <div class="Reserve" align="center">
-                    <div class="reservebottom" align="center">
-                        <form action="{{ url_for('nr_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
-                            <label for="meno">First name:</label><br>
-                            <input type="text" name="meno" placeholder="Enter Your First name" class="textbox" id="meno" aria-describedby="basic-addon1" maxlength="30" pattern="^[A-Z][a-z]+$" required><br>
-                            <label for="meno" style="color: grey;">*for example: John</label><br>
-                            <label for="meno" style="color: red;">*required</label><br><br>
-                            
-                            <label for="priezvisko">Last name:</label><br>
-                            <input type="text" name="priezvisko" placeholder="Enter Your Last name" class="textbox" id="priezvisko" aria-describedby="basic-addon1" maxlength="30" pattern="^[A-Z][a-z]+$" required><br>
-                            <label for="priezvisko" style="color: grey;">*for example: John</label><br>
-                            <label for="priezvisko" style="color: red;">*required</label><br><br>
+                {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
+                    <td>Reservation:</td></br></br>
+                    <div class="Reserve" align="center">
+                        <div class="reservebottom" align="center">
+                            <form action="{{ url_for('nr_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
+                                <label for="meno">First name:</label><br>
+                                <input type="text" name="meno" placeholder="Enter Your First name" class="textbox" id="meno" aria-describedby="basic-addon1" maxlength="30" pattern="^[A-Z][a-z]+$" required><br>
+                                <label for="meno" style="color: grey;">*for example: John</label><br>
+                                <label for="meno" style="color: red;">*required</label><br><br>
+                                
+                                <label for="priezvisko">Last name:</label><br>
+                                <input type="text" name="priezvisko" placeholder="Enter Your Last name" class="textbox" id="priezvisko" aria-describedby="basic-addon1" maxlength="30" pattern="^[A-Z][a-z]+$" required><br>
+                                <label for="priezvisko" style="color: grey;">*for example: John</label><br>
+                                <label for="priezvisko" style="color: red;">*required</label><br><br>
 
-                            <label for="email">Email:</label><br>
-                            <input type="email" name="email" placeholder="Enter Your email" class="textbox" id="email" aria-describedby="basic-addon1" maxlength="50" required><br>
-                            <label for="email" style="color: red;">*required</label><br><br>
+                                <label for="email">Email:</label><br>
+                                <input type="email" name="email" placeholder="Enter Your email" class="textbox" id="email" aria-describedby="basic-addon1" maxlength="50" required><br>
+                                <label for="email" style="color: red;">*required</label><br><br>
 
-                            <label for="pocet">How many tickets do you want to reserve?</label><br>
-                            <input type="number" id="pocet" name="pocet" placeholder="" class="textbox" aria-describedby="basic-addon1" min="1" max="10" required><br>
-                            <label for="pocet" style="color: red;">*required</label><br><br>
+                                <label for="pocet">How many tickets do you want to reserve?</label><br>
+                                <input type="number" id="pocet" name="pocet" placeholder="" class="textbox" aria-describedby="basic-addon1" min="1" max="10" required><br>
+                                <label for="pocet" style="color: red;">*required</label><br><br>
 
-                            <input type="submit" class="btn btn-outline-secondary" value="Reserve & Pay">
-                        </form>
-                    </div>
-                </div></br></br>
+                                <input type="submit" class="btn btn-outline-secondary" value="Reserve & Pay">
+                            </form>
+                        </div>
+                    </div></br></br>
+                {% endif %}
             </div>
         </div>
     </body>
