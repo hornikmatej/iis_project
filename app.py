@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 app.secret_key = 'your secret key'
-app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=10)
 app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
 app.config['MYSQL_USER'] = 'sql11447453'
 app.config['MYSQL_PASSWORD'] = 'e2KGxNGz6H'
@@ -24,6 +23,12 @@ context = CryptContext(
         default="pbkdf2_sha256",
         pbkdf2_sha256__default_rounds=50000
 )
+
+@app.before_request
+def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=20)
+    session.modified = True
 
 
 @app.route('/')
