@@ -6,7 +6,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime, timedelta
 
 
-
 app = Flask(__name__)
 
 app.secret_key = 'your secret key'
@@ -14,7 +13,6 @@ app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
 app.config['MYSQL_USER'] = 'sql11447453'
 app.config['MYSQL_PASSWORD'] = 'e2KGxNGz6H'
 app.config['MYSQL_DB'] = 'sql11447453'
-
 
 mysql = MySQL(app)
 
@@ -24,6 +22,7 @@ context = CryptContext(
         pbkdf2_sha256__default_rounds=50000
 )
 
+
 @app.before_request
 def before_request():
     session.permanent = True
@@ -32,7 +31,7 @@ def before_request():
 
 
 @app.route('/')
-@app.route('/login', methods =['GET', 'POST'])
+@app.route('/login', methods = ['GET', 'POST'])
 def login():
     msg = ''
     if request.method == 'POST' and 'login' in request.form and 'heslo' in request.form:
@@ -69,6 +68,7 @@ def login():
         else:
             msg = 'Incorrect login / password !'
     return render_template('login.html', msg = msg)
+
 
 @app.route('/nr_all_conf', methods = ['GET', 'POST'])
 def nr_all_conf():
@@ -133,6 +133,7 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
+
 @app.route('/register', methods =['GET', 'POST'])
 def register():
     msg = ''
@@ -196,6 +197,7 @@ def index():
         return render_template("index.html", admin_bool = admin_bool, session = session)
     return redirect(url_for('login'))
 
+
 @app.route("/user_management", methods =['GET', 'POST'])
 def user_management():
     if 'loggedin' in session:
@@ -240,6 +242,7 @@ def user_management():
         else:
             return redirect(url_for('index'), session = session)
     return redirect(url_for('login'))
+
 
 @app.route('/user_management/edit/<conf_id>', methods = ['GET', 'POST'])
 def um_edit(conf_id):
@@ -615,6 +618,11 @@ def my_conf(conf_id):
             cursor.execute(sql, params)
             incoming_reservations = cursor.fetchall()
 
+            sql = "SELECT * FROM rezervacia r JOIN uzivatel u ON r.id_uzivatela = u.id_uziv WHERE r.id_konferencie = % s AND ( r.stav = 'Accepted' OR r.stav = 'Declined')"
+            params = (conf_id, )
+            cursor.execute(sql, params)
+            decided_reservations = cursor.fetchall()
+
             sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s ORDER BY cas"
             params = (conf_id, "Accepted")
             cursor.execute(sql, params)
@@ -631,7 +639,7 @@ def my_conf(conf_id):
         else:
             cursor.close()
             return render_template("my_conf.html", session = session)
-        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, incoming_reservations=incoming_reservations, admin_bool = admin_bool, msg = msg, session = session)
+        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, incoming_reservations=incoming_reservations, decided_reservations=decided_reservations, admin_bool = admin_bool, msg = msg, session = session)
     return redirect(url_for('login'))
 
 
