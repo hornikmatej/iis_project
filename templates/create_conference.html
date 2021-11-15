@@ -61,18 +61,9 @@
                     <label for="rooms">Select room (room capacity):</label><br>
                     <label for="rooms" style="color: grey;">(if more than one hold CTRL)</label><br>
                     <select name="rooms" id="room-select" multiple>
-                        <option value="D105">D105 (100)</option>
-                        <option value="D106">D106 (100)</option>
-                        <option value="D107">D107 (100)</option>
-                        <option value="E112">E112 (200)</option>
-                        <option value="E113">E113 (200)</option>
-                        <option value="E114">E114 (200)</option>
-                        <option value="M101">M101 (50)</option>
-                        <option value="M102">M102 (50)</option>
-                        <option value="M103">M103 (50)</option>
-                        <option value="N203">N203 (70)</option>
-                        <option value="N204">N204 (70)</option>
-                        <option value="N205">N205 (70)</option>
+                        {% for room in rooms %}   
+                            <option value="{{room['nazov']}}">{{room['nazov']}} ({{room['kapacita']}})</option>
+                        {% endfor %}
                     </select></br>
                     <label for="rooms" style="color: red;">*required</label><br><br>
 

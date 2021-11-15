@@ -684,6 +684,11 @@ def create_conference():
         cursor.execute(sql, params)
         admin = cursor.fetchone()
         admin_bool = True if admin else False
+
+        rooms_trans = "SELECT * FROM miestnost"
+        cursor.execute(rooms_trans)
+        rooms = cursor.fetchall()
+
         if request.method == 'POST' and 'nazov' in request.form and 'zaner' in request.form and 'od_datum' in request.form and 'do_datum' in request.form and 'cena' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             zaner = request.form['zaner']
@@ -716,7 +721,7 @@ def create_conference():
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
         cursor.close()
-        return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg)
+        return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg, rooms=rooms)
     return redirect(url_for('login'))
 
 
