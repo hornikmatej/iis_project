@@ -495,7 +495,7 @@ def my_conf(conf_id):
                 cursor.execute(sql, params)
                 same_time_applicaton = cursor.fetchall()
                 if(same_time_applicaton):
-                    msg = 'Another application at same time and room already exist!' 
+                    msg = 'Room is used by your or other conference at the same time, please choose another room.' 
 
                 else:
                     sql = "UPDATE prednaska SET id_miestnosti = % s, cas = % s, stav = % s WHERE id_pred = % s"

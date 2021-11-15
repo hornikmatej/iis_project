@@ -55,9 +55,9 @@
                 <form name="update" action="{{ url_for('your_account') }}" method="post" autocomplete="off">
                     <div class="msg">{{ msg }}</div>
                     <label for="meno">First name:</label><br>
-                    <input type="text" name="meno" placeholder="Your new First name" class="textbox" id="meno" pattern="^[A-Za-z]+$"><br><br>
+                    <input type="text" name="meno" placeholder="Your new First name" class="textbox" id="meno" pattern="^[A-Z][a-z]+$"><br><br>
                     <label for="priezvisko">Last name:</label><br>
-                    <input type="text" name="priezvisko" placeholder="Your new Last name" class="textbox" id="priezvisko" pattern="^[A-Za-z]+$"><br><br>
+                    <input type="text" name="priezvisko" placeholder="Your new Last name" class="textbox" id="priezvisko" pattern="^[A-Z][a-z]+$"><br><br>
                     <label for="heslo">Password:</label><br>
                     <input type="password" name="aktualne_heslo" placeholder="Your actual Password" class="textbox" id="aktualne_heslo"><br><br>
                     <input type="password" name="heslo1" placeholder="Your new  Password" class="textbox" id="heslo1"><br><br>
