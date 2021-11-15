@@ -55,15 +55,21 @@
                 <form name="update" action="{{ url_for('your_account') }}" method="post" autocomplete="off">
                     <div class="msg">{{ msg }}</div>
                     <label for="meno">First name:</label><br>
-                    <input type="text" name="meno" placeholder="Your new First name" class="textbox" id="meno" maxlength="30" pattern="^[A-Za-z]+$"><br><br>
+                    <input type="text" name="meno" placeholder="Your new First name" class="textbox" id="meno" maxlength="30" pattern="^[A-Za-z]+$"><br>
+                    <label for="meno" style="color: grey;">*for example: John</label><br><br>
+
                     <label for="priezvisko">Last name:</label><br>
-                    <input type="text" name="priezvisko" placeholder="Your new Last name" class="textbox" id="priezvisko" maxlength="30" pattern="^[A-Za-z]+$" ><br><br>
+                    <input type="text" name="priezvisko" placeholder="Your new Last name" class="textbox" id="priezvisko" maxlength="30" pattern="^[A-Za-z]+$" ><br>
+                    <label for="priezvisko" style="color: grey;">*for example: Brown</label><br><br>
+
                     <label for="heslo">Password:</label><br>
                     <input type="password" name="aktualne_heslo" placeholder="Your actual Password" class="textbox" id="aktualne_heslo" maxlength="200"><br><br>
                     <input type="password" name="heslo1" placeholder="Your new  Password" class="textbox" id="heslo1" maxlength="200"><br><br>
                     <input type="password" name="heslo2" placeholder="Again new Password" class="textbox" id="heslo2" maxlength="200"><br><br>
+                    
                     <label for="email">Email:</label><br>
                     <input type="email" name="email" placeholder="Your new Email" class="textbox" id="email" maxlength="50"><br><br>
+                    
                     <input type="submit" class="btn btn-outline-secondary" value="Update">
                 </form><br><br>
             </div>
