@@ -32,7 +32,7 @@
                     <div class="msg">{{ kapacita_msg }}</div>
                     
                     <label for="nazov">Title:</label><br>
-                    <input type="text" name="nazov" placeholder="Conference title" class="textbox" id="title" required><br>
+                    <input type="text" name="nazov" placeholder="Conference title" class="textbox" id="title" maxlength="50" required><br>
                     <label for="nazov" style="color: red;">*required</label><br><br>
                     
                     <label for="zaner">Genre:</label><br>
@@ -47,7 +47,7 @@
                     <label for="obsah" style="color: red;">*required</label><br><br>
                     
                     <label for="obsah">Conference content:</label><br>
-                    <textarea name="obsah" cols="40" rows="5" placeholder="What will this conference be about?" class="textbox" id="obsah" required></textarea><br>
+                    <textarea name="obsah" cols="40" rows="5" placeholder="What will this conference be about?" class="textbox" id="obsah" maxlength="300" required></textarea><br>
                     <label for="obsah" style="color: red;">*required</label><br><br>
                     
                     <label for="od_datum">From:</label><br>

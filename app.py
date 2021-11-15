@@ -448,6 +448,15 @@ def my_reservations():
     return redirect(url_for('login'))   
 
 
+def make_short_content(applications):
+    for application in applications:
+        if len(application['obsah']) >= 15:
+            application['kratky_obsah'] = application['obsah'][0:15] + "..."
+        else:
+            application['kratky_obsah'] = application['obsah']
+    return applications
+    
+
 @app.route('/my_conf/<conf_id>', methods = ['GET', 'POST'])
 def my_conf(conf_id):
     msg = ''
@@ -519,6 +528,7 @@ def my_conf(conf_id):
         params = (conf_id, "In progress")
         cursor.execute(sql, params)
         applications = cursor.fetchall()
+        applications = make_short_content(applications)
 
         sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s ORDER BY cas"
         params = (conf_id, "Accepted")
@@ -746,16 +756,19 @@ def my_applications():
         params = (session['id_uziv'], )
         cursor.execute(sql, params)
         applications_in_progress = cursor.fetchall()
-        
+        applications_in_progress = make_short_content(applications_in_progress)
+
         sql = "SELECT * FROM prednaska p JOIN reg_uzivatel r ON p.login = r.login JOIN konferencia k ON p.id_konferencie = k.id_kon JOIN miestnost m ON p.id_miestnosti = m.id_miestnosti WHERE r.id_uziv = % s AND p.stav = 'Accepted'"
         params = (session['id_uziv'], )
         cursor.execute(sql, params)
         applications_accepted = cursor.fetchall()
-        
+        applications_accepted = make_short_content(applications_accepted)
+
         sql = "SELECT * FROM prednaska p JOIN reg_uzivatel r ON p.login = r.login JOIN konferencia k ON p.id_konferencie = k.id_kon WHERE r.id_uziv = % s AND p.stav = 'Declined'"
         params = (session['id_uziv'], )
         cursor.execute(sql, params)
         applications_declined = cursor.fetchall()
+        applications_declined = make_short_content(applications_declined)
 
         cursor.close()
         
