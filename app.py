@@ -280,13 +280,13 @@ def um_edit(conf_id):
                     cursor.execute(sql, params)
                     mysql.connection.commit()
             if request.method == 'POST':
-                return redirect(url_for('user_management'), session = session)
+                return redirect(url_for('user_management'))
 
             cursor.close()
             return render_template("um_edit.html", admin_bool = admin_bool, account = account, conf_id=conf_id, session = session)
         else:
             cursor.close()
-            return render_template("index", session = session)
+            return render_template("index.html", session = session)
     return redirect(url_for('login'))
 
 
@@ -748,7 +748,7 @@ def create_conference():
                 cursor.execute(sql, params)
                 mysql.connection.commit()
                 kapacita_msg = "Capacity of conference: "+str(kapacita)
-                msg = 'You have successfully created coference !'
+                msg = 'You have successfully created conference !'
             else:
                 msg = 'Wrong starting date, start date must be earlier than end date and conference cannot start in past'
         elif request.method == 'POST':
