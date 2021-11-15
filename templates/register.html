@@ -13,16 +13,35 @@
             </div></br></br>
             <div class="registerbottom">
                 <form action="{{ url_for('register')}}" method="post" autocomplete="off">
-            <div class="msg">{{ msg }}</div>
-            <input type="text" name="meno" placeholder="Enter Your First name" class="textbox" id="meno" maxlength="30" pattern="^[A-Z][a-z]+$" required></br></br>
-            <input type="text" name="priezvisko" placeholder="Enter Your Last name" class="textbox" id="priezvisko" maxlength="30" pattern="^[A-Z][a-z]+$" required></br></br>
-            <input type="text" name="login" placeholder="Enter Your Username" class="textbox" id="login" maxlength="100" required></br></br>
-            <input type="password" name="heslo" placeholder="Enter Your Password" class="textbox" id="heslo" maxlength="200" required></br></br>
-            <input type="email" name="email" placeholder="Enter Your Email ID" class="textbox" id="email" maxlength="50" required></br></br>
-            <input type="submit" class="btn btn-outline-secondary" value="Register">
-            </form>
+                    <div class="msg" style="color: red;">{{ msg }}</div><br>
+                    <label for="meno">First name:</label><br>
+                    <input type="text" name="meno" placeholder="Enter Your First name" class="textbox" id="meno" maxlength="30" pattern="^[A-Z][a-z]+$" required><br>
+                    <label for="meno" style="color: grey;">*for example: John</label><br>
+                    <label for="meno" style="color: red;">*required</label><br><br>
+
+                    <label for="priezvisko">Last name:</label><br>
+                    <input type="text" name="priezvisko" placeholder="Enter Your Last name" class="textbox" id="priezvisko" maxlength="30" pattern="^[A-Z][a-z]+$" required><br>
+                    <label for="priezvisko" style="color: grey;">*for example: Brown</label><br>
+                    <label for="priezvisko" style="color: red;">*required</label><br><br>
+
+                    <label for="login">Login:</label><br>
+                    <input type="text" name="login" placeholder="Enter Your Login" class="textbox" id="login" maxlength="100" required><br>
+                    <label for="login" style="color: red;">*required</label><br><br>
+
+                    <label for="heslo">Password:</label><br>
+                    <input type="password" name="heslo1" placeholder="Your new  Password" class="textbox" id="heslo1" maxlength="200" required><br>
+                    <label for="heslo1" style="color: red;">*required</label><br>
+                    <input type="password" name="heslo2" placeholder="Again new Password" class="textbox" id="heslo2" maxlength="200" required><br>
+                    <label for="heslo2" style="color: red;">*required</label><br><br>
+
+                    <label for="email">Email:</label><br>            
+                    <input type="email" name="email" placeholder="Enter Your Email" class="textbox" id="email" maxlength="50" required><br>
+                    <label for="email" style="color: red;">*required</label><br><br>
+
+                    <input type="submit" class="btn btn-outline-secondary" value="Register"><br><br>
+                </form>
                 <p class="worddark">Already have account? <a class="worddark" href="{{ url_for('login')}}">Login here</a></p>
-            </div>
+            </div><br><br>
         </div>
     </body>
 </html>
