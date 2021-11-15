@@ -25,6 +25,7 @@
             <div class="content" align="center">
                 <div class="topbar">
                     <h2>{{ conf['nazov'] }}</h2>
+                    <h3>{{session['login']}}</h3> 
                 </div>
                 <div>
                     <h2>{{ conf['zaner'] }}</h2>
@@ -53,7 +54,11 @@
                     </tbody>
                 </table></br></br>
                 <td>Price: {{ conf['cena'] }}</td></br></br>
-                <div class="msg">{{ msg }}</div>
+                <div class="msg">{{ msg }}
+                    {% if ((msg != '') and (msg != 'You have successfully applied presentation on conference, now wait for confirmation!')) %}
+                        <a href="{{ url_for('my_reservations') }}">My reservations</a></li></br></br>
+                    {% endif %}
+                </div>
                 {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
                     <td>Reservation:</td></br></br>
                     <div class="Reserve" align="center">

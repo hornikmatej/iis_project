@@ -25,7 +25,8 @@
             </div>
             <div class="content" align="center">
                 <div class="topbar">
-                    <h2>Create new conference</h2>                        
+                    <h2>Create new conference</h2>
+                    <h3>{{session['login']}}</h3>                        
                 </div><br>
                 <form action="{{ url_for('create_conference') }}" method="post" autocomplete="off">
                     <div class="msg">{{ msg }}</div>
@@ -36,7 +37,7 @@
                     <label for="nazov" style="color: red;">*required</label><br><br>
                     
                     <label for="zaner">Genre:</label><br>
-                    <select name="zaner" id="Genre-select" multiple>
+                    <select name="zaner" id="Genre-select">
                         <option value="Sport">Sport</option>
                         <option value="Movie">Movie</option>
                         <option value="Technology">Technology</option>
@@ -60,7 +61,7 @@
                     
                     <label for="rooms">Select room (room capacity):</label><br>
                     <label for="rooms" style="color: grey;">(if more than one hold CTRL)</label><br>
-                    <select name="rooms" id="room-select" multiple>
+                    <select name="rooms" id="room-select" multiple required>
                         {% for room in rooms %}   
                             <option value="{{room['nazov']}}">{{room['nazov']}} ({{room['kapacita']}})</option>
                         {% endfor %}
@@ -68,7 +69,7 @@
                     <label for="rooms" style="color: red;">*required</label><br><br>
 
                     <label for="cena">Price:</label><br>
-                    <input type="number" id="cena" name="cena" placeholder="Ticket price" class="textbox" id="price" min="0" required></br>
+                    <input type="number" id="cena" name="cena" placeholder="Ticket price" class="textbox" id="price" min="0" max="1000" required></br>
                     <label for="cena" style="color: red;">*required</label><br><br>
                     
                     <input type="submit" class="btn btn-outline-secondary" value="Create"><br><br>
