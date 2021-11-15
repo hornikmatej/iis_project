@@ -308,14 +308,30 @@ def your_account():
             cursor.execute(sql, params)
             mysql.connection.commit()
             msg+= 'Last name updated, '
-        if request.method == 'POST' and 'heslo' in request.form and request.form['heslo'] != "":
-            heslo = request.form['heslo']
-            heslo = context.hash(heslo)
-            sql = "UPDATE reg_uzivatel SET heslo =% s WHERE id_uziv = % s"
-            params = (heslo, session['id_uziv'],)
+        if request.method == 'POST' and 'aktualne_heslo' in request.form and request.form['aktualne_heslo'] != "" and 'heslo1' in request.form and request.form['heslo1'] != "" and 'heslo2' in request.form and request.form['heslo2'] != "":
+            aktualne_heslo = request.form['aktualne_heslo']
+            heslo1 = request.form['heslo1']
+            heslo2 = request.form['heslo2']
+
+            sql = "SELECT * FROM reg_uzivatel WHERE id_uziv = % s"
+            params = (session['id_uziv'],)
             cursor.execute(sql, params)
-            mysql.connection.commit()
-            msg+= 'Password updated, '
+            account = cursor.fetchone()
+            
+            try:
+                valid = context.verify(aktualne_heslo, account['heslo'])
+            except:
+                msg+= 'Password NOT updated WRONG actual password entered !, '
+
+            if heslo1 == heslo2 and valid == True:
+                heslo1 = context.hash(heslo1)
+                sql = "UPDATE reg_uzivatel SET heslo =% s WHERE id_uziv = % s"
+                params = (heslo1, session['id_uziv'],)
+                cursor.execute(sql, params)
+                mysql.connection.commit()
+                msg+= 'Password updated, '
+            else:
+                msg+= 'Password NOT updated they are are not the same or wrong actual password entered, '
             
         if request.method == 'POST' and 'email' in request.form and request.form['email'] != "":
             email = request.form['email']
@@ -510,21 +526,52 @@ def my_conf(conf_id):
         incoming_reservations = cursor.fetchall()
 
         if request.method == 'POST' and 'id_rez' in request.form and 'reservation_submit' in request.form and request.form['reservation_submit'] == 'Confirm':
+
             sql = "UPDATE rezervacia SET stav = 'Accepted' WHERE id_rez = % s"
             params = (request.form['id_rez'], )
             cursor.execute(sql, params)
             mysql.connection.commit()
 
+            sql = "SELECT celkova_kapacita FROM konferencia WHERE id_kon = % s"
+            params = (conf_id, )
+            cursor.execute(sql, params)
+            conf_capacity_info = cursor.fetchone()
+            mysql.connection.commit()
+
             sql = "SELECT SUM(pocet_listkov) FROM rezervacia WHERE stav = % s AND id_konferencie = % s AND uhradene = % s"
             params = ('Accepted', conf_id, 'ano', )
             cursor.execute(sql, params)
-            number_of_tickets = cursor.fetchone()
+            tickets_sum = cursor.fetchone()
             mysql.connection.commit()
 
-            sql = "UPDATE konferencia SET aktualna_zaplnenost = % s WHERE id_kon = % s"
-            params = (number_of_tickets['SUM(pocet_listkov)'], conf_id, )
-            cursor.execute(sql, params)
-            mysql.connection.commit()
+            maximal_capacity = conf_capacity_info['celkova_kapacita']
+            capacity_after_accept = tickets_sum['SUM(pocet_listkov)']
+            
+            if capacity_after_accept > maximal_capacity:
+                msg = 'Reservation cannot be accepted because the maximum capacity would be exceeded.'
+
+                sql = "UPDATE rezervacia SET stav = 'In progress' WHERE id_rez = % s"
+                params = (request.form['id_rez'], )
+                cursor.execute(sql, params)
+                mysql.connection.commit()
+
+            elif capacity_after_accept == maximal_capacity:
+                msg = 'Conference is full! other reservations are Declined.'
+
+                sql = "UPDATE rezervacia r JOIN uzivatel u ON r.id_uzivatela = u.id_uziv SET stav = 'Declined' WHERE r.id_konferencie = % s AND r.stav = 'In progress'"
+                params = (conf_id, )
+                cursor.execute(sql, params)
+                mysql.connection.commit()
+
+                sql = "UPDATE konferencia SET aktualna_zaplnenost = % s, od_datum = od_datum WHERE id_kon = % s"
+                params = (capacity_after_accept, conf_id, )
+                cursor.execute(sql, params)
+                mysql.connection.commit()  
+            else:
+                sql = "UPDATE konferencia SET aktualna_zaplnenost = % s, od_datum = od_datum WHERE id_kon = % s"
+                params = (capacity_after_accept, conf_id, )
+                cursor.execute(sql, params)
+                mysql.connection.commit()
 
         elif request.method == 'POST' and 'id_rez' in request.form and 'reservation_submit' in request.form and request.form['reservation_submit'] == 'Decline':
             sql = "UPDATE rezervacia SET stav = 'Declined' WHERE id_rez = % s"
@@ -550,7 +597,7 @@ def my_conf(conf_id):
 
         mysql.connection.commit()
         cursor.close() 
-        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, incoming_reservations=incoming_reservations, admin_bool = admin_bool)
+        return render_template("my_conf.html", conf=conf, lecs=presentations, applications=applications, incoming_reservations=incoming_reservations, admin_bool = admin_bool, msg = msg)
     return redirect(url_for('login'))
 
 
@@ -644,24 +691,28 @@ def create_conference():
             od_datum = request.form['od_datum']
             do_datum = request.form['do_datum']
             cena = request.form['cena']
-
-            miestnosti = ""
-            kapacita = 0
-            for room in request.form.getlist('rooms'):
-                sql = "SELECT kapacita FROM miestnost WHERE nazov = % s"
-                params = (room,)
+            now = (datetime.now()).strftime("%Y-%m-%dT%H:%M:%S")
+        
+            if od_datum < do_datum and now < od_datum:
+                miestnosti = ""
+                kapacita = 0
+                for room in request.form.getlist('rooms'):
+                    sql = "SELECT kapacita FROM miestnost WHERE nazov = % s"
+                    params = (room,)
+                    cursor.execute(sql, params)
+                    kapacita_miestnosti = cursor.fetchone()
+                    kapacita+= kapacita_miestnosti['kapacita']
+                    miestnosti+=str(room)+","
+                miestnosti = miestnosti[:-1]
+                
+                sql = "INSERT INTO konferencia VALUES (NULL, % s, % s, % s, % s, % s, % s, % s, % s, % s, 0)"
+                params = (nazov, zaner, obsah, od_datum, do_datum, cena, login, kapacita, miestnosti,)
                 cursor.execute(sql, params)
-                kapacita_miestnosti = cursor.fetchone()
-                kapacita+= kapacita_miestnosti['kapacita']
-                miestnosti+=str(room)+","
-            miestnosti = miestnosti[:-1]
-            
-            sql = "INSERT INTO konferencia VALUES (NULL, % s, % s, % s, % s, % s, % s, % s, % s, % s)"
-            params = (nazov, zaner, obsah, od_datum, do_datum, cena, login, kapacita, miestnosti,)
-            cursor.execute(sql, params)
-            mysql.connection.commit()
-            kapacita_msg = "Capacity of conference: "+str(kapacita)
-            msg = 'You have successfully created coference !'
+                mysql.connection.commit()
+                kapacita_msg = "Capacity of conference: "+str(kapacita)
+                msg = 'You have successfully created coference !'
+            else:
+                msg = 'Wrong starting date, start date must be earlier than end date and conference cannot start in past'
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
         cursor.close()
