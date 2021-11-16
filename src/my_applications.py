@@ -1,4 +1,4 @@
-from modules import *
+from src.modules import *
 
 def make_short_content(applications):
     for application in applications:

@@ -1,4 +1,4 @@
-from modules import *
+from src.modules import *
 
 @app.route("/my_conferences")
 def my_conferences():

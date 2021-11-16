@@ -1,4 +1,4 @@
-from modules import *
+from src.modules import *
 
 @app.route("/my_reservations", methods = ['GET', 'POST'])
 def my_reservations():

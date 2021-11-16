@@ -1,4 +1,4 @@
-from modules import *
+from src.modules import *
 
 @app.route('/r_conf/<conf_id>', methods = ['GET', 'POST'])
 def r_conf(conf_id):

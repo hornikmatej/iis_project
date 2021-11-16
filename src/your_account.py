@@ -1,4 +1,4 @@
-from modules import *
+from src.modules import *
 
 
 @app.route("/your_account", methods =['GET', 'POST'])

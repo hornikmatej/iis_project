@@ -1,4 +1,4 @@
-from modules import *
+from src.modules import *
 
 @app.route('/nr_all_conf', methods = ['GET', 'POST'])
 def nr_all_conf():

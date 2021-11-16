@@ -1,4 +1,4 @@
-from modules import *
+from src.modules import *
 
 @app.route('/')
 @app.route('/login', methods = ['GET', 'POST'])

@@ -1,4 +1,4 @@
-from modules import *
+from src.modules import *
 
 @app.route("/all_conferences", methods = ['GET', 'POST'])
 def all_conferences():
