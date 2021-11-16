@@ -6,10 +6,10 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime, timedelta
 import os
 
-template_dir = os.path.abspath('../templates')
-static_dir = os.path.abspath('../static')
+static_dir = os.path.abspath('static')
+template_dir = os.path.abspath('templates')
 
-app = Flask(__name__, static_folder = static_dir, template_folder = template_dir)
+app = Flask(__name__ , static_folder = static_dir, template_folder = template_dir)
 
 app.secret_key = 'your secret key'
 app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
