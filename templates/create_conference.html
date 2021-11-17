@@ -71,51 +71,65 @@
                     <h3>{{session['login']}}</h3>     
                 </div>
                 <form action="{{ url_for('create_conference') }}" method="post" autocomplete="off">
+                    <p class="mt-5 mb-3">{{ msg }}</p>
+                    <p class="mt-5 mb-3">{{ kapacita_msg }}</p>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="nazov"  id="title" placeholder="*Conference title" maxlength="50" required>
+                        <label for="meno">*Conference title </label>
+                        <label for="meno" style="color: red;">*</label>
+                    </div><p></p>
+                    <label for="zaner" style="color: red;">*</label>
+                    <label for="zaner">Genre: </label>
+                    <select class="form-select"  name="zaner" id="Genre-select" required>
+                        <option value="Beauty">Beauty</option>
+                        <option value="Food">Food</option>
+                        <option value="Games">Games</option>
+                        <option value="Movie">Movie</option>
+                        <option value="Science">Science</option>
+                        <option value="Sport">Sport</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Others">Others</option>
+                    </select><p></p>
+                    <div class="form-floating">
+                        <textarea name="obsah" cols="40" rows="10" class="form-control"   id="obsah" placeholder="*Conference content:" maxlength="300" required></textarea> </textarea>
+                        <label for="obsah">*Conference content </label>
+                        <label for="obsah" style="color: red;">*</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <input type="datetime-local" class="form-control" name="od_datum"  id="date" min="2020-01-01T00:00" max="9999-12-31T00:00" placeholder="*From" value="datetime-local" step="3600" required>
+                        <label for="od_datum">*From </label>
+                        <label for="od_datum" style="color: red;">*</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <input type="datetime-local" class="form-control" name="do_datum"  id="date" min="2020-01-01T00:00" max="9999-12-31T00:00" placeholder="*To" value="datetime-local" step="3600" required>
+                        <label for="do_datum">*To </label>
+                        <label for="do_datum" style="color: red;">*</label>
+                    </div><p></p>
+                    <label for="rooms" style="color: red;">*</label>
+                    <label for="rooms">Rooms (room capacity): </label><br>
+                    <label for="rooms" style="color: grey;">(if more than one hold CTRL)</label><br>
+                    <select class="form-select"  name="rooms" id="room-select" multiple required>
+                        {% for room in rooms %}  
+                            <option value="{{room['nazov']}}">{{room['nazov']}} ({{room['kapacita']}})</option>
+                        {% endfor %}
+                    </select><p></p>
+                    <div class="form-floating">
+                        <input type="number" class="form-control" name="cena"  id="price" placeholder="*Price:" min="0" max="1000" required>
+                        <label for="cena">*Price</label>
+                        <label for="cena" style="color: red;">*</label>
+                    </div><p></p>
+                    <input type="submit" class="w-100 btn btn-lg btn-primary" value="Create">
+
+                    
+                    <!--
                     <div class="msg">{{ msg }}</div>
                     <div class="msg">{{ kapacita_msg }}</div>
                     
-                    <label for="nazov">Title:</label><br>
-                    <input type="text" name="nazov" placeholder="Conference title" class="textbox" id="title" maxlength="50" required><br>
-                    <label for="nazov" style="color: red;">*required</label><br><br>
-                    
-                    <label for="zaner">Genre:</label><br>
-                    <select name="zaner" id="Genre-select">
-                        <option value="Sport">Sport</option>
-                        <option value="Movie">Movie</option>
-                        <option value="Technology">Technology</option>
-                        <option value="Science">Science</option>
-                        <option value="Travel">Travel</option>
-                        <option value="Others">Others</option>
-                    </select><br>
-                    <label for="obsah" style="color: red;">*required</label><br><br>
-                    
-                    <label for="obsah">Conference content:</label><br>
-                    <textarea name="obsah" cols="40" rows="5" placeholder="What will this conference be about?" class="textbox" id="obsah" maxlength="300" required></textarea><br>
-                    <label for="obsah" style="color: red;">*required</label><br><br>
-                    
-                    <label for="od_datum">From:</label><br>
-                    <input type="datetime-local" name="od_datum" placeholder="Date" class="textbox" id="date" min="2020-01-01T00:00" max="9999-12-31T00:00" value="datetime-local" step="3600" required><br>
-                    <label for="od_datum" style="color: red;">*required</label><br><br>
-                    
-                    <label for="do_datum">To:</label><br>
-                    <input type="datetime-local" name="do_datum" placeholder="Date" class="textbox" id="date" min="2020-01-01T00:00" max="9999-12-31T00:00" value="datetime-local" step="3600" required><br>
-                    <label for="do_datum" style="color: red;">*required</label><br><br>
-                    
-                    <label for="rooms">Select room (room capacity):</label><br>
-                    <label for="rooms" style="color: grey;">(if more than one hold CTRL)</label><br>
-                    <select name="rooms" id="room-select" multiple required>
-                        {% for room in rooms %}   
-                            <option value="{{room['nazov']}}">{{room['nazov']}} ({{room['kapacita']}})</option>
-                        {% endfor %}
-                    </select></br>
-                    <label for="rooms" style="color: red;">*required</label><br><br>
-
-                    <label for="cena">Price:</label><br>
-                    <input type="number" id="cena" name="cena" placeholder="Ticket price" class="textbox" id="price" min="0" max="1000" required></br>
-                    <label for="cena" style="color: red;">*required</label><br><br>
-                    
                     <input type="submit" class="btn btn-outline-secondary" value="Create"><br><br>
-                </form>
+                    -->
+                </form> 
             </div>
         </div>
     </body>

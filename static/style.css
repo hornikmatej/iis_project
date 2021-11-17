@@ -1,35 +1,35 @@
 /*Store this code in 'style.css' file inside the 'static' folder*/
 
-/* .textbox {
-  padding: 10px 40px;
-  background-color: #ffffff;
-  border-radius: 1px;
+.form-signin .form-floating:focus-within {
+  z-index: 2;
 }
 
-::placeholder {
-  color: #727272;
-  opacity: 1;
-  font-style: oblique;
-  font-weight: bold;
+.one .content {
+  width: 100%;
+  height: auto;
+  padding: 10px;
 }
 
-/* .btn {
-  padding: 10px 40px;
-  background-color: #009933;
-  color: #ffffff;
-  font-style: oblique;
-  font-weight: bold;
-  border-radius: 10px;
-} */
+.one .content .topbar {
+  text-align: center;
+  margin: -10px;
+  background: rgba(13, 110, 253);
+  color: white;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
 
 .worddark {
   color: #727272;
-  font-style: oblique;
-  font-weight: bold;
-}
-
-.wordlight {
-  color: #ffffff;
   font-style: oblique;
   font-weight: bold;
 }
@@ -90,21 +90,6 @@
   width: 25px;
 }
 
-.one .content {
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-}
-
-.one .content .topbar {
-  text-align: center;
-  margin: -10px;
-  /* border-radius: 7px; */
-  /* padding: 5px; */
-  background: rgba(13, 110, 253);
-  color: white;
-}
-
 .one .content .contentbar {
   margin: auto;
 }
@@ -114,8 +99,4 @@
   text-align: center;
   font-style: oblique;
   font-weight: bold;
-}
-
-.table {
-  max-width: 500px;
 }
