@@ -6,22 +6,6 @@
     </head>
     <body bgcolor="#e6ffee">
         <div class="one">
-            <!-- <div class="two">
-                <h1>Side Bar</h1>
-                <ul>
-                    <li><a href="{{url_for('index')}}">Index</a></li>
-                    <li><a href="{{url_for('your_account')}}">Your account</a></li>
-                    <li><a href="{{url_for('my_reservations')}}">My reservations</a></li>
-                    <li><a href="{{url_for('my_conferences')}}">My conferences</a></li>
-                    <li><a href="{{url_for('all_conferences')}}">All conferences</a></li>
-                    <li><a href="{{url_for('create_conference')}}">Create new conference</a></li>
-                    <li class="active"><a href="{{url_for('my_applications')}}">My applications</a></li>
-                    {% if admin_bool %}
-                    <li><a href="{{url_for('user_management')}}">User management</a></li>
-                    {% endif %}
-                    <li><a href="{{url_for('logout')}}">Log out</a></li>
-                </ul> 
-            </div> -->
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; min-height: 100vh;">
                 <a href="{{url_for('your_account')}}" class="d-flex sidebarr align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                     <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
@@ -83,7 +67,7 @@
             </div> 
             <div class="content" align="center">
                 <div class="topbar">
-                    <h2>My applications</h2>
+                    <h1>My applications</h1>
                     <h3>{{session['login']}}</h3> 
                 </div><br>
                 <label for="applications_in_progress">Applications in progress:</label><br>

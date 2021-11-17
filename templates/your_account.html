@@ -83,43 +83,56 @@
                     </li>
                 </ul>
             </div> 
-            <div class="content" align="center">
+            <div class="content" align="left">
                 <div class="topbar">
-                    <h2>Your account</h2> 
+                    <h1>Your account</h1> 
                     <h3>{{reg_uzivatel['login']}}</h3>                        
                 </div>
-                <div class="contentbar">
-                    <div class="border">
-                        <table class="worddark"><br>
-                            <tr>
-                                <td>First name:</td>
-                                <td>{{ account['meno'] }}</td>
-                            </tr>
-                            <tr>
-                                <td>Last name:</td>
-                                <td>{{ account['priezvisko'] }}</td>
-                            </tr> 
-                            <tr>
-                                <td>Email:</td>
-                                <td>{{ account['email'] }}</td>
-                            </tr>  
-                            <tr>
-                                <td>Login:</td>
-                                <td>{{ reg_uzivatel['login'] }}</td>
-                            </tr>                   
-                        </table></br>   
-                    </div>
-                </div><br>
-                <label for="update">Here you can update your personal informations:</label><br><br>
+                <table class="worddark"><br>
+                    <tr>
+                        <h2>&nbsp &nbsp First name: {{ account['meno'] }}</h2>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <h2>&nbsp &nbsp Last name: {{ account['priezvisko'] }}</h2>
+                        <td></td>
+                    </tr> 
+                    <tr>
+                        <h2>&nbsp &nbsp Email: {{ account['email'] }}</h2>
+                    </tr>  
+                    <tr>
+                        <h2>&nbsp &nbsp Login: {{ reg_uzivatel['login'] }}</h2>
+                    </tr>                   
+                </table></br>   
+                <div class="border"></div></br>
+                <h2 align="center">Here you can update your personal informations</h2>
                 <form name="update" action="{{ url_for('your_account') }}" method="post" autocomplete="off">
-                    <div class="msg">{{ msg }}</div>
-                    <input type="text" name="meno" placeholder="First name (example: John)" class="textbox" id="meno" maxlength="30" pattern="^[A-Z][a-z]*$"><br><br>
-                    <input type="text" name="priezvisko" placeholder="Last name (example: Brown)" class="textbox" id="priezvisko" maxlength="30" pattern="^[A-Z][a-z]*$"><br><br>
-                    <input type="password" name="aktualne_heslo" placeholder="Actual password" class="textbox" id="aktualne_heslo" maxlength="200"><br><br>
-                    <input type="password" name="heslo1" placeholder="New password" class="textbox" id="heslo1" maxlength="200"><br><br>
-                    <input type="password" name="heslo2" placeholder="New password again" class="textbox" id="heslo2" maxlength="200"><br><br>
-                    <input type="email" name="email" placeholder="New Email" class="textbox" id="email" maxlength="50" pattern="[^@]+@[^@]+\.[^@]+"><br><br>
-                    <input type="submit" class="btn btn-outline-secondary" value="Update">
+                    <h2  align="center">{{ msg }}</h2>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="meno"  id="meno" placeholder="First name (example: John)" maxlength="30" pattern="^[A-Z][a-z]*$" >
+                        <label for="meno">First name (example: John)</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="priezvisko"  id="priezvisko" placeholder="Last name (example: Brown)" maxlength="30" pattern="^[A-Z][a-z]*$" >
+                        <label for="priezvisko">Last name (example: Brown)</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <input type="password" name="aktualne_heslo" class="form-control" id="aktualne_heslo" placeholder="Actual password" maxlength="200" >
+                        <label for="floatingPassword">Actual password</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <input type="password" name="heslo1" class="form-control" id="heslo1" placeholder="New password" maxlength="200" >
+                        <label for="floatingPassword">New password</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <input type="password" name="heslo2" class="form-control" id="heslo2" placeholder="New password again" maxlength="200" >
+                        <label for="floatingPassword">New password again</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <input type="email" name="email" class="form-control" id="email" placeholder="New email (example: john@brown.com)" maxlength="50"  pattern="[^@]+@[^@]+\.[^@]+" >
+                        <label for="email">New email (example: john@brown.com)</label>
+                    </div><p></p>
+                    <input type="submit" class="w-100 btn btn-lg btn-primary" value="Update">
                 </form><br><br>
             </div>
         </div>
