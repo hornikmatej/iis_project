@@ -107,13 +107,16 @@
 
 .one .content {
   width: 100%;
-  margin-left: 200px;
+  height: 100%;
+  padding: 10px;
 }
 
 .one .content .topbar {
   text-align: center;
-  padding: 20px;
-  background: #00b33c;
+  margin: -10px;
+  /* border-radius: 7px; */
+  /* padding: 5px; */
+  background: rgba(13, 110, 253);
   color: white;
 }
 
