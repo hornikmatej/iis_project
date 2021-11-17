@@ -70,7 +70,7 @@
                     <h2>Create new conference</h2>
                     <h3>{{session['login']}}</h3>     
                 </div>
-                <form action="{{ url_for('create_conference') }}" method="post" autocomplete="off">
+                <form action="{{ url_for('create_conference') }}"  onsubmit="return checkRegistration()" method="post" autocomplete="off">
                     <p class="mt-5 mb-3">{{ msg }}</p>
                     <p class="mt-5 mb-3">{{ kapacita_msg }}</p>
 
@@ -98,12 +98,12 @@
                         <label for="obsah" style="color: red;">*</label>
                     </div><p></p>
                     <div class="form-floating">
-                        <input type="datetime-local" class="form-control" name="od_datum"  id="date" min="2020-01-01T00:00" max="9999-12-31T00:00" placeholder="*From" value="datetime-local" step="3600" required>
+                        <input type="datetime-local" class="form-control" name="od_datum"  id="date_od" min="2020-01-01T00:00" max="9999-12-31T00:00" placeholder="*From" value="datetime-local" step="3600" required>
                         <label for="od_datum">*From </label>
                         <label for="od_datum" style="color: red;">*</label>
                     </div><p></p>
                     <div class="form-floating">
-                        <input type="datetime-local" class="form-control" name="do_datum"  id="date" min="2020-01-01T00:00" max="9999-12-31T00:00" placeholder="*To" value="datetime-local" step="3600" required>
+                        <input type="datetime-local" class="form-control" name="do_datum"  id="date_do" min="2020-01-01T00:00" max="9999-12-31T00:00" placeholder="*To" value="datetime-local" step="3600" required>
                         <label for="do_datum">*To </label>
                         <label for="do_datum" style="color: red;">*</label>
                     </div><p></p>
@@ -128,8 +128,24 @@
                     <div class="msg">{{ kapacita_msg }}</div>
                     
                     <input type="submit" class="btn btn-outline-secondary" value="Create"><br><br>
-                    -->
-                </form> 
+                      -->
+                    <script>
+                        function checkRegistration(){
+                            var date_od = new Date (document.getElementById('date_od').value);
+                            var date_do = new Date (document.getElementById('date_do').value);
+                            var date_now = new Date ();
+
+                            console.log(date_od.getTime() > date_do.getTime());
+                            console.log(date_now.getTime() > date_od.getTime());
+                            
+                            if (date_od.getTime() > date_do.getTime() || date_now.getTime() > date_od.getTime()){
+                                alert("Wrong starting date, start date must be earlier than end date and conference cannot start in past");
+                                return false;
+                            }
+                            return true;
+                        }
+                    </script>
+                </form>
             </div>
         </div>
     </body>
