@@ -17,15 +17,9 @@
 
 /* .textbox {
   padding: 10px 40px;
-<<<<<<< HEAD
-  background-color: #009933;
-  border-radius: 10px;
-} */
-=======
   background-color: #ffffff;
   border-radius: 1px;
 }
->>>>>>> 3e281ed86034403b1404bdfb9533ef3765fcbbec
 
 ::placeholder {
   color: #727272;
@@ -109,7 +103,6 @@
 
 .one .two ul li a .side {
   width: 25px;
-  align: center;
 }
 
 .one .content {
