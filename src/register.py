@@ -3,6 +3,8 @@ from src.modules import *
 @app.route('/register', methods =['GET', 'POST'])
 def register():
     msg = ''
+    if 'loggedin' in session:
+        return redirect(url_for('index'))
     if request.method == 'POST' and 'login' in request.form and 'heslo1' in request.form and 'heslo2' in request.form and 'email' in request.form and 'meno' in request.form and 'priezvisko' in request.form:
         meno = request.form['meno']
         priezvisko = request.form['priezvisko']
@@ -37,10 +39,10 @@ def register():
                 cursor.execute(sql, params)
                 mysql.connection.commit()
                 cursor.close()
-                msg = 'You have successfully registered !'
-
+                msg = 'Successfully registered ! Now sign in.'
+                return render_template("login.html", msg = msg)
         else:
-            msg = 'Passwords are not match!'
+            msg = 'Passwords do not match!'
     
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
