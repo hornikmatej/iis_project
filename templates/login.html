@@ -8,19 +8,19 @@
     </head>
     <body>
         <div class="logincontent" align="center">
-            <div class="logintop">
-                <h1>Login</h1>
-            </div></br></br></br></br>
+            <div class="logintop"></br></br></br></br></br></br></br></br></br>
+                <h1>Please sign in</h1>
+            </div>
             <div class="loginbottom">
                 <form action="{{ url_for('login')}}" method="post" autocomplete="off">
-            <div class="msg">{{ msg }}</div>
-            <input type="text" name="login" placeholder="Enter Your Username" class="textbox" id="login" maxlength="100" required></br></br>
-            <input type="password" name="heslo" placeholder="Enter Your Password" class="textbox" id="heslo" maxlength="200" required></br></br></br>
-            <input type="submit" class="btn btn-outline-secondary" value="Login">
-            </form></br></br>
-            <p class="worddark">New to this page? <a class="worddark" href="{{ url_for('register')}}">Register here</a></p>
-            </form></br></br>
-            <p class="worddark">Would you like to <a class="worddark" href="{{ url_for('nr_all_conf')}}">continue without registration.</a></p>
+                <div class="msg">{{ msg }}</div>
+                <input type="text" name="login" placeholder="Username" class="textbox" id="login" maxlength="100" required></br>
+                <input type="password" name="heslo" placeholder="Password" class="textbox" id="heslo" maxlength="200" required></br></br></br>
+                <input type="submit" class="btn btn-outline-secondary" value="Sign in">
+                </form></br></br>
+                <p class="worddark">New to this page? <a class="worddark" href="{{ url_for('register')}}">Register here</a></p>
+            </form>
+            <p class="worddark">Would you like to <a class="worddark" href="{{ url_for('nr_all_conf')}}">continue without registration ?</a></p>
             </div>
         </div>
     </body>

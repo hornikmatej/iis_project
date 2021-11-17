@@ -1,26 +1,11 @@
 /*Store this code in 'style.css' file inside the 'static' folder*/
 
-.logincontent {
-  margin: 0 auto;
-  height: 500px;
-  width: 400px;
-  background-color: #e6ffee;
-  border-radius: 10px;
-}
-
 .registercontent {
   margin: 0 auto;
   height: 720px;
   width: 400px;
-  background-color: #e6ffee;
+  background-color: #e9e9e9;
   border-radius: 10px;
-}
-
-.logintop {
-  height: 60px;
-  width: 400px;
-  background-color: #009933;
-  color: #ffffff;
 }
 
 .registertop {
@@ -32,12 +17,12 @@
 
 .textbox {
   padding: 10px 40px;
-  background-color: #009933;
-  border-radius: 10px;
+  background-color: #ffffff;
+  border-radius: 1px;
 }
 
 ::placeholder {
-  color: #ffffff;
+  color: #727272;
   opacity: 1;
   font-style: oblique;
   font-weight: bold;
@@ -53,7 +38,7 @@
 } */
 
 .worddark {
-  color: #009933;
+  color: #727272;
   font-style: oblique;
   font-weight: bold;
 }
