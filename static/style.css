@@ -30,11 +30,11 @@
   color: #ffffff;
 }
 
-.textbox {
+/* .textbox {
   padding: 10px 40px;
   background-color: #009933;
   border-radius: 10px;
-}
+} */
 
 ::placeholder {
   color: #ffffff;
