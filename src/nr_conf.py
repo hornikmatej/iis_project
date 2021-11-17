@@ -2,6 +2,8 @@ from src.modules import *
 
 @app.route('/nr_conf/<conf_id>', methods =['GET', 'POST'])
 def nr_conf(conf_id):
+    if 'loggedin' in session:
+        return redirect(url_for('r_conf', conf_id = conf_id))
     msg = ''
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     sql = "SELECT * FROM konferencia WHERE id_kon = % s"
