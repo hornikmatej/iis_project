@@ -134,7 +134,11 @@
                     <tbody>
                         <tr>
                             <td>{{ conf['zaner'] }}</td>
-                            <td>{{ conf['kratky_obsah'] }}</td>
+                            <td>
+                                <span data-toggle="tooltip" data-placement="top" title=" {{ conf['obsah'] }}">
+                                    {{ conf['kratky_obsah'] }}
+                                </span>
+                            </td>
                             <td>{{ conf['od_datum'] }}</td>
                             <td>{{ conf['do_datum'] }}</td>
                             <td>{{ conf['login'] }} (you)</td>
@@ -191,7 +195,11 @@
                                 <input type="hidden" name="id_pred" id="id_pred" value="{{ application['id_pred'] }}" />
                                 <td>{{ application['login'] }}</td>
                                 <td>{{ application['nazov'] }}</td>
-                                <td>{{ application['kratky_obsah'] }}</td>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title=" {{ application['obsah'] }}">
+                                        {{ application['kratky_obsah'] }}
+                                    </span>
+                                </td>
                                 <td>
                                     <select name="rooms" id="rooms" required>
                                         {% for room in conf['miestnosti'] %}    
@@ -222,8 +230,10 @@
                             <tr>
                                 <th style="width: 20%; text-align: left;">
                                     <input type="checkbox" id="checkall"/>
-                                    <input type="submit" name="reservation_submit_accept" id="reservation_submit_accept" value="Accept"/>
-                                    <input type="submit" name="reservation_submit_decline" id="reservation_submit_decline" value="Decline"/>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <input class="btn btn-outline-success btn-sm" type="submit" name="reservation_submit_accept" id="reservation_submit_accept" value="Accept"/>
+                                        <input class="btn btn-outline-danger btn-sm" type="submit" name="reservation_submit_decline" id="reservation_submit_decline" value="Decline"/>
+                                    </div>
                                 </th>
                                 <th style="color: darkgray; width: 5%;">ID</th>
                                 <th style="width: 65%;">Customer</th>

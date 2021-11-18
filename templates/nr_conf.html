@@ -50,7 +50,11 @@
                     <tbody>
                         <tr>
                             <td>{{ conf['zaner'] }}</td>
-                            <td>{{ conf['kratky_obsah'] }}</td>
+                            <td>
+                                <span data-toggle="tooltip" data-placement="top" title=" {{ conf['obsah'] }}">
+                                    {{ conf['kratky_obsah'] }}
+                                </span>
+                            </td>
                             <td>{{ conf['od_datum'] }}</td>
                             <td>{{ conf['do_datum'] }}</td>
                             <td>{{ conf['login'] }}</td>
