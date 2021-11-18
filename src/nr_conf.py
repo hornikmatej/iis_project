@@ -41,7 +41,7 @@ def nr_conf(conf_id):
         mysql.connection.commit()
         cursor2.close()
         
-        msg = 'You have successfully ordered and paid '+str(pocet)+' ticket/s to conference ! Wait for the confirmation email, if your reservation is declined, money will be returned to your bank account.'
+        msg = 'You have successfully ordered and paid '+str(pocet)+' ticket/s to the conference ! Wait for the confirmation email, if your reservation is declined, money will be returned to your bank account.'
     
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
