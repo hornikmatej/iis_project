@@ -134,7 +134,11 @@
                     <tbody>
                         <tr>
                             <td>{{ conf['zaner'] }}</td>
-                            <td>{{ conf['kratky_obsah'] }}</td>
+                            <td>
+                                <span data-toggle="tooltip" data-placement="top" title=" {{ conf['obsah'] }}">
+                                    {{ conf['kratky_obsah'] }}
+                                </span>
+                            </td>
                             <td>{{ conf['od_datum'] }}</td>
                             <td>{{ conf['do_datum'] }}</td>
                             <td>{{ conf['login'] }} (you)</td>
@@ -191,7 +195,11 @@
                                 <input type="hidden" name="id_pred" id="id_pred" value="{{ application['id_pred'] }}" />
                                 <td>{{ application['login'] }}</td>
                                 <td>{{ application['nazov'] }}</td>
-                                <td>{{ application['kratky_obsah'] }}</td>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title=" {{ application['obsah'] }}">
+                                        {{ application['kratky_obsah'] }}
+                                    </span>
+                                </td>
                                 <td>
                                     <select name="rooms" id="rooms" required>
                                         {% for room in conf['miestnosti'] %}    
