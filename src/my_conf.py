@@ -6,12 +6,19 @@ from src.modules import *
 
 
 def make_short_content(applications):
-    for application in applications:
-        if len(application['obsah']) >= 15:
-            application['kratky_obsah'] = application['obsah'][0:15] + "..."
+    try:
+        if len(applications['obsah']) >= 15:
+            applications['kratky_obsah'] = applications['obsah'][0:15] + "..."
         else:
-            application['kratky_obsah'] = application['obsah']
-    return applications
+            applications['kratky_obsah'] = applications['obsah']
+        return applications
+    except:
+        for application in applications:
+            if len(application['obsah']) >= 15:
+                application['kratky_obsah'] = application['obsah'][0:15] + "..."
+            else:
+                application['kratky_obsah'] = application['obsah']
+        return applications
 
 
 @app.route('/my_conf/<conf_id>', methods = ['GET', 'POST'])
@@ -23,6 +30,7 @@ def my_conf(conf_id):
         cursor.execute("SELECT * FROM konferencia WHERE id_kon = % s", (conf_id, ))
         conf = cursor.fetchone()
         conf['miestnosti'] = conf['miestnosti'].split(",")
+        conf = make_short_content(conf)
 
         if session['login'] == conf['login']:
             cursor.execute("SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = 'Accepted' ORDER BY cas", (conf_id, ))
@@ -68,6 +76,7 @@ def my_conf(conf_id):
 
             cursor.execute("SELECT * FROM prednaska WHERE id_konferencie = % s AND stav = 'In progress'", (conf_id, ))
             applications = cursor.fetchall()
+            applications = make_short_content(applications)
 
             cursor.execute("SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = 'Accepted' ORDER BY cas", (conf_id, ))
             presentations = cursor.fetchall()
@@ -134,6 +143,7 @@ def my_conf(conf_id):
             cursor.execute("SELECT * FROM konferencia WHERE id_kon = % s", (conf_id, ))
             conf = cursor.fetchone()
             conf['miestnosti'] = conf['miestnosti'].split(",")
+            conf = make_short_content(conf)
 
             mysql.connection.commit()
             cursor.close() 

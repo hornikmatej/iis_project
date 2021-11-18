@@ -1,5 +1,13 @@
 from src.modules import *
 
+def make_short_content(applications):
+    if len(applications['obsah']) >= 15:
+        applications['kratky_obsah'] = applications['obsah'][0:15] + "..."
+    else:
+        applications['kratky_obsah'] = applications['obsah']
+    return applications
+
+
 @app.route('/nr_conf/<conf_id>', methods =['GET', 'POST'])
 def nr_conf(conf_id):
     if 'loggedin' in session:
@@ -11,6 +19,7 @@ def nr_conf(conf_id):
     cursor.execute(sql, params)
     conf = cursor.fetchone()
     conf['miestnosti'] = conf['miestnosti'].split(",")
+    conf = make_short_content(conf)
     
     sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s AND p.stav = %s ORDER BY cas"
     params = (conf_id, "Accepted")
