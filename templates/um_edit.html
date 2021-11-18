@@ -80,30 +80,30 @@
                     </ul>
                 </div>
             </div>
-            <div class="content" align="left">
+            <div class="content" align="center">
                 <div class="topbar">
                     <h1>Edit user</h1>
                     <h3>{{session['login']}}</h3>                       
                 </div></br>
-                <table class="worddark"></br>
-                    <tr>
-                        <h1>You are editing user:</h1>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <h1>&nbsp &nbsp First name: {{ account['meno'] }}</h1>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <h1>&nbsp &nbsp Last name: {{ account['priezvisko'] }}</h1>
-                        <td></td>
-                    </tr> 
-                    <tr>
-                        <h1>&nbsp &nbsp Email: {{ account['email'] }}</h1>
-                    </tr>               
-                </table></br> 
-                <div class="border"></div>                                     
-                </br></br>
+                <table name="info" id="info" class="table" style="max-width: 100%;border-color: white;" >
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        <tr>
+                            <td>Edit user:</td>
+                            <td>{{ account['meno'] }}</td>
+                            <td>{{ account['priezvisko'] }}</td>
+                            <td>{{ account['email'] }}</td>
+                        </tr>  
+                    </tbody>
+                </table>                                    
+                </br>
                 <form action="{{ url_for('um_edit', conf_id=conf_id) }}" method="post" autocomplete="off">
                     <div class="form-floating">
                         <input type="text" class="form-control" name="meno"  id="meno" placeholder="First name (example: John)" maxlength="30" pattern="^[A-Z][a-z]*$">
