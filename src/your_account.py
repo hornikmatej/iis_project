@@ -61,7 +61,7 @@ def your_account():
                 mysql.connection.commit()
                 msg+= 'Password updated, '
             else:
-                msg+= 'Password NOT updated, passwords are not the same or wrong WRONG actual password entered!, '
+                msg+= 'Password NOT updated, you entered wrong actual or new passwords do not match, '
             
         if request.method == 'POST' and 'email' in request.form and request.form['email'] != "":
             email = request.form['email']

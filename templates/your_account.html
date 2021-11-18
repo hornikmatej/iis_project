@@ -107,7 +107,7 @@
                 <div class="border"></div></br>
                 <h2 align="center">Here you can update your personal informations</h2>
                 <form name="update" action="{{ url_for('your_account') }}" method="post" autocomplete="off">
-                    <h2  align="center">{{ msg }}</h2>
+                    <h3  align="center" style="color:grey;" >{{ msg }}</h3>
                     <div class="form-floating">
                         <input type="text" class="form-control" name="meno"  id="meno" placeholder="First name (example: John)" maxlength="30" pattern="^[A-Z][a-z]*$" >
                         <label for="meno">First name (example: John)</label>

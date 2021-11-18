@@ -34,8 +34,8 @@ def r_conf(conf_id):
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             obsah = request.form['obsah']
-            sql = "INSERT INTO prednaska VALUES (NULL, % s, NULL, NULL, % s, % s, % s, 'In progress')"
-            params = (conf_id, session['login'], nazov, obsah,)
+            sql = "INSERT INTO prednaska VALUES (NULL, % s, NULL, %s, % s, % s, % s, 'In progress')"
+            params = (conf_id,(datetime.now()).strftime("%Y-%m-%d %H:%M:%S"), session['login'], nazov, obsah,)
             cursor.execute(sql, params)
             mysql.connection.commit()
             msg = 'You have successfully applied presentation on conference, now wait for confirmation!'

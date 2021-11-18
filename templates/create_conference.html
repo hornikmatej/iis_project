@@ -71,9 +71,9 @@
                     <h3>{{session['login']}}</h3>     
                 </div>
                 <form action="{{ url_for('create_conference') }}"  onsubmit="return checkRegistration()" method="post" autocomplete="off">
-                    <p class="mt-5 mb-3">{{ msg }}</p>
-                    <p class="mt-5 mb-3">{{ kapacita_msg }}</p>
-
+                    <h3 align="center" style="color:grey;">{{ msg }}</h3>
+                    <h3 align="center" style="color:grey;">{{ kapacita_msg }}</h3><p></p>
+                    
                     <div class="form-floating">
                         <input type="text" class="form-control" name="nazov"  id="title" placeholder="*Conference title" maxlength="50" required>
                         <label for="meno">*Conference title </label>
@@ -116,19 +116,12 @@
                         {% endfor %}
                     </select><p></p>
                     <div class="form-floating">
-                        <input type="number" class="form-control" name="cena"  id="price" placeholder="*Price:" min="0" max="1000" required>
-                        <label for="cena">*Price</label>
+                        <input type="number" class="form-control" name="cena"  id="price" placeholder="*Price €" min="0" max="1000" required>
+                        <label for="cena">*Price €</label>
                         <label for="cena" style="color: red;">*</label>
-                    </div><p></p>
+                    </div>
+                    <label for="rooms" style="color: red;">*required</label>
                     <input type="submit" class="w-100 btn btn-lg btn-primary" value="Create">
-
-                    
-                    <!--
-                    <div class="msg">{{ msg }}</div>
-                    <div class="msg">{{ kapacita_msg }}</div>
-                    
-                    <input type="submit" class="btn btn-outline-secondary" value="Create"><br><br>
-                      -->
                     <script>
                         function checkRegistration(){
                             var date_od = new Date (document.getElementById('date_od').value);

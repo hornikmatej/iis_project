@@ -65,46 +65,51 @@
                     </li>
                 </ul>
             </div> 
-            <div class="content" align="center">
+            <div class="content" align="left">
                 <div class="topbar">
                     <h1>{{ conf['nazov'] }}</h1>
                     <h3>{{session['login']}}</h3> 
-                </div>
-                <div>
-                    <h2>{{ conf['zaner'] }}</h2>
-                    <h2>{{ conf['obsah'] }}</h2>
-                    <h2>From: {{ conf['od_datum'] }}</h2>
-                    <h2>To: {{ conf['do_datum'] }}</h2>
-                    <h2>Organisator: {{ conf['login'] }}</h2>
-                    <h2>Capacity: {{ conf['aktualna_zaplnenost'] }} / {{ conf['celkova_kapacita'] }}</h2>
-                    <h2>Price: {{ conf['cena'] }}</h2>
                 </div><br>
-                <label>Presentations:</label><br>
+
+                <div>
+                    <h3>&nbsp Genre: {{ conf['zaner'] }}</h3>
+                    <h3>&nbsp Content: {{ conf['obsah'] }}</h3>
+                    <h3>&nbsp From: {{ conf['od_datum'] }}</h3>
+                    <h3>&nbsp To: {{ conf['do_datum'] }}</h3>
+                    <h3>&nbsp Organisator: you</h3>
+                    <h3>&nbsp Capacity: {{ conf['aktualna_zaplnenost'] }} / {{ conf['celkova_kapacita'] }}</h3>
+                    <h3>&nbsp Price: {{ conf['cena'] }} €</h3>
+                </div><br>
+                <div class="border"></div></br>
+
+                <h3>&nbsp Presentations:</h3>
                 {% for room in conf['miestnosti'] %}
-                <label>{{ room }}</label>
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Date & Time:</th>
-                            <th>Speaker:</th>
-                            <th>Presentation:</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for lec in lecs %}
-                        {% if lec['m.nazov'] == room %}
-                        <tr>
-                            <td>{{ lec['cas'] }}</td>
-                            <td>{{ lec['login'] }}</td>
-                            <td>{{ lec['nazov'] }}</td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table><br>
+                    <label>&nbsp &nbsp Room: &nbsp{{ room }}</label>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>&nbsp&nbsp Date & Time:</th>
+                                <th>Speaker:</th>
+                                <th>Presentation:</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lec in lecs %}
+                            {% if lec['m.nazov'] == room %}
+                            <tr>
+                                <td>{{ lec['cas'] }}</td>
+                                <td>{{ lec['login'] }}</td>
+                                <td>{{ lec['nazov'] }}</td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table><br>
                 {% endfor %}
-                <label for="applications">Applications:</label>
-                <div class="msg">{{ msg }}</div>
+                <div class="border"></div></br>
+
+                <h3>&nbsp Applications:</h3>
+                <h3 align="center" style="color:grey;">{{ msg }}</h3>
                 <table name="applications" id="applications" class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -148,7 +153,7 @@
                     </tbody>
                 </table><br>
                 {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
-                <label for="incoming_reservations">Incoming reservations:</label>
+                <h3>&nbsp Incoming reservations:</h3>
                 <table name="incoming_reservations" id="incoming_reservations" class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -178,11 +183,12 @@
                 </table><br>
                 {% endif %}
                 {% if conf['aktualna_zaplnenost'] == conf['celkova_kapacita'] %}
-                <label style="color: red;">
+                <h3 align="center" style="color: red;">
                     Cannot accept more reservations because this conference is full. All remaining reservations were automatically declined.
-                </label></br></br>
+                </h3>
                 {% endif %}
-                <label for="decided_reservations">Decided reservations:</label>
+
+                <h3>&nbsp Decided reservations:</h3>
                 <table name="decided_reservations" id="decided_reservations" class="table table-striped table-hover">
                     <thead>
                         <tr>
