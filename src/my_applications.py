@@ -1,12 +1,19 @@
 from src.modules import *
 
 def make_short_content(applications):
-    for application in applications:
-        if len(application['obsah']) >= 15:
-            application['kratky_obsah'] = application['obsah'][0:15] + "..."
+    try:
+        if len(applications['obsah']) >= 15:
+            applications['kratky_obsah'] = applications['obsah'][0:15] + "..."
         else:
-            application['kratky_obsah'] = application['obsah']
-    return applications
+            applications['kratky_obsah'] = applications['obsah']
+        return applications
+    except:
+        for application in applications:
+            if len(application['obsah']) >= 15:
+                application['kratky_obsah'] = application['obsah'][0:15] + "..."
+            else:
+                application['kratky_obsah'] = application['obsah']
+        return applications
 
 @app.route("/my_applications", methods = ['GET', 'POST'])
 def my_applications():
