@@ -23,7 +23,7 @@ def user_management():
                     mysql.connection.commit()
                 if list(request.form.keys())[0] == 'button3':
                     #print(request.form['button3'])
-                    return redirect(url_for('um_edit', conf_id = request.form['button3'], session = session))
+                    return redirect(url_for('um_edit', conf_id = request.form['button3']))
 
             cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
             users = cursor.fetchall()

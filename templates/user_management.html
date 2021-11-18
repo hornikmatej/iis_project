@@ -91,16 +91,20 @@
                                 <td>{{ user['id_uziv'] }}</td>
                                 <td>{{ user['admin'] }}</td>
                                 <td>
-                                    <form action="{{ url_for('user_management') }}" method="post" id='a_yes'>
-                                        <button name="button1" value="{{ user['id_uziv'] }}">Add</button>
-                                    </form>
-                                    <form action="{{ url_for('user_management') }}" method="post" id='a_no'>
-                                        <button name="button2" value="{{ user['id_uziv'] }}">Remove</button>
-                                    </form>
+                                    <div class="btn-group-vertical">
+                                    
+                                        <form action="{{ url_for('user_management') }}" method="post" id='a_yes'>
+                                            <button class="btn btn-outline-primary btn-sm" name="button1" value="{{ user['id_uziv'] }}">Add</button>
+                                        </form>
+                                        <form action="{{ url_for('user_management') }}" method="post" id='a_no'>
+                                            <button class="btn btn-outline-primary btn-sm" name="button2" value="{{ user['id_uziv'] }}">Remove</button>
+                                        </form>
+
+                                    </div>
                                 </td>
                                 <td>
                                     <form action="{{ url_for('user_management') }}" method="post" id='edit'>
-                                        <button name="button3" value="{{ user['id_uziv'] }}">Edit</button>
+                                        <button class="btn btn-outline-primary btn-sm" name="button3" value="{{ user['id_uziv'] }}">Edit</button>
                                     </form>
                                 </td>
                             </tr>
