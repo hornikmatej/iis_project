@@ -54,7 +54,7 @@ def r_conf(conf_id):
 
         # redirect if clicked conference is mine
         if conf['login'] == session['login']:
-            return redirect(url_for('my_conf', conf_id = conf_id, session = session))
+            return redirect(url_for('my_conf', conf_id = conf_id))
         else:
             return render_template("r_conf.html", conf = conf, lecs = lecs, msg = msg, conf_id = conf_id, admin_bool = admin_bool, session = session)
     return redirect(url_for('login'))
