@@ -12,10 +12,10 @@ template_dir = os.path.abspath('templates')
 app = Flask(__name__ , static_folder = static_dir, template_folder = template_dir)
 
 app.secret_key = 'your secret key'
-app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
-app.config['MYSQL_USER'] = 'sql11447453'
-app.config['MYSQL_PASSWORD'] = 'e2KGxNGz6H'
-app.config['MYSQL_DB'] = 'sql11447453'
+app.config['MYSQL_HOST'] = 'remotemysql.com'
+app.config['MYSQL_USER'] = 'vcby3qlzlT'
+app.config['MYSQL_PASSWORD'] = 'fNYUUHSa0M'
+app.config['MYSQL_DB'] = 'vcby3qlzlT'
 
 mysql = MySQL(app)
 

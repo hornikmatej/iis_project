@@ -132,5 +132,14 @@
 }
 
 .table {
-  max-width: 500px;
+  max-width: 800px;
+  text-align: center;
+  border: 1px;
+  border-color: darkgray;
+}
+
+.reservation_submit_accept {
+  background: url("../static/imgs/check.png"); 
+  width: "15px"; 
+  height: "15px"; 
 }
