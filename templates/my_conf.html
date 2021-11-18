@@ -230,8 +230,10 @@
                             <tr>
                                 <th style="width: 20%; text-align: left;">
                                     <input type="checkbox" id="checkall"/>
-                                    <input type="submit" name="reservation_submit_accept" id="reservation_submit_accept" value="Accept"/>
-                                    <input type="submit" name="reservation_submit_decline" id="reservation_submit_decline" value="Decline"/>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <input class="btn btn-outline-success btn-sm" type="submit" name="reservation_submit_accept" id="reservation_submit_accept" value="Accept"/>
+                                        <input class="btn btn-outline-danger btn-sm" type="submit" name="reservation_submit_decline" id="reservation_submit_decline" value="Decline"/>
+                                    </div>
                                 </th>
                                 <th style="color: darkgray; width: 5%;">ID</th>
                                 <th style="width: 65%;">Customer</th>
