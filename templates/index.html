@@ -32,7 +32,23 @@
                         My applications
                         </a>
                     </li>
-                    <li>
+                    
+                    <li >
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+                            <a href="#" class="nav-link text-white">
+                            Conferences
+                            </a>
+                        </button>
+                        <div class="collapse" id="home-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="{{url_for('my_conferences')}}" class="nav-link text-white ">My conferences</a></li>
+                            <li><a href="{{url_for('all_conferences')}}" class="nav-link text-white ">All conferences</a></li>
+                            <li><a href="{{url_for('create_conference')}}" class="nav-link text-white ">Create new conference</a></li>
+                        </ul>
+                        </div>
+                    </li>
+
+                    <!-- <li>
                         <a href="{{url_for('my_conferences')}}" class="nav-link text-white sidebarr">
                         <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
                         My conferences
@@ -49,7 +65,7 @@
                         <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
                         Create new conference
                         </a>
-                    </li>
+                    </li> -->
                     {% if admin_bool %}
                     <li>
                         <a href="{{url_for('user_management')}}" class="nav-link text-white sidebarr">
