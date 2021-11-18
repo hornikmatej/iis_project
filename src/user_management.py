@@ -21,11 +21,8 @@ def user_management():
                 if list(request.form.keys())[0] == 'button2':
                     cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
                     mysql.connection.commit()
-                if list(request.form.keys())[0] == 'button3':
-                    #print(request.form['button3'])
-                    return redirect(url_for('um_edit', conf_id = request.form['button3']))
 
-            cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv')
+            cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv ORDER BY u.id_uziv ')
             users = cursor.fetchall()
 
             cursor.execute('SELECT * FROM admin')
