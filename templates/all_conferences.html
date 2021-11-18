@@ -6,22 +6,6 @@
     </head>
     <body bgcolor="#e6ffee">
         <div class="one">
-            <!-- <div class="two">
-                <h1>Side Bar</h1>
-                <ul>
-                    <li><a href="{{url_for('index')}}">Index</a></li>
-                    <li><a href="{{url_for('your_account')}}">Your account</a></li>
-                    <li><a href="{{url_for('my_reservations')}}">My reservations</a></li>
-                    <li><a href="{{url_for('my_conferences')}}">My conferences</a></li>
-                    <li class="active"><a href="{{url_for('all_conferences')}}">All conferences</a></li>
-                    <li><a href="{{url_for('create_conference')}}">Create new conference</a></li>
-                    <li><a href="{{url_for('my_applications')}}">My applications</a></li>
-                    {% if admin_bool %}
-                    <li><a href="{{url_for('user_management')}}">User management</a></li>
-                    {% endif %}
-                    <li><a href="{{url_for('logout')}}">Log out</a></li>
-                </ul> 
-            </div> -->
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; min-height: 100vh;">
                 <a href="{{url_for('your_account')}}" class=" sidebarr d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                     <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
@@ -62,25 +46,6 @@
                         </ul>
                         </div>
                     </li>
-
-                    <!-- <li>
-                        <a href="{{url_for('my_conferences')}}" class="nav-link text-white  sidebarr">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-                        My conferences
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{url_for('all_conferences')}}" class="nav-link active  sidebarr">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
-                        All conferences
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{url_for('create_conference')}}" class="nav-link text-white  sidebarr">
-                        <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
-                        Create new conference
-                        </a>
-                    </li> -->
                     {% if admin_bool %}
                     <li>
                         <a href="{{url_for('user_management')}}" class="nav-link text-white sidebarr">
@@ -90,23 +55,23 @@
                     </li>
                     {% endif %}
                     <li>
-                        <a href="{{url_for('logout')}}" class="nav-link text-white  sidebarr">
+                        <a href="{{url_for('logout')}}" class="nav-link  sidebarr" style="color: red;">
                         <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
-                        Log out
+                        Sign out
                         </a>
                     </li>
                 </ul>
                 <hr>
                 <div class="dropdown">
                     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                      <img src="https://www.nonprofithr.com/wp-content/uploads/2017/05/icon_profile_unknown_300x300.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                      <strong>{{session['login']}}</strong>
+                        <img src="https://www.nonprofithr.com/wp-content/uploads/2017/05/icon_profile_unknown_300x300.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong>{{session['login']}}</strong>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                      <li><a class="dropdown-item" href="#">Settings</a></li>
-                      <li><a class="dropdown-item" href="{{url_for('your_account')}}">Profile</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="{{url_for('logout')}}">Sign out</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="{{url_for('your_account')}}">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{url_for('logout')}}">Sign out</a></li>
                     </ul>
                 </div>
             </div> 
