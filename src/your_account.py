@@ -62,6 +62,8 @@ def your_account():
                 msg+= 'Password updated, '
             else:
                 msg+= 'Password NOT updated, you entered wrong actual or new passwords do not match, '
+        elif request.method == 'POST' and (request.form['aktualne_heslo'] != "" or request.form['heslo1'] != "" or request.form['heslo2'] != ""):
+            msg+= 'Password NOT updated, fill required inputs, '
             
         if request.method == 'POST' and 'email' in request.form and request.form['email'] != "":
             email = request.form['email']

@@ -8,22 +8,6 @@
     </head>
     <body bgcolor="#e6ffee">
         <div class="one">
-            <!-- <div class="two">
-                <h1>Side Bar</h1>
-                <ul>
-                    <li><a href="{{url_for('index')}}">Index</a></li>
-                    <li class="active"><a href="{{url_for('your_account')}}">Your account</a></li>
-                    <li><a href="{{url_for('my_reservations')}}">My reservations</a></li>
-                    <li><a href="{{url_for('my_conferences')}}">My conferences</a></li>
-                    <li><a href="{{url_for('all_conferences')}}">All conferences</a></li>
-                    <li><a href="{{url_for('create_conference')}}">Create new conference</a></li>
-                    <li><a href="{{url_for('my_applications')}}">My applications</a></li>
-                    {% if admin_bool %}
-                    <li><a href="{{url_for('user_management')}}">User management</a></li>
-                    {% endif %}
-                    <li><a href="{{url_for('logout')}}">Log out</a></li>
-                </ul> 
-            </div> -->
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; min-height: 100vh;">
                 <a href="{{url_for('your_account')}}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                     <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
@@ -87,24 +71,25 @@
                 <div class="topbar">
                     <h1>Your account</h1> 
                     <h3>{{reg_uzivatel['login']}}</h3>                        
-                </div>
-                <table class="worddark"><br>
-                    <tr>
-                        <h2>&nbsp &nbsp First name: {{ account['meno'] }}</h2>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <h2>&nbsp &nbsp Last name: {{ account['priezvisko'] }}</h2>
-                        <td></td>
-                    </tr> 
-                    <tr>
-                        <h2>&nbsp &nbsp Email: {{ account['email'] }}</h2>
-                    </tr>  
-                    <tr>
-                        <h2>&nbsp &nbsp Login: {{ reg_uzivatel['login'] }}</h2>
-                    </tr>                   
-                </table></br>   
-                <div class="border"></div></br>
+                </div><br>
+                <table name="info" id="info" class="table" style="max-width: 100%;border-color: white;" >
+                    <thead>
+                        <tr>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Email</th>
+                            <th>Login</th>
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        <tr>
+                            <td>{{ account['meno'] }}</td>
+                            <td>{{ account['priezvisko'] }}</td>
+                            <td>{{ account['email'] }}</td>
+                            <td>{{ reg_uzivatel['login'] }}</td>
+                        </tr>  
+                    </tbody>
+                </table>  
                 <h2 align="center">Here you can update your personal informations</h2>
                 <form name="update" action="{{ url_for('your_account') }}" method="post" autocomplete="off">
                     <h3  align="center" style="color:grey;" >{{ msg }}</h3>
@@ -117,21 +102,25 @@
                         <label for="priezvisko">Last name (example: Brown)</label>
                     </div><p></p>
                     <div class="form-floating">
-                        <input type="password" name="aktualne_heslo" class="form-control" id="aktualne_heslo" placeholder="Actual password" maxlength="200" >
-                        <label for="floatingPassword">Actual password</label>
-                    </div><p></p>
-                    <div class="form-floating">
-                        <input type="password" name="heslo1" class="form-control" id="heslo1" placeholder="New password" maxlength="200" >
-                        <label for="floatingPassword">New password</label>
-                    </div><p></p>
-                    <div class="form-floating">
-                        <input type="password" name="heslo2" class="form-control" id="heslo2" placeholder="New password again" maxlength="200" >
-                        <label for="floatingPassword">New password again</label>
-                    </div><p></p>
-                    <div class="form-floating">
                         <input type="email" name="email" class="form-control" id="email" placeholder="New email (example: john@brown.com)" maxlength="50"  pattern="[^@]+@[^@]+\.[^@]+" >
                         <label for="email">New email (example: john@brown.com)</label>
                     </div><p></p>
+                    <div class="form-floating">
+                        <input type="password" name="aktualne_heslo" class="form-control" id="aktualne_heslo" placeholder="*Actual password" maxlength="200" >
+                        <label for="floatingPassword">*Actual password</label>
+                        <label for="meno" style="color: red;">*</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <input type="password" name="heslo1" class="form-control" id="heslo1" placeholder="*New password" maxlength="200" >
+                        <label for="floatingPassword">*New password</label>
+                        <label for="meno" style="color: red;">*</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <input type="password" name="heslo2" class="form-control" id="heslo2" placeholder="*New password again" maxlength="200" >
+                        <label for="floatingPassword">*New password again</label>
+                        <label for="meno" style="color: red;">*</label>
+                    </div><p></p>
+                    <label for="meno" style="color: red;">* required when you want to change password</label><br><br>
                     <input type="submit" class="w-100 btn btn-lg btn-primary" value="Update">
                 </form><br><br>
             </div>
