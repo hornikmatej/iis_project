@@ -47,6 +47,7 @@ def create_conference():
             else:
                 msg = 'Wrong starting date, start date must be earlier than end date and conference cannot start in past'
         elif request.method == 'POST':
+            print(request.form)
             msg = 'Please fill out the form !'
         cursor.close()
         return render_template("create_conference.html", msg = msg, admin_bool = admin_bool, kapacita_msg = kapacita_msg, rooms=rooms, session=session)
