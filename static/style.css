@@ -104,3 +104,10 @@
 .text-white:hover{
   background-color: rgb(22, 25, 27)
 }
+
+.table {
+  max-width: 800px;
+  text-align: center;
+  border: 1px;
+  border-color: darkgray;
+}
