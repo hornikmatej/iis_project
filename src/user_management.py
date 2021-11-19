@@ -9,17 +9,32 @@ def user_management():
         admin = cursor.fetchall()
         admin = [id for id_list in admin for id in id_list.values()]
         if session['id_uziv'] in admin:
-            if request.method == 'POST':
-                if list(request.form.keys())[0] == 'button1':
-                    try:        
-                        cursor.execute('INSERT INTO admin VALUES (% s)', (request.form['button1'], ))
+            if request.method == 'POST' and 'admin_rights_add' in request.form:
+                for getid in request.form.getlist('mycheckbox'):
+                    try:
+                        cursor.execute("INSERT INTO admin VALUES (% s)", (getid, ))
                         mysql.connection.commit()
                     except (MySQLdb._exceptions.IntegrityError):
                         # vlozenie uz admina do tabulky
                         pass
 
-                if list(request.form.keys())[0] == 'button2':
-                    cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
+                # if list(request.form.keys())[0] == 'button1':
+                #     try:        
+                #         cursor.execute('INSERT INTO admin VALUES (% s)', (request.form['button1'], ))
+                #         mysql.connection.commit()
+                #     except (MySQLdb._exceptions.IntegrityError):
+                #         # vlozenie uz admina do tabulky
+                #         pass
+
+                # if list(request.form.keys())[0] == 'button2':
+                #     cursor.execute('DELETE FROM admin WHERE id_uzivatela = (% s)', (request.form['button2'], ))
+                #     mysql.connection.commit()
+                # if list(request.form.keys())[0] == 'button3':
+                #     #print(request.form['button3'])
+                #     return redirect(url_for('um_edit', conf_id = request.form['button3']))
+            elif request.method == 'POST' and 'admin_rights_remove' in request.form:
+                for getid in request.form.getlist('mycheckbox'):
+                    cursor.execute("DELETE FROM admin WHERE id_uzivatela = % s", (getid, ))
                     mysql.connection.commit()
 
             cursor.execute('SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv ORDER BY u.id_uziv ')
