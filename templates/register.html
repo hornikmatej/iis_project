@@ -37,14 +37,14 @@
                     <label for="meno" style="color: red;">*</label>
                 </div><p></p>
                 <div class="form-floating">
-                    <input type="email" name="email" class="form-control" id="email" placeholder="*Email (example: john@brown.com)" maxlength="50"  pattern="[^@]+@[^@]+\.[^@]+" required>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="*Email (example: john@brown.com)" maxlength="50"  pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" required>
                     <label for="email">*Email (example: john@brown.com)</label>
                     <label for="meno" style="color: red;">*</label>
                 </div>
                 <label for="meno" style="color: red;">* required</label><br><br>
                 <input type="submit" class="w-100 btn btn-lg btn-primary" value="Register">
             </form>
-            <p class="worddark">Already have account? <a class="worddark" href="{{ url_for('login')}}">Login here</a></p>
+            <p class="worddark">Already have account? <a class="worddark" href="{{ url_for('login')}}">Sign in here</a></p>
             <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
         </div>
     </body>

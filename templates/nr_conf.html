@@ -26,7 +26,7 @@
                     <li>
                         <a href="{{url_for('login')}}" class="nav-link text-white sidebarr">
                         <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
-                        Login
+                        Sign in
                         </a>
                     </li>
                 </ul>
@@ -105,7 +105,7 @@
                                     <label for="meno" style="color: red;">*</label>
                                 </div><p></p>
                                 <div class="form-floating">
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="*Email (example: john@brown.com)" aria-describedby="basic-addon1" maxlength="50"  pattern="[^@]+@[^@]+\.[^@]+" required>
+                                    <input type="email" name="email" class="form-control" id="email" placeholder="*Email (example: john@brown.com)" aria-describedby="basic-addon1" maxlength="50"  pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" required>
                                     <label for="email">*Email (example: john@brown.com)</label>
                                     <label for="meno" style="color: red;">*</label>
                                 </div><p></p>

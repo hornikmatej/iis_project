@@ -3,7 +3,6 @@ from src.modules import *
 @app.route('/')
 @app.route('/login', methods = ['GET', 'POST'])
 def login(msg = ''):
-    print (msg)
     if 'loggedin' in session:
         return redirect(url_for('index'))
     if request.method == 'POST' and 'login' in request.form and 'heslo' in request.form:

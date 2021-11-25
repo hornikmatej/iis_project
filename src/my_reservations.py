@@ -55,7 +55,6 @@ def my_reservations():
         cursor.execute(sql, params)
         reservations_declined = cursor.fetchall()
                 
-        #print(reservations_in_progress)
 
         cursor.close()
         return render_template("my_reservations.html", reservations_in_progress=reservations_in_progress, reservations_accepted=reservations_accepted, reservations_declined=reservations_declined, admin_bool = admin_bool, session = session)
