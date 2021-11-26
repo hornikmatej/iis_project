@@ -1,7 +1,14 @@
 from src.modules import *
 
-@app.route('/register', methods =['GET', 'POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
+    """ function is called when unregistred user want to register himself
+    from request form we get user First name, Last name, Login, password twice (for check if he insert same passwords) and email 
+    registred user in session are redicted to index page
+    if registration is successful user is redicted to login page, else user insert wrong information
+    function return msg which contains information for user
+    """
     msg = ''
     if 'loggedin' in session:
         return redirect(url_for('index'))
@@ -40,11 +47,11 @@ def register():
                 mysql.connection.commit()
                 cursor.close()
                 msg = 'Successfully registered ! Now sign in.'
-                return render_template("login.html", msg = msg)
+                return render_template("login.html", msg=msg)
         else:
             msg = 'Passwords do not match!'
-    
+
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
-    
-    return render_template('register.html', msg = msg)
+
+    return render_template('register.html', msg=msg)
