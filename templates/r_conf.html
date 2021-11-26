@@ -91,8 +91,7 @@ About:  On the left is static sidebar that offers quick access to most clickable
                 <div class="topbar">
                     <h1>{{ conf['nazov'] }}</h1>
                     <h3>{{session['login']}}</h3> 
-                </div><br>
-
+                </div>
                 <table name="info" id="info" class="table" style="max-width: 100%;border-color: white;" >
                     <thead>
                         <tr>
@@ -120,10 +119,8 @@ About:  On the left is static sidebar that offers quick access to most clickable
                             <td>{{ conf['cena'] }} €</td>
                         </tr>  
                     </tbody>
-                </table>                                    
-                </br>
-                <div class="border"></div></br>
-                
+                </table>
+                <div class="border"></div><br>
                 <h3 align="center">&nbsp Presentations:</h3>
                 {% for room in conf['miestnosti'] %}
                     <label >Room: &nbsp{{ room }}</label>
@@ -178,7 +175,7 @@ About:  On the left is static sidebar that offers quick access to most clickable
                     {% if conf['aktualna_zaplnenost'] == conf['celkova_kapacita'] %}
                     <h3 align="center" style="color: red;">
                         Cannot reserve tickets because this conference is full.
-                    </h3>
+                    </h3><br>
                     {% endif %}
 
                     <div class="border"></div></br>
