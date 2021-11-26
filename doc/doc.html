@@ -34,8 +34,7 @@
 		dynamické zobrazovanie údajov z databázy, práca s html súbormi, osetrenie vstupov
 	</dd>
 	<dt>URL aplikace</dt>
-	<dd><a href="http://www.stud.fit.vutbr.cz/~xautor01/IIS">http://www.stud.fit.vutbr.cz/~xautor01/IIS</a></dd>
-	<dd>(pokud má aplikace více vstupních stránek, napi¹te obdobnì dal¹í URL)</dd>
+	<dd><a href="https://iis-project-konference.herokuapp.com/">https://iis-project-konference.herokuapp.com/</a></dd>
 </dl>
 
 <h2>Uzivatelé systému pro testování</h2>
@@ -50,15 +49,17 @@
 </table>
 
 <h2>Implementace</h2>
-<p>Struèná dokumentace k implementaci, která popisuje, které èásti projektu (napø. PHP skripty) implementují jednotlivé pøípady pou¾ití.</p>
+<p>Vytvaranie konferencie prebieha v subore create_conference.py. Proces prihlasovania a odlhasovania je implementovany v log.py. 
+Registracia uzivatelov je implementovana v subore register.py. SPrava uzivatelov a editacia ich udajov sa nachadza v subore user_management.py. 
+Prehlad rezervacii uzivatela a ich potvrdenie je implementovane v my_reservations.py. Prehlad ziadosti o prednasky a ich stav sa nachadza v my_applications.py.
+ V subore my_conf.py je implementove system pre spravu konferencie, to jest prijmanie a rusenie rezervacii, prijmanie a vytvarania rozvrhu prednasok taktiez ich rusenie. 
+V subore your_account.py je implementove upravovanie uzivatelskych udajov.</p>
 
 <h3>Databáze</h3>
 
 <img src="graficke zobrazenie databazy.png" alt="Italian Trulli">
 
 <h2>Instalace</h2>
-
-Struènì popiste: 
 <ul>
 <li>Ako server sme pouzili <a href="https://www.heroku.com">heroku.com</a>. <br> 
 	<ul>
@@ -76,7 +77,9 @@ Struènì popiste:
 </ul>
 
 <h2>Známé problémy</h2>
-<p>Zde popi¹te, které body zadání nejsou implementovány a z jakého dùvodu. Napø. &#8222;Z èasových dùvodù nebyla implementována správa u¾ivatelù.&#8221; Pomù¾ete tím zrychlit hodnocení, kdy¾ neimplementované funkce nebudeme muset dlouze hledat.</p>
+<p>Vytvorene prezentacie neobsahuju ziadne tagy, fotky, poster ani logo a dlzka prezentacie nie je volitelna, kazda prednaska trva hodinu. 
+Registrovany uzivatel sice vidi v rozpis prednasok ale priamo v systeme si nemoze vytvarat osobny rozvrh. Rozsirenia neboli implementovane, 
+okrem vyssie uvedenych problemov nas informacny system plne odpoveda zadaniu.</p>
 
 
 
