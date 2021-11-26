@@ -3,6 +3,9 @@ from src.modules import *
 
 @app.route("/index")
 def index():
+    """Endpoint for index page
+    Accesible for logged in users, else redirected to login page
+    """
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         sql = "SELECT * FROM admin WHERE id_uzivatela = % s"

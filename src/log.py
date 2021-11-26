@@ -3,6 +3,13 @@ from src.modules import *
 @app.route('/')
 @app.route('/login', methods = ['GET', 'POST'])
 def login(msg = ''):
+    """Endpoint for sign in to application
+    If user is logged in already, he is redirected to index page
+    Password is transformed to hash and then compared
+
+    Arguments:
+        msg -- message that is shown to user after failed sign in
+    """
     if 'loggedin' in session:
         return redirect(url_for('index'))
     if request.method == 'POST' and 'login' in request.form and 'heslo' in request.form:
@@ -16,6 +23,7 @@ def login(msg = ''):
         account = cursor.fetchone()
         
         try:
+            # verifiying password
             valid = context.verify(heslo, account['heslo'])
         except:
             msg = 'Incorrect login / password !'
@@ -29,6 +37,7 @@ def login(msg = ''):
                 admin_bool = True if admin else False
                 
                 cursor.close()
+                # storing session data
                 session['loggedin'] = True
                 session['id_uziv'] = account['id_uziv']
                 session['login'] = account['login']
@@ -42,6 +51,9 @@ def login(msg = ''):
 
 @app.route('/logout')
 def logout():
+    """Endpoint for sing out 
+    Drops the data from session
+    """
     session.pop('loggedin', None)
     session.pop('id', None)
     session.pop('username', None)

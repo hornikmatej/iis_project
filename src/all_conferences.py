@@ -3,6 +3,9 @@ from src.modules import *
 
 @app.route("/all_conferences", methods=['GET', 'POST'])
 def all_conferences():
+    """Endpoint for all conferences in system.
+    Accesible only for logged users, else redirected for login page
+    """
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 

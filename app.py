@@ -16,6 +16,8 @@ from src.my_applications import *
 
 @app.before_request
 def before_request():
+    """Inicializacia aplikacie, nastavenie trvanie platnej session
+    """
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=20)
     session.modified = True 

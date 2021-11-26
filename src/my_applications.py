@@ -1,6 +1,11 @@
 from src.modules import *
 
 def make_short_content(applications):
+    """If content is too long to show on html, this funtion will cut to 15 characters
+
+    Arguments:
+        applications -- dictionary where are stored items to show on website
+    """
     try:
         if len(applications['obsah']) >= 15:
             applications['kratky_obsah'] = applications['obsah'][0:15] + "..."
@@ -17,6 +22,10 @@ def make_short_content(applications):
 
 @app.route("/my_applications", methods = ['GET', 'POST'])
 def my_applications():
+    """Endpoint for applications that you submitted
+    If user is logged in already, he is redirected to index page
+    Data are being pulled from db to show on html
+    """
     if 'loggedin' in session:
         msg = ''
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

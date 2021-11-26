@@ -2,6 +2,10 @@ from src.modules import *
 
 @app.route('/create_conference', methods = ['GET', 'POST'])
 def create_conference():
+    """Endpoint for creating conferences
+    Accesible for logged in users, else redirected to login page
+    Process submitted form
+    """
     if 'loggedin' in session:  
         msg = ''
         kapacita_msg = ""
@@ -16,7 +20,7 @@ def create_conference():
         rooms_trans = "SELECT * FROM miestnost"
         cursor.execute(rooms_trans)
         rooms = cursor.fetchall()
-
+        # zaslanie vyplneneho formulara serveru
         if request.method == 'POST' and 'nazov' in request.form and 'zaner' in request.form and 'od_datum' in request.form and 'do_datum' in request.form and 'cena' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             zaner = request.form['zaner']
