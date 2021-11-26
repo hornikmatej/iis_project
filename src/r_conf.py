@@ -11,11 +11,18 @@ def make_short_content(applications):
 
 @app.route('/r_conf/<conf_id>', methods=['GET', 'POST'])
 def r_conf(conf_id):
+    """Overview of given conference for registered user which does not belong to him.
+    Loads the data of conference and handle reservations and applications made by registered user.
+
+    Arguments:
+        conf_id - gives the function knowledge of which conference should be loaded
+    """
     past_bool = False
     if 'loggedin' in session:
         msg = ''
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
+        # Loads conference and its data
         sql = "SELECT * FROM konferencia WHERE id_kon = % s"
         params = (conf_id,)
         cursor.execute(sql, params)
@@ -23,6 +30,7 @@ def r_conf(conf_id):
         conf['miestnosti'] = conf['miestnosti'].split(",")
         conf = make_short_content(conf)
 
+        # Loads presentations that belong to given conference
         sql = "SELECT * FROM prednaska p JOIN miestnost m ON m.id_miestnosti = p.id_miestnosti WHERE p.id_konferencie = % s ORDER BY p.cas"
         params = (conf_id,)
         cursor.execute(sql, params)
@@ -34,6 +42,7 @@ def r_conf(conf_id):
         admin = cursor.fetchone()
         admin_bool = True if admin else False
 
+        # Handle reservation input 
         if request.method == 'POST' and 'pocet' in request.form:
             pocet = request.form['pocet']
             uzivatel = session['id_uziv']
@@ -44,6 +53,8 @@ def r_conf(conf_id):
             mysql.connection.commit()
             msg = 'You have successfully ordered ' + \
                 str(pocet)+' ticket/s to conference ! Please pay tickets the next 24 hours, otherwise reservation will be Declined. Pay in:'
+        
+        # Handle application input
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
             obsah = request.form['obsah']
@@ -55,7 +66,7 @@ def r_conf(conf_id):
             msg = 'You have successfully applied presentation on conference, now wait for confirmation!'
         cursor.close()
 
-        # redirect if clicked conference is mine
+        # Redirect if clicked conference is mine
         if conf['login'] == session['login']:
             return redirect(url_for('my_conf', conf_id=conf_id))
         else:

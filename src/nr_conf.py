@@ -11,6 +11,12 @@ def make_short_content(applications):
 
 @app.route('/nr_conf/<conf_id>', methods=['GET', 'POST'])
 def nr_conf(conf_id):
+    """Overview of given conference for not registered user.
+    Loads the data of conference and handle reservations made by not registered user.
+
+    Arguments:
+        conf_id - gives the function knowledge of which conference should be loaded
+    """
     past_bool = False
     if 'loggedin' in session:
         return redirect(url_for('r_conf', conf_id=conf_id))
@@ -29,6 +35,7 @@ def nr_conf(conf_id):
     presentations = cursor.fetchall()
     cursor.close()
 
+    # Handling of reservation input
     if request.method == 'POST' and 'email' in request.form and 'meno' in request.form and 'priezvisko' in request.form and 'pocet' in request.form:
         meno = request.form['meno']
         priezvisko = request.form['priezvisko']
