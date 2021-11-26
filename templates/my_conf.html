@@ -152,8 +152,8 @@
                         </tbody>
                     </table><br>
                 {% endfor %}
+                <label for="rooms" style="color: red;">*required</label><p></p>
                 <div class="border"></div></br>
-
                 <h3 align="left">&nbsp Applications:</h3>
                 <h3 align="center" style="color:grey;">{{ msg }}</h3>
                 <table name="applications" id="applications" class="table table-striped table-hover">
@@ -201,8 +201,24 @@
                         </form>
                         {% endfor %}
                     </tbody>
-                </table><br>
+                </table>
+                <h3 align="left">&nbsp Applie for presentation:</h3>
+                <form action="{{ url_for('my_conf', conf_id = conf['id_kon'])}}" method="post" autocomplete="off">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="nazov"  id="nazov" placeholder="*Presentation title" aria-describedby="basic-addon1" maxlength="255" required>
+                        <label for="nazov">*Presentation title</label>
+                        <label for="nazov" style="color: red;">*</label>
+                    </div><p></p>
+                    <div class="form-floating">
+                        <textarea type="text" cols="40" rows="5" class="form-control" name="obsah"  id="obsah" placeholder="*What will this presentation be about?" aria-describedby="basic-addon1" maxlength="255" required></textarea>
+                        <label for="obsah">*What will this presentation be about?</label>
+                        <label for="obsah" style="color: red;">*</label>
+                    </div><p></p>
+                    <input type="submit" class="w-100 btn btn-lg btn-primary" value="Apply">
+                </form>
+                <div class="border"></div></br>
                 {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
+                <div class="border"></div></br>
                 <form action="{{ url_for('my_conf', conf_id=conf['id_kon']) }}" method="post">
                     <!-- <label for="incoming_reservations" style="text-align: center;">Incoming reservations:</label> -->
                     <h3 align="left">&nbsp Incoming reservations:</h3>

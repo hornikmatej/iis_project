@@ -74,6 +74,14 @@ def my_conf(conf_id):
             elif request.method == 'POST' and 'id_pred' in request.form and 'submit' in request.form and request.form['submit'] == 'Decline':
                 cursor.execute("UPDATE prednaska SET stav = 'Declined' WHERE id_pred = % s", (request.form['id_pred'], ))
 
+            elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
+                nazov = request.form['nazov']
+                obsah = request.form['obsah']
+                sql = "INSERT INTO prednaska VALUES (NULL, % s, NULL, %s, % s, % s, % s, 'In progress')"
+                params = (conf_id,(datetime.now()).strftime("%Y-%m-%d %H:%M:%S"), session['login'], nazov, obsah,)
+                cursor.execute(sql, params)
+                mysql.connection.commit()
+
             cursor.execute("SELECT * FROM prednaska WHERE id_konferencie = % s AND stav = 'In progress'", (conf_id, ))
             applications = cursor.fetchall()
             applications = make_short_content(applications)
