@@ -85,19 +85,19 @@
                 <table name="reservations_in_progress" id="reservations_in_progress" class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>ID:</th>
-                            <th>Date from:</th>
-                            <th>Date to:</th>
-                            <th>Conference:</th>
-                            <th>Number of tickets:</th>
-                            <th>Paid:</th>
+                            <th style="color: grey; width: 5%;">ID:</th>
+                            <th style="width: 22%;">Date & Time from:</th>
+                            <th style="width: 22%;">Date & Time to:</th>
+                            <th >Conference:</th>
+                            <th style="width: 10%;">Tickets:</th>
+                            <th style="width: 5%;">Paid:</th>
                         </tr>
                     </thead>    
                     <tbody>
                         {% for reservation in reservations_in_progress %}    
                         <form action="{{ url_for('my_reservations') }}" method="post">
                             <tr>
-                                <td name="id_rez">{{ reservation['id_rez'] }}</td>
+                                <td name="id_rez" style="color: grey">{{ reservation['id_rez'] }}</td>
                                 <input type="hidden" name="id_rez" id="id_rez" value="{{ reservation['id_rez'] }}"/>
                                 <td>{{ reservation['od_datum'] }}</td>
                                 <td>{{ reservation['do_datum'] }}</td>
@@ -121,19 +121,19 @@
                 <table name="reservations_accepted" id="reservations_accepted" class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>ID:</th>
-                            <th>Date from:</th>
-                            <th>Date to:</th>
+                            <th style="color: grey; width: 5%;">ID:</th>
+                            <th style="width: 22%;">Date & Time from:</th>
+                            <th style="width: 22%;">Date & Time to:</th>
                             <th>Conference:</th>
-                            <th>Number of tickets:</th>
-                            <th>Paid:</th>
+                            <th style="width: 10%;">Tickets:</th>
+                            <th style="width: 5%;">Paid:</th>
                         </tr>
                     </thead>    
                     <tbody>
                         {% for reservation in reservations_accepted %}    
                         <form action="{{ url_for('my_reservations') }}" method="post">
                             <tr>
-                                <td name="id_rez">{{ reservation['id_rez'] }}</td>
+                                <td name="id_rez" style="color: grey">{{ reservation['id_rez'] }}</td>
                                 <input type="hidden" name="id_rez" id="id_rez" value="{{ reservation['id_rez'] }}"/>
                                 <td>{{ reservation['od_datum'] }}</td>
                                 <td>{{ reservation['do_datum'] }}</td>
@@ -157,10 +157,10 @@
                 <table name="reservations_declined" id="reservations_declined" class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Date from:</th>
-                            <th>Date to:</th>
+                            <th style="width: 24.5%;">Date & Time from:</th>
+                            <th style="width: 24.5%;">Date & Time to:</th>
                             <th>Conference:</th>
-                            <th>Number of tickets:</th>
+                            <th style="width: 15%;">Tickets:</th>
                         </tr>
                     </thead>    
                     <tbody>
