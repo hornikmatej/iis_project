@@ -105,7 +105,7 @@
                                 <td>{{ reservation['pocet_listkov'] }}</td>
                                 {% if reservation['uhradene'] == 'nie' %}
                                 <td>
-                                    <input type="submit" name="pay_submit" id="pay_submit" value="Pay">
+                                    <input class="btn btn-outline-success btn-sm" type="submit" name="pay_submit" id="pay_submit" value="Pay">
                                 </td>
                                 {% endif %}
                                 {% if reservation['uhradene'] == 'ano' %}

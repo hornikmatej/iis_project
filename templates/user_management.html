@@ -101,21 +101,21 @@
                     <h3>{{session['login']}}</h3>                       
                 </div><br>  
                 <form action="{{ url_for('user_management') }}" method="post">
-                    <table name="user_table" id="user_table" class="table table-striped table-hover" >
+                    <table name="user_table" id="user_table" class="table table-striped table-hover" width="100%">
                         <thead>
                             <tr>
-                                <th>
+                                <th style="width: 19%;">
                                     <input type="checkbox" id="checkall"/>
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <input class="btn btn-outline-success btn-sm" type="submit" name="admin_rights_add" id="admin_rights_add" value="Add"/>
                                         <input class="btn btn-outline-danger btn-sm" type="submit" name="admin_rights_remove" id="admin_rights_remove" value="Remove"/>
                                     </div>
                                 </th>
-                                <th style="color: darkgray;">ID</th>
-                                <th>Login</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Admin</th>
+                                <th style="color: darkgray; width: 5%;">ID:</th>
+                                <th>Login:</th>
+                                <th>Name & Surname:</th>
+                                <th>Email:</th>
+                                <th>Admin:</th>
                             </tr>
                         </thead>
                         <tbody>

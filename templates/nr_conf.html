@@ -8,8 +8,6 @@
     <body bgcolor="#e6ffee">
         <div class="one">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; min-height: 100vh; position: fixed;">
-                <br>
-                <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li>
                         <a href="{{url_for('nr_all_conf')}}" class="nav-link text-white sidebarr">
@@ -33,7 +31,7 @@
             </div> 
             <div class="content" align="center">
                 <div class="topbar">
-                    <h2>{{ conf['nazov'] }}</h2>
+                    <h1>{{ conf['nazov'] }}</h1>
                 </div>
                 <table name="info" id="info" class="table" style="max-width: 100%;border-color: white;" >
                     <thead>
@@ -63,7 +61,7 @@
                         </tr>  
                     </tbody>
                 </table><br>
-                <h3 align="left">&nbsp Presentations:</h3>
+                <h3 align="center">&nbsp Presentations:</h3>
                 {% for room in conf['miestnosti'] %}
                     <label >Room: &nbsp{{ room }}</label>
                     <table class="table table-striped table-hover">
@@ -121,10 +119,10 @@
                                         <label for="pocet" style="color: red;">*</label>
                                     </div><p></p>
                                     <input type="submit" class="w-100 btn btn-lg btn-primary" value="Reserve & Pay">
-                                    <label for="pocet" style="color: red;">*required</label><br><br> 
+                                    <label for="pocet" style="color: red;">*required</label> 
                                 </form>
                             </div>
-                        </div></br></br>
+                        </div><br>
                     {% endif %}
                     {% if conf['aktualna_zaplnenost'] == conf['celkova_kapacita'] %}
                     <h3 align="center" style="color: red;">

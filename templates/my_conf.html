@@ -128,7 +128,8 @@
                         </tr>  
                     </tbody>
                 </table>
-                <h3 align="left">&nbsp Presentations:</h3>
+                <div class="border"></div></br> 
+                <h3 align="center">&nbsp Presentations:</h3>
                 {% for room in conf['miestnosti'] %}
                     <label>&nbsp &nbsp Room: &nbsp{{ room }}</label>
                     <table class="table table-striped table-hover">
@@ -160,12 +161,12 @@
                 </h3>
                 {% else %}
                 
-                <h3 align="left">&nbsp Applications:</h3>
+                <h3 align="center">&nbsp Applications:</h3>
                 <h3 align="center" style="color:grey;">{{ msg }}</h3>
                 <table name="applications" id="applications" class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>ID:</th>
+                            <th style="color: grey;">ID:</th>
                             <th>Name:</th>
                             <th>Presention:</th>
                             <th>About:</th>
@@ -178,7 +179,7 @@
                         {% for application in applications%}
                         <form action="{{ url_for('my_conf', conf_id=conf['id_kon']) }}" method="post" autocomplete="off">
                             <tr>
-                                <td name="id_pred">{{ application['id_pred'] }}</td>
+                                <td style="color: grey;" name="id_pred">{{ application['id_pred'] }}</td>
                                 <input type="hidden" name="id_pred" id="id_pred" value="{{ application['id_pred'] }}" />
                                 <td>{{ application['login'] }}</td>
                                 <td>{{ application['nazov'] }}</td>
@@ -198,16 +199,17 @@
                                     <input type="datetime-local" name="datetime" placeholder="Date" class="textbox" id="datetime" min="2020-01-01T00:00" max="9999-12-31T00:00" value="datetime-local" step="3600" required>
                                 </td>
                                 <td>
-                                    <input type="submit" name="submit" id="submit" value="Accept">
+                                    <input class="btn btn-outline-success btn-sm" type="submit" name="submit" id="submit" value="Accept">
                                 </td>
                                 <td>
-                                    <input type="submit" name="submit" value="Decline" formnovalidate>
+                                    <input class="btn btn-outline-danger btn-sm" type="submit" name="submit" value="Decline" formnovalidate>
                                 </td>
                             </tr>
                         </form>
                         {% endfor %}
                     </tbody>
-                </table>
+                </table><br>
+                <div class="border"></div></br> 
                 <h3 align="left">&nbsp Applie for presentation:</h3>
                 <form action="{{ url_for('my_conf', conf_id = conf['id_kon'])}}" method="post" autocomplete="off">
                     <div class="form-floating">
@@ -227,7 +229,7 @@
                 <div class="border"></div></br>
                 <form action="{{ url_for('my_conf', conf_id=conf['id_kon']) }}" method="post">
                     <!-- <label for="incoming_reservations" style="text-align: center;">Incoming reservations:</label> -->
-                    <h3 align="left">&nbsp Incoming reservations:</h3>
+                    <h3 align="center">&nbsp Incoming reservations:</h3>
                     <table name="incoming_reservations" id="incoming_reservations" class="table table-hover" style="width: 100%;">
                         <thead>
                             <tr>
@@ -238,9 +240,9 @@
                                         <input class="btn btn-outline-danger btn-sm" type="submit" name="reservation_submit_decline" id="reservation_submit_decline" value="Decline"/>
                                     </div>
                                 </th>
-                                <th style="color: darkgray; width: 5%;">ID</th>
-                                <th style="width: 65%;">Customer</th>
-                                <th style="width: 10%;">Tickets</th>
+                                <th style="color: darkgray; width: 5%;">ID:</th>
+                                <th style="width: 65%;">Customer:</th>
+                                <th style="width: 10%;">Tickets:</th>
                             </tr>
                         </thead>    
                         <tbody>
@@ -254,20 +256,21 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                </form>
-                <br><br>
+                </form><br>
                 {% endif %}
+
                 {% if conf['aktualna_zaplnenost'] == conf['celkova_kapacita'] %}
                 <h3 align="center" style="color: red;">
                     Cannot accept more reservations because this conference is full. All remaining reservations were automatically declined.
                 </h3>
                 {% endif %}
 
-                <h3 align="left">&nbsp Decided reservations:</h3>
+                <div class="border"></div></br> 
+                <h3 align="center">&nbsp Decided reservations:</h3>
                 <table name="decided_reservations" id="decided_reservations" class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>ID:</th>
+                            <th style="color: grey">ID:</th>
                             <th>Name & Surname:</th>
                             <th>Number of tickets:</th>
                             <th>Status:</th>
