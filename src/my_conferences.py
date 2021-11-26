@@ -3,18 +3,23 @@ from src.modules import *
 
 @app.route("/my_conferences")
 def my_conferences():
+    """Overview of conferences that belong to logged in user.
+    Loads table of conferences that belong to logged in user and 
+    parses them into two tables, incoming conferences and conferences
+    that already ended.
+    """
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
+        # Loads the data of all incoming or already running conferences
         sql = "SELECT * FROM konferencia WHERE login = % s AND do_datum > % s ORDER BY od_datum"
-        params = (session['login'], (datetime.now()
-                                     ).strftime("%Y-%m-%d %H:%M:%S"),)
+        params = (session['login'], (datetime.now()).strftime("%Y-%m-%d %H:%M:%S"),)
         cursor.execute(sql, params)
         confs = cursor.fetchall()
 
+        # Loads the data of all conferences that ended
         sql = "SELECT * FROM konferencia WHERE login = % s AND do_datum <= % s ORDER BY od_datum"
-        params = (session['login'], (datetime.now()
-                                     ).strftime("%Y-%m-%d %H:%M:%S"),)
+        params = (session['login'], (datetime.now()).strftime("%Y-%m-%d %H:%M:%S"),)
         cursor.execute(sql, params)
         ended_confs = cursor.fetchall()
 
