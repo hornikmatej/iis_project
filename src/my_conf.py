@@ -23,6 +23,14 @@ def make_short_content(applications):
 
 @app.route('/my_conf/<conf_id>', methods=['GET', 'POST'])
 def my_conf(conf_id):
+    """ Function is called when organisator want to see informations about his conference
+    if user is not logged in alredy, user is redicted to login page
+    at this function are selects to display information about specific conference
+    select for info who is going to have a presentation in the rooms and time you book
+    also here is created presentation for user own conference and 
+    decide which incoming reservation will be declined or accepted based on form data
+    function return msg which contains information for user
+    """
     msg = ''
     past_bool = False
     if 'loggedin' in session:
