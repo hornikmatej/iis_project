@@ -279,7 +279,12 @@
                     <tbody>
                         {% for reservation in decided_reservations %}    
                         <tr>
-                            <td>{{ reservation['stav'] }}</td>
+                            {% if reservation['stav'] == 'Accepted' %}
+                            <td style="color: rgb(28, 168, 28);">{{ reservation['stav'] }}</td>
+                            {% endif %}
+                            {% if reservation['stav'] == 'Declined' %}
+                            <td style="color: red;">{{ reservation['stav'] }}</td>
+                            {% endif %}
                             <td style="color: grey">{{ reservation['id_rez'] }}</td>
                             <td>{{ reservation['meno'] }} {{ reservation['priezvisko'] }}</td>
                             <td>{{ reservation['pocet_listkov'] }}</td>
