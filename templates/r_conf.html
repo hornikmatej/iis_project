@@ -137,48 +137,55 @@
                     </table><br>
                 {% endfor %}
                 <div class="border"></div></br>
-                <h3 align="center" style="color:grey;">{{ msg }}
-                    {% if ((msg != '') and (msg != 'You have successfully applied presentation on conference, now wait for confirmation!')) %}
-                        <a href="{{ url_for('my_reservations') }}">My reservations</a></li></br></br>
-                    {% endif %}
-                </h3>
+                {% if past_bool %}
+                    <h3 align="center" style="color: red;">
+                        Conference is over
+                    </h3>
+                {% else %}
                 
-                {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
-                    <h3 align="left">&nbsp Reservation:</h3>
+                    <h3 align="center" style="color:grey;">{{ msg }}
+                        {% if ((msg != '') and (msg != 'You have successfully applied presentation on conference, now wait for confirmation!')) %}
+                            <a href="{{ url_for('my_reservations') }}">My reservations</a></li></br></br>
+                        {% endif %}
+                    </h3>
+                    
+                    {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
+                        <h3 align="left">&nbsp Reservation:</h3>
+                        <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" name="pocet"  id="pocet" placeholder="*How many tickets do you want to reserve?" aria-describedby="basic-addon1" min="1" max="10" required>
+                                <label for="pocet">*How many tickets do you want to reserve?</label>
+                                <label for="pocet" style="color: red;">*</label>
+                            </div><p></p>
+                            <input type="submit" class="w-100 btn btn-lg btn-primary" value="Reserve">
+                        </form>
+                        <label for="rooms" style="color: red;">*required for reservation</label><p></p>  
+                    {% endif %} 
+
+
+                    {% if conf['aktualna_zaplnenost'] == conf['celkova_kapacita'] %}
+                    <h3 align="center" style="color: red;">
+                        Cannot reserve tickets because this conference is full.
+                    </h3>
+                    {% endif %}
+
+                    <div class="border"></div></br>
+                    <h3 align="left">&nbsp Applie for presentation:</h3>
                     <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
                         <div class="form-floating">
-                            <input type="number" class="form-control" name="pocet"  id="pocet" placeholder="*How many tickets do you want to reserve?" aria-describedby="basic-addon1" min="1" max="10" required>
-                            <label for="pocet">*How many tickets do you want to reserve?</label>
-                            <label for="pocet" style="color: red;">*</label>
+                            <input type="text" class="form-control" name="nazov"  id="nazov" placeholder="*Presentation title" aria-describedby="basic-addon1" maxlength="255" required>
+                            <label for="nazov">*Presentation title</label>
+                            <label for="nazov" style="color: blue;">*</label>
                         </div><p></p>
-                        <input type="submit" class="w-100 btn btn-lg btn-primary" value="Reserve">
+                        <div class="form-floating">
+                            <textarea type="text" cols="40" rows="5" class="form-control" name="obsah"  id="obsah" placeholder="*What will this presentation be about?" aria-describedby="basic-addon1" maxlength="255" required></textarea>
+                            <label for="obsah">*What will this presentation be about?</label>
+                            <label for="obsah" style="color: blue;">*</label>
+                        </div><p></p>
+                        <input type="submit" class="w-100 btn btn-lg btn-primary" value="Apply">
                     </form>
-                    <label for="rooms" style="color: red;">*required for reservation</label><p></p>  
-                {% endif %} 
-
-
-                {% if conf['aktualna_zaplnenost'] == conf['celkova_kapacita'] %}
-                <h3 align="center" style="color: red;">
-                    Cannot reserve tickets because this conference is full.
-                </h3>
+                    <label for="rooms" style="color: blue;">*required for presentation</label><p></p>
                 {% endif %}
-
-                <div class="border"></div></br>
-                <h3 align="left">&nbsp Applie for presentation:</h3>
-                <form action="{{ url_for('r_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" name="nazov"  id="nazov" placeholder="*Presentation title" aria-describedby="basic-addon1" maxlength="255" required>
-                        <label for="nazov">*Presentation title</label>
-                        <label for="nazov" style="color: blue;">*</label>
-                    </div><p></p>
-                    <div class="form-floating">
-                        <textarea type="text" cols="40" rows="5" class="form-control" name="obsah"  id="obsah" placeholder="*What will this presentation be about?" aria-describedby="basic-addon1" maxlength="255" required></textarea>
-                        <label for="obsah">*What will this presentation be about?</label>
-                        <label for="obsah" style="color: blue;">*</label>
-                    </div><p></p>
-                    <input type="submit" class="w-100 btn btn-lg btn-primary" value="Apply">
-                </form>
-                <label for="rooms" style="color: blue;">*required for presentation</label><p></p>
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

@@ -88,42 +88,49 @@
                     </table><br>
                 {% endfor %}
                 <div class="border"></div></br>
-                <h3 align="center" style="color:grey;">{{ msg }}</h3>
-                {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
-                    <h3 align="left">&nbsp Reservation:</h3>
-                    <div class="Reserve" align="center">
-                        <div class="reservebottom" align="center">
-                            <form action="{{ url_for('nr_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" name="meno"  id="meno" placeholder="*First name (example: John)" aria-describedby="basic-addon1" maxlength="30" pattern="^[A-Z][a-z]*$" required>
-                                    <label for="meno">*First name (example: John)</label>
-                                    <label for="meno" style="color: red;">*</label>
-                                </div><p></p>
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" name="priezvisko"  id="priezvisko" placeholder="*Last name (example: Brown)" aria-describedby="basic-addon1" maxlength="30" pattern="^[A-Z][a-z]*$" required>
-                                    <label for="priezvisko">*Last name (example: Brown)</label>
-                                    <label for="meno" style="color: red;">*</label>
-                                </div><p></p>
-                                <div class="form-floating">
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="*Email (example: john@brown.com)" aria-describedby="basic-addon1" maxlength="50"  pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" required>
-                                    <label for="email">*Email (example: john@brown.com)</label>
-                                    <label for="meno" style="color: red;">*</label>
-                                </div><p></p>
-                                <div class="form-floating">
-                                    <input type="number" class="form-control" name="pocet"  id="pocet" placeholder="*How many tickets do you want to reserve?" aria-describedby="basic-addon1" min="1" max="10" required>
-                                    <label for="pocet">*How many tickets do you want to reserve?</label>
-                                    <label for="pocet" style="color: red;">*</label>
-                                </div><p></p>
-                                <input type="submit" class="w-100 btn btn-lg btn-primary" value="Reserve & Pay">
-                                <label for="pocet" style="color: red;">*required</label><br><br> 
-                            </form>
-                        </div>
-                    </div></br></br>
-                {% endif %}
-                {% if conf['aktualna_zaplnenost'] == conf['celkova_kapacita'] %}
-                <h3 align="center" style="color: red;">
-                    Cannot reserve tickets because this conference is full.
-                </h3>
+                {% if past_bool %}
+                    <h3 align="center" style="color: red;">
+                        Conference is over
+                    </h3>
+                {% else %}
+
+                    <h3 align="center" style="color:grey;">{{ msg }}</h3>
+                    {% if conf['aktualna_zaplnenost'] < conf['celkova_kapacita'] %}
+                        <h3 align="left">&nbsp Reservation:</h3>
+                        <div class="Reserve" align="center">
+                            <div class="reservebottom" align="center">
+                                <form action="{{ url_for('nr_conf', conf_id = conf_id)}}" method="post" autocomplete="off">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="meno"  id="meno" placeholder="*First name (example: John)" aria-describedby="basic-addon1" maxlength="30" pattern="^[A-Z][a-z]*$" required>
+                                        <label for="meno">*First name (example: John)</label>
+                                        <label for="meno" style="color: red;">*</label>
+                                    </div><p></p>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="priezvisko"  id="priezvisko" placeholder="*Last name (example: Brown)" aria-describedby="basic-addon1" maxlength="30" pattern="^[A-Z][a-z]*$" required>
+                                        <label for="priezvisko">*Last name (example: Brown)</label>
+                                        <label for="meno" style="color: red;">*</label>
+                                    </div><p></p>
+                                    <div class="form-floating">
+                                        <input type="email" name="email" class="form-control" id="email" placeholder="*Email (example: john@brown.com)" aria-describedby="basic-addon1" maxlength="50"  pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" required>
+                                        <label for="email">*Email (example: john@brown.com)</label>
+                                        <label for="meno" style="color: red;">*</label>
+                                    </div><p></p>
+                                    <div class="form-floating">
+                                        <input type="number" class="form-control" name="pocet"  id="pocet" placeholder="*How many tickets do you want to reserve?" aria-describedby="basic-addon1" min="1" max="10" required>
+                                        <label for="pocet">*How many tickets do you want to reserve?</label>
+                                        <label for="pocet" style="color: red;">*</label>
+                                    </div><p></p>
+                                    <input type="submit" class="w-100 btn btn-lg btn-primary" value="Reserve & Pay">
+                                    <label for="pocet" style="color: red;">*required</label><br><br> 
+                                </form>
+                            </div>
+                        </div></br></br>
+                    {% endif %}
+                    {% if conf['aktualna_zaplnenost'] == conf['celkova_kapacita'] %}
+                    <h3 align="center" style="color: red;">
+                        Cannot reserve tickets because this conference is full.
+                    </h3>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
