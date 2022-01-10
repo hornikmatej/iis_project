@@ -11,41 +11,41 @@
 </head>
 <body>
 
-<!-- Zkontrolujte prosím nastavení kódování v hlavièce dokumentu 
-     podle pou¾itého editoru -->
+<!-- Zkontrolujte prosÃ­m nastavenÃ­ kÃ³dovÃ¡nÃ­ v hlaviÄce dokumentu 
+     podle pouÅ¾itÃ©ho editoru -->
 
-<h1>Konference: správa událostí, prezentací a úèastníkù</h1>
+<h1>Konference: sprÃ¡va udÃ¡lostÃ­, prezentacÃ­ a ÃºÄastnÃ­kÅ¯</h1>
 
 <dl>
 	<dt>Autori</dt>
 	<dd>Matej Hornik 
 	    <a href="mailto:xhorni20@stud.fit.vutbr.cz">xhorni20@stud.fit.vutbr.cz</a> -
-		popis èinnosti v tımu:
-		vytváranie databáze, nasadenie a jej správa, osetrovanie vstupov, správa uzívatelov
+		popis Äinnosti v tÃ½mu:
+		vytvÃ¡ranie databÃ¡ze, nasadenie a jej sprÃ¡va, osetrovanie vstupov, sprÃ¡va uzÃ­vatelov
 	</dd>
 	<dd>Filip Brna
 	    <a href="mailto:xbrnaf00@stud.fit.vutbr.cz">xbrnaf00@stud.fit.vutbr.cz</a> - 
-		popis èinnosti v tımu:
-		práca s databázou, vkladanie do nej, osetrenie vstupov, zabezpeèenie hesiel
+		popis Äinnosti v tÃ½mu:
+		prÃ¡ca s databÃ¡zou, vkladanie do nej, osetrenie vstupov, zabezpeÄenie hesiel
 	</dd>
  	<dd>Matus Tvarozny
 		<a href="mailto:xtvaro00@stud.fit.vutbr.cz">xtvaro00@stud.fit.vutbr.cz</a> - 
-		popis èinnosti v tımu:
-		dynamické zobrazovanie údajov z databázy, práca s html súbormi, osetrenie vstupov
+		popis Äinnosti v tÃ½mu:
+		dynamickÃ© zobrazovanie Ãºdajov z databÃ¡zy, prÃ¡ca s html sÃºbormi, osetrenie vstupov
 	</dd>
 	<dt>URL aplikace</dt>
 	<dd><a href="https://iis-project-konference.herokuapp.com/">https://iis-project-konference.herokuapp.com/</a></dd>
 </dl>
 
-<h2>Uzivatelé systému pro testování</h2>
-<p>Uveïte prosím existující zástupce <strong>vsech rolí uzivatelù</strong>.</p>
+<h2>UzivatelÃ© systÃ©mu pro testovÃ¡nÃ­</h2>
+<p>UveÄte prosÃ­m existujÃ­cÃ­ zÃ¡stupce <strong>vsech rolÃ­ uzivatelÅ¯</strong>.</p>
 <table>
 <tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
-<tr><td>xbrnaf00</td><td>xbrnaf00</td><td>Administrátor</td></tr>
-<tr><td>xtvaro00</td><td>xtvaro00</td><td>Registrovanı uzivatel</td></tr>
-<tr><td>xhorni20</td><td>xhorni20</td><td>Registrovanı uzivatel</td></tr>
+<tr><td>xbrnaf00</td><td>xbrnaf00</td><td>AdministrÃ¡tor</td></tr>
+<tr><td>xtvaro00</td><td>xtvaro00</td><td>RegistrovanÃ½ uzivatel</td></tr>
+<tr><td>xhorni20</td><td>xhorni20</td><td>RegistrovanÃ½ uzivatel</td></tr>
 <tr><th>Meno</th><th>Priezvisko</th><th>Role</th></tr>
-<tr><td>Gabor</td><td>Chvostnaty</td><td>Neregistrovanı uzivatel</td></tr>
+<tr><td>Gabor</td><td>Chvostnaty</td><td>NeregistrovanÃ½ uzivatel</td></tr>
 </table>
 
 <h2>Implementace</h2>
@@ -55,7 +55,7 @@ Prehlad rezervacii uzivatela a ich potvrdenie je implementovane v my_reservation
  V subore my_conf.py je implementove system pre spravu konferencie, to jest prijmanie a rusenie rezervacii, prijmanie a vytvarania rozvrhu prednasok taktiez ich rusenie. 
 V subore your_account.py je implementove upravovanie uzivatelskych udajov.</p>
 
-<h3>Databáze</h3>
+<h3>DatabÃ¡ze</h3>
 
 <img src="graficke zobrazenie databazy.png" alt="Italian Trulli">
 
@@ -63,20 +63,20 @@ V subore your_account.py je implementove upravovanie uzivatelskych udajov.</p>
 <ul>
 <li>Ako server sme pouzili <a href="https://www.heroku.com">heroku.com</a>. <br> 
 	<ul>
-		<li>Vytvorenie aplikácie na Heroku: heroku create</li>
-		<li>Deploynutie kódu: git push heroku main</li>
-		<li>Otvorenie aplikácie: heroku open</li>
+		<li>Vytvorenie aplikÃ¡cie na Heroku: heroku create</li>
+		<li>Deploynutie kÃ³du: git push heroku main</li>
+		<li>Otvorenie aplikÃ¡cie: heroku open</li>
 	</ul>
-	V koreòovom adresári musí by» súbor requirements.txt, ktorı nain¹taluje potrebné kni¾nice. <br>
-	Taktie¾ súbor Procfile, ktorı definuje proces typu web a príkaz ktorım sa aplikácia spustí
+	V koreÅˆovom adresÃ¡ri musÃ­ byÅ¥ sÃºbor requirements.txt, ktorÃ½ nainÅ¡taluje potrebnÃ© kniÅ¾nice. <br>
+	TaktieÅ¾ sÃºbor Procfile, ktorÃ½ definuje proces typu web a prÃ­kaz ktorÃ½m sa aplikÃ¡cia spustÃ­
 </li>
-<li>softwarové poziadavky: Python 3.8.10, Flask 2.0.2, MySQL, Werkzeug 2.0.2 ,</li>
-<li>Pomocou nástroja <a href="https://www.phpmyadmin.co">phpmyadmin.co</a> sme na¹u databázu importovali na ná¹ mysql server.<br>
-	Na vygenerovanie sql súboru s na¹ou databázou sme taktie¾ pou¾ili phpmyadmin.
+<li>softwarovÃ© poziadavky: Python 3.8.10, Flask 2.0.2, MySQL, Werkzeug 2.0.2 ,</li>
+<li>Pomocou nÃ¡stroja <a href="https://www.phpmyadmin.co">phpmyadmin.co</a> sme naÅ¡u databÃ¡zu importovali na nÃ¡Å¡ mysql server.<br>
+	Na vygenerovanie sql sÃºboru s naÅ¡ou databÃ¡zou sme taktieÅ¾ pouÅ¾ili phpmyadmin.
 </li>
 </ul>
 
-<h2>Známé problémy</h2>
+<h2>ZnÃ¡mÃ© problÃ©my</h2>
 <p>Vytvorene prezentacie neobsahuju ziadne tagy, fotky, poster ani logo a dlzka prezentacie nie je volitelna, kazda prednaska trva hodinu. 
 Registrovany uzivatel sice vidi v rozpis prednasok ale priamo v systeme si nemoze vytvarat osobny rozvrh. Rozsirenia neboli implementovane, 
 okrem vyssie uvedenych problemov nas informacny system plne odpoveda zadaniu.</p>
