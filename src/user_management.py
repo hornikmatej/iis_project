@@ -14,20 +14,27 @@ def user_management():
         admin = cursor.fetchall()
         admin = [id for id_list in admin for id in id_list.values()]
         if session['id_uziv'] in admin:
-            if request.method == 'POST' and 'admin_rights_add' in request.form:
-                for getid in request.form.getlist('mycheckbox'):
-                    try:
+            if request.method == 'POST': # and 'admin_rights_add' in request.form
+                form_data = request.get_json()
+                print(form_data)
+
+                if form_data[0]['checkbox_type'] == 'add':
+                    for getid in form_data[1]['ids']:
+                        try:
+                            cursor.execute(
+                                "INSERT INTO admin VALUES (% s)", (getid, ))
+                            mysql.connection.commit()
+                        except (MySQLdb._exceptions.IntegrityError):
+                            # vlozenie uz admina do tabulky
+                            pass
+                    
+                else:
+                    for getid in form_data[1]['ids']:
                         cursor.execute(
-                            "INSERT INTO admin VALUES (% s)", (getid, ))
+                            "DELETE FROM admin WHERE id_uzivatela = % s", (getid, ))
                         mysql.connection.commit()
-                    except (MySQLdb._exceptions.IntegrityError):
-                        # vlozenie uz admina do tabulky
-                        pass
-            elif request.method == 'POST' and 'admin_rights_remove' in request.form:
-                for getid in request.form.getlist('mycheckbox'):
-                    cursor.execute(
-                        "DELETE FROM admin WHERE id_uzivatela = % s", (getid, ))
-                    mysql.connection.commit()
+                results = {'ids': 420}
+                return jsonify(results)
 
             cursor.execute(
                 'SELECT * FROM reg_uzivatel ru JOIN uzivatel u ON u.id_uziv = ru.id_uziv ORDER BY u.id_uziv ')
