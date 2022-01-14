@@ -14,7 +14,7 @@ def user_management():
         admin = cursor.fetchall()
         admin = [id for id_list in admin for id in id_list.values()]
         if session['id_uziv'] in admin:
-            if request.method == 'POST': # and 'admin_rights_add' in request.form
+            if request.method == 'POST':  # and 'admin_rights_add' in request.form
                 form_data = request.get_json()
                 print(form_data)
 
@@ -27,7 +27,7 @@ def user_management():
                         except (MySQLdb._exceptions.IntegrityError):
                             # vlozenie uz admina do tabulky
                             pass
-                    
+
                 else:
                     for getid in form_data[1]['ids']:
                         cursor.execute(

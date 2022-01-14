@@ -20,6 +20,7 @@ function process_form(String) {
          // console.log(result.rows);
          for (var i = 0; i < checked_boxes.length; i++) {
             var update = document.getElementById(checked_boxes[i]);
+            console.log(update);
             if (String == 'add') {
                update.innerHTML = "Yes";
             }
