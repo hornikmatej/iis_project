@@ -27,6 +27,9 @@ def r_conf(conf_id):
         params = (conf_id,)
         cursor.execute(sql, params)
         conf = cursor.fetchone()
+
+        # print(conf)
+
         conf['miestnosti'] = conf['miestnosti'].split(",")
         conf = make_short_content(conf)
 
@@ -43,17 +46,25 @@ def r_conf(conf_id):
         admin_bool = True if admin else False
 
         # Handle reservation input 
-        if request.method == 'POST' and 'pocet' in request.form:
-            pocet = request.form['pocet']
+        if request.method == 'POST':
+            form_data = request.get_json()
+            
+            print(form_data)
+
+            pocet = form_data['count']
             uzivatel = session['id_uziv']
+
             sql = "INSERT INTO rezervacia VALUES (NULL, % s, % s, % s, % s, % s, % s)"
             params = (uzivatel, conf_id, pocet, "nie", "In progress",
                       (datetime.now()).strftime("%Y-%m-%d %H:%M:%S"))
             cursor.execute(sql, params)
+
             mysql.connection.commit()
             msg = 'You have successfully ordered ' + \
                 str(pocet)+' ticket/s to conference ! Please pay tickets the next 24 hours, otherwise reservation will be Declined. Pay in:'
-        
+           
+            return jsonify({'msg': msg})
+
         # Handle application input
         elif request.method == 'POST' and 'nazov' in request.form and 'obsah' in request.form:
             nazov = request.form['nazov']
